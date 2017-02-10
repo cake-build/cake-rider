@@ -1,0 +1,45 @@
+<idea-plugin version="2">
+    <id>com.cakebuild.cake.rider</id>
+    <name>Cake for Rider</name>
+    <version>1.0</version>
+    <vendor email="team@cakebuild.net" url="http://www.cakebuild.net">Cake Build</vendor>
+
+    <description><![CDATA[
+      Cake support for the Project Rider IDE
+    ]]></description>
+
+    <change-notes><![CDATA[
+      Initial release.
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="145.0"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+
+    <depends>com.intellij.modules.lang</depends>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="Language.CakeFileTypeFactory"/>
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <group id="Cake.InstallMenu" text="Cake Build" description="Cake actions menu">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action id="Cake.ScriptInstaller" class="CakeScriptInstallerAction" text="Install _Cake build script"
+                    description="Install a basic Cake build script into the current project"/>
+            <action class="CakePSInstallerAction" id="Cake.PowerShellInstaller"
+                    text="Install Cake _PowerShell bootstrapper"
+                    description="Install the default PowerShell bootstrapper"/>
+            <action class="CakeBashInstallerAction" id="Cake.BashInstaller" text="Install Cake _Bash bootstrapper"
+                    description="Install the default Bash bootstrapper"/>
+
+        </group>
+    </actions>
+
+
+</idea-plugin>
