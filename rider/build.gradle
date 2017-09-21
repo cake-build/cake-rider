@@ -1,0 +1,54 @@
+buildscript {
+    ext.kotlin_version = '1.1.4-3'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+plugins {
+    id 'org.jetbrains.intellij' version '0.2.17'
+}
+
+group 'net.cakebuild'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+
+intellij {
+    type 'RD'
+    version '171.4456.3568' // Rider 2017.1.2
+    downloadSources false
+}
+patchPluginXml {
+    pluginId "${group}.${project.name}"
+    changeNotes """
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>"""
+    description """
+      Enter short description for your plugin here.<br>
+      <em>most HTML tags may be used</em>"""
+}
