@@ -7,10 +7,31 @@
   <depends>com.intellij.modules.lang</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-      <toolWindow anchor="right" id="Cake" icon="/icons/CakeIcon.png" factoryClass="net.cakebuild.CakeToolWindowFactory" />
+      <toolWindow anchor="right" id="Cake Tasks" icon="/icons/CakeIcon.png" factoryClass="net.cakebuild.toolwindow.CakeTasksWindowFactory" />
   </extensions>
 
   <actions>
-    <!-- Add your actions here -->
+    <action id="Cake.ExecuteTask"
+            class="net.cakebuild.actions.CakeTasksTreeAction$Execute"
+            text="Execute Cake Task"
+            icon="/icons/CakeIcon.png" />
+
+    <group id="CakeTasksWindow">
+      <action id="CakeTasksWindow.Refresh"
+              text="Refresh"
+              class="net.cakebuild.actions.CakeTasksTreeAction$Refresh"
+              icon="AllIcons.Actions.Refresh" />
+      <separator />
+      <reference id="Cake.ExecuteTask" />
+      <separator />
+      <action id="CakeTasksWindow.ExpandAll"
+              class="net.cakebuild.actions.CakeTasksTreeAction$ExpandAll"
+              icon="AllIcons.Actions.Expandall"
+              use-shortcut-of="ExpandAll" />
+      <action id="CakeTasksWindow.CollapseAll"
+              class="net.cakebuild.actions.CakeTasksTreeAction$CollapseAll"
+              icon="AllIcons.Actions.Collapseall"
+              use-shortcut-of="CollapseAll" />
+    </group>
   </actions>
 </idea-plugin>
