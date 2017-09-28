@@ -17,7 +17,7 @@ abstract class CakeTasksTreeAction : AnAction() {
     }
 
     protected fun getTree(e: AnActionEvent?): JTree? {
-        if (e == null) return null;
+        if (e == null) return null
         return CakeTasksDataKeys.PROJECTS_TREE.getData(e.dataContext)
     }
 
@@ -39,17 +39,15 @@ abstract class CakeTasksTreeAction : AnAction() {
 
     class Refresh : CakeTasksTreeAction() {
         override fun actionPerformed(e: AnActionEvent?) {
-            Messages.showMessageDialog(e!!.project, "Refresh!", "Cake", Messages.getInformationIcon());
+            Messages.showMessageDialog(e!!.project, "Refresh!", "Cake", Messages.getInformationIcon())
         }
     }
 
     class Execute : CakeTasksTreeAction() {
         override fun actionPerformed(e: AnActionEvent?) {
-            val tree = getTree(e!!) ?: return
+            getTree(e!!) ?: return
             val selected = CakeTasksDataKeys.SELECTED_TASK_NODE.getData(e.dataContext) ?: return
-            Messages.showMessageDialog(e.project, "Execute ${selected.name}!", "Cake", Messages.getInformationIcon());
-
+            Messages.showMessageDialog(e.project, "Execute ${selected.name}!", "Cake", Messages.getInformationIcon())
         }
-
     }
 }
