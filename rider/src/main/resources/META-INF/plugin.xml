@@ -7,7 +7,8 @@
   <depends>com.intellij.modules.lang</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-      <toolWindow anchor="right" id="Cake Tasks" icon="/icons/CakeIcon.png" factoryClass="net.cakebuild.toolwindow.CakeTasksWindowFactory" />
+    <configurationType implementation="net.cakebuild.run.CakeConfigurationType" id="Cake" />
+    <toolWindow anchor="right" id="Cake Tasks" icon="/icons/CakeIcon.png" factoryClass="net.cakebuild.toolwindow.CakeTasksWindowFactory" />
   </extensions>
 
   <actions>

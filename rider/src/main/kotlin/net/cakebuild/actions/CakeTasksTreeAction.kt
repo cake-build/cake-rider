@@ -44,6 +44,7 @@ abstract class CakeTasksTreeAction : AnAction() {
     }
 
     class Execute : CakeTasksTreeAction() {
+
         override fun actionPerformed(e: AnActionEvent?) {
             getTree(e!!) ?: return
             val selected = CakeTasksDataKeys.SELECTED_TASK_NODE.getData(e.dataContext) ?: return
