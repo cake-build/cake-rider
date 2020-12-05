@@ -23,7 +23,7 @@ class CakeFileNode(project: Project, private val data: CakeTasks) : SimpleNode(p
         return data.tasks.map { CakeTaskNode(project!!, it, data.cakeFile!!.parent) }.toTypedArray()
     }
 
-    override fun update(presentation: PresentationData?) {
+    override fun update(presentation: PresentationData) {
         super.update(presentation)
         presentation?.setIcon(CakeIcons.Cake)
     }
@@ -37,7 +37,7 @@ class CakeTaskNode(project: Project, val task: String, val cakeFileDir: VirtualF
 
     override fun getChildren(): Array<SimpleNode> = emptyArray()
 
-    override fun update(presentation: PresentationData?) {
+    override fun update(presentation: PresentationData) {
         super.update(presentation)
         presentation?.setIcon(CakeIcons.Cake)
     }

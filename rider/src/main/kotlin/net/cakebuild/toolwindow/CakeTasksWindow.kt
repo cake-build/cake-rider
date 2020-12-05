@@ -31,7 +31,7 @@ class CakeTasksWindow(private val project: Project, private val toolWindowEx: To
         scheduleStructureRequest()
     }
 
-    override fun getData(dataId: String?): Any? {
+    override fun getData(dataId: String): Any? {
         if (CakeTasksDataKeys.PROJECTS_TREE.`is`(dataId)) return myTree
         if (CakeTasksDataKeys.SELECTED_TASK_NODE.`is`(dataId)) return myTree.selectedNode as CakeTaskNode
         return super.getData(dataId)

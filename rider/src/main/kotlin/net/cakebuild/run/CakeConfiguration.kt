@@ -1,14 +1,60 @@
 package net.cakebuild.run
 
-import com.intellij.execution.configurations.RunConfiguration
+import com.intellij.execution.Executor
+import com.intellij.execution.configurations.*
+import com.intellij.execution.process.ProcessHandler
+import com.intellij.execution.process.ProcessHandlerFactory
+import com.intellij.execution.process.ProcessTerminatedListener
+import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VirtualFile
-import com.jetbrains.rider.model.RunnableProjectKind
-import com.jetbrains.rider.run.configurations.DotNetRunConfigurationBase
-import com.jetbrains.rider.runtime.RiderDotNetActiveRuntimeHost
-import net.cakebuild.util.CakeFilePath
 
+class CakeConfiguration(project: Project, factory: CakeConfigurationFactory)
+    : RunConfigurationBase<CakeConfigurationOptions>(project, factory, "Cake") {
+
+    var task: String
+        get() {
+            return options.task
+        }
+        set(value) {
+            options.task = value
+        }
+
+    // TODO: Verbosity & scriptPath
+
+    override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
+        return object : CommandLineState(environment) {
+            override fun startProcess(): ProcessHandler {
+                val commandLine = GeneralCommandLine(options.getCommandline())
+                val processHandler = ProcessHandlerFactory.getInstance().createColoredProcessHandler(commandLine)
+                ProcessTerminatedListener.attach(processHandler)
+                return processHandler
+            }
+        }
+    }
+
+    override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> {
+        return CakeConfigurationEditor()
+    }
+
+    override fun getOptions(): CakeConfigurationOptions {
+        return super.getOptions() as CakeConfigurationOptions
+    }
+}
+
+class CakeConfigurationOptions : RunConfigurationOptions() {
+    var task = "Default"
+    private var scriptPath = "build.cake"
+    private var verbosity = "normal"
+
+    fun getCommandline(): String {
+        return "dotnet cake $scriptPath --target=\"$task\" --verbosity=$verbosity"
+    }
+}
+
+// original (non-compiling) code:
+// reason for having this: I'm really not sure if my (compiling) replacement does the same...
+/*
 class CakeConfiguration(project: Project, factory: CakeConfigurationFactory, activeRuntimeHost: RiderDotNetActiveRuntimeHost)
     : DotNetRunConfigurationBase("Cake", project, factory, activeRuntimeHost) {
 
@@ -37,3 +83,5 @@ class CakeConfiguration(project: Project, factory: CakeConfigurationFactory, act
         return CakeConfigurationEditor()
     }
 }
+ */
+
