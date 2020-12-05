@@ -8,24 +8,31 @@ import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
+
 
 class CakeConfiguration(project: Project, factory: CakeConfigurationFactory)
     : RunConfigurationBase<CakeConfigurationOptions>(project, factory, "Cake") {
 
-    var task: String
-        get() {
-            return options.task
-        }
-        set(value) {
-            options.task = value
-        }
+    fun setOptions(file: VirtualFile, taskName: String, verbosity: String = "normal"){
+        val options = options
+        options.scriptPath = file.path
+        options.taskName = taskName
+        options.verbosity = verbosity
+    }
 
-    // TODO: Verbosity & scriptPath
-
-    override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
+    override fun getState(executor: Executor, environment: ExecutionEnvironment)
+        : RunProfileState {
         return object : CommandLineState(environment) {
             override fun startProcess(): ProcessHandler {
-                val commandLine = GeneralCommandLine(options.getCommandline())
+                val options = options
+                val commandLine = GeneralCommandLine()
+                    .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.CONSOLE)
+                    .withExePath("dotnet-cake.exe")
+                    .withParameters(
+                        options.scriptPath,
+                        "--target=${options.taskName}",
+                        "--verbosity=${options.verbosity}")
                 val processHandler = ProcessHandlerFactory.getInstance().createColoredProcessHandler(commandLine)
                 ProcessTerminatedListener.attach(processHandler)
                 return processHandler
@@ -39,16 +46,6 @@ class CakeConfiguration(project: Project, factory: CakeConfigurationFactory)
 
     override fun getOptions(): CakeConfigurationOptions {
         return super.getOptions() as CakeConfigurationOptions
-    }
-}
-
-class CakeConfigurationOptions : RunConfigurationOptions() {
-    var task = "Default"
-    private var scriptPath = "build.cake"
-    private var verbosity = "normal"
-
-    fun getCommandline(): String {
-        return "dotnet cake $scriptPath --target=\"$task\" --verbosity=$verbosity"
     }
 }
 
