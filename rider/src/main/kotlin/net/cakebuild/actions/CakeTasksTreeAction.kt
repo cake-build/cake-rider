@@ -32,16 +32,26 @@ abstract class CakeTasksTreeAction : AnAction() {
         }
     }
 
-    class Execute : CakeTasksTreeAction() {
-        override fun actionPerformed(e: AnActionEvent) {
-            val win = getWindow(e)
-            win.runTask()
-        }
+    abstract class TaskOnlyActions : CakeTasksTreeAction() {
 
         override fun update(e: AnActionEvent) {
             super.update(e)
             val win = getWindow(e)
             e.presentation.isEnabled = win.isTaskSelected()
+        }
+
+        class Execute : TaskOnlyActions() {
+            override fun actionPerformed(e: AnActionEvent) {
+                val win = getWindow(e)
+                win.runTask()
+            }
+        }
+
+        class CreateRunConfig : TaskOnlyActions() {
+            override fun actionPerformed(e: AnActionEvent) {
+                val win = getWindow(e)
+                win.createRunConfig()
+            }
         }
     }
 }

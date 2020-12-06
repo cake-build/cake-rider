@@ -1,7 +1,10 @@
 package net.cakebuild.shared
 
+import com.intellij.execution.ProgramRunnerUtil
 import com.intellij.execution.RunManager
 import com.intellij.execution.configurations.ConfigurationTypeUtil
+import com.intellij.execution.executors.DefaultDebugExecutor
+import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.vfs.VfsUtil
@@ -9,7 +12,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import net.cakebuild.run.CakeConfiguration
 import net.cakebuild.run.CakeConfigurationType
 import java.nio.file.FileSystems
-import java.nio.file.Path
 import java.util.*
 
 class CakeProject(private val project: Project) {
@@ -55,7 +57,7 @@ class CakeProject(private val project: Project) {
             return taskName
         }
 
-        fun run() {
+        fun run(mode: CakeTaskRunMode) {
             val runManager = project.getComponent(RunManager::class.java)
             val configurationType = ConfigurationTypeUtil.findConfigurationType(CakeConfigurationType::class.java)
             val fileSystems = FileSystems.getDefault()
@@ -65,7 +67,23 @@ class CakeProject(private val project: Project) {
             val runConfiguration = runManager.createConfiguration(cfgName, configurationType.cakeFactory)
             val cakeConfiguration = runConfiguration.configuration as CakeConfiguration
             cakeConfiguration.setOptions(path.toString(), taskName)
-            runManager.addConfiguration(runConfiguration, false)
+
+            val executor = when(mode){
+                CakeTaskRunMode.Debug -> DefaultDebugExecutor.getDebugExecutorInstance()
+                CakeTaskRunMode.Run -> DefaultRunExecutor.getRunExecutorInstance()
+                else -> {
+                    runManager.addConfiguration(runConfiguration, true)
+                    return
+                }
+            }
+
+            ProgramRunnerUtil.executeConfiguration(runConfiguration, executor);
         }
+    }
+
+    enum class CakeTaskRunMode {
+        Run,
+        Debug,
+        SaveConfigOnly
     }
 }

@@ -65,15 +65,23 @@ class CakeTasksWindow(private val project: Project)
         }
     }
 
+    private fun getSelectedTask(): CakeProject.CakeTask? {
+        val selected = tree.getSelectedNodes(DefaultMutableTreeNode::class.java) { it.isLeaf }.firstOrNull() ?: return null
+        return selected.userObject as CakeProject.CakeTask
+    }
+
     fun isTaskSelected(): Boolean {
-        val selected = tree.getSelectedNodes(DefaultMutableTreeNode::class.java) { it.isLeaf }
-        return selected.any()
+        return getSelectedTask() != null
     }
 
     fun runTask() {
-        val selected = tree.getSelectedNodes(DefaultMutableTreeNode::class.java) { it.isLeaf }.firstOrNull() ?: return
-        val task = selected.userObject as CakeProject.CakeTask
-        task.run()
+        val task = getSelectedTask() ?: return
+        task.run(CakeProject.CakeTaskRunMode.Run)
+    }
+
+    fun createRunConfig() {
+        val task = getSelectedTask() ?: return
+        task.run(CakeProject.CakeTaskRunMode.SaveConfigOnly)
     }
 
     fun refreshTree() {

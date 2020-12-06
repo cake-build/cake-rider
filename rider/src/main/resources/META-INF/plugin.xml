@@ -15,9 +15,9 @@
 
   <actions>
     <action id="Cake.ExecuteTask"
-            class="net.cakebuild.actions.CakeTasksTreeAction$Execute"
+            class="net.cakebuild.actions.CakeTasksTreeAction$TaskOnlyActions$Execute"
             text="Execute Cake Task"
-            icon="/icons/CakeIcon.png" />
+            icon="AllIcons.Actions.Execute" />
 
     <group id="CakeTasksWindow">
       <action id="CakeTasksWindow.Refresh"
@@ -26,6 +26,10 @@
               icon="AllIcons.Actions.Refresh" />
       <separator />
       <reference id="Cake.ExecuteTask" />
+      <action id="Cake.CreateRunConfiguration"
+              class="net.cakebuild.actions.CakeTasksTreeAction$TaskOnlyActions$CreateRunConfig"
+              text="Create a run configuration"
+              icon="AllIcons.Actions.Profile" />
       <separator />
       <action id="CakeTasksWindow.ExpandAll"
               class="net.cakebuild.actions.CakeTasksTreeAction$ExpandAll"
