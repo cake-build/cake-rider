@@ -1,8 +1,12 @@
 package net.cakebuild.run
 
+import com.intellij.execution.BeforeRunTask
 import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.openapi.components.BaseState
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Key
+import com.jetbrains.rider.build.tasks.BuildProjectBeforeRunTask
+import com.jetbrains.rider.build.tasks.BuildProjectBeforeRunTaskProvider
 
 class CakeConfigurationFactory(cakeConfigurationType: CakeConfigurationType)
     : ConfigurationFactory(cakeConfigurationType) {
@@ -21,12 +25,14 @@ class CakeConfigurationFactory(cakeConfigurationType: CakeConfigurationType)
         return CakeConfigurationOptions::class.java
     }
 
-    /*
-    TODO: Still needed?
-    override fun configureBeforeRunTaskDefaults(providerID: Key<out BeforeRunTask<BeforeRunTask<*>>>?, task: BeforeRunTask<out BeforeRunTask<*>>?) {
-        if (providerID == BuildProjectBeforeRunTaskProvider.providerId && task is BuildProjectBeforeRunTask) {
+    // Do not build the project before running cake-tasks
+    override fun configureBeforeRunTaskDefaults(
+        providerID: Key<out BeforeRunTask<BeforeRunTask<*>>>?,
+        task: BeforeRunTask<out BeforeRunTask<*>>?
+    ) {
+        if (providerID == BuildProjectBeforeRunTaskProvider.providerId
+            && task is BuildProjectBeforeRunTask) {
             task.isEnabled = false
         }
     }
-    */
 }

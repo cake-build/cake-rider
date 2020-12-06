@@ -8,6 +8,8 @@ import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import net.cakebuild.run.CakeConfiguration
 import net.cakebuild.run.CakeConfigurationType
+import java.nio.file.FileSystems
+import java.nio.file.Path
 import java.util.*
 
 class CakeProject(private val project: Project) {
@@ -56,9 +58,13 @@ class CakeProject(private val project: Project) {
         fun run() {
             val runManager = project.getComponent(RunManager::class.java)
             val configurationType = ConfigurationTypeUtil.findConfigurationType(CakeConfigurationType::class.java)
-            val runConfiguration = runManager.createConfiguration(taskName, configurationType.cakeFactory)
+            val fileSystems = FileSystems.getDefault()
+            val projectPath = fileSystems.getPath(project.basePath)
+            val path = projectPath.relativize(fileSystems.getPath(file.path))
+            val cfgName = "${path.fileName}: $taskName"
+            val runConfiguration = runManager.createConfiguration(cfgName, configurationType.cakeFactory)
             val cakeConfiguration = runConfiguration.configuration as CakeConfiguration
-            cakeConfiguration.setOptions(file, taskName)
+            cakeConfiguration.setOptions(path.toString(), taskName)
             runManager.addConfiguration(runConfiguration, false)
         }
     }
