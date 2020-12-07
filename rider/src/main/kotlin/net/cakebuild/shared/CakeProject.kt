@@ -58,7 +58,7 @@ class CakeProject(private val project: Project) {
         }
 
         fun run(mode: CakeTaskRunMode) {
-            val runManager = project.getComponent(RunManager::class.java)
+            val runManager = project.getService(RunManager::class.java)
             val configurationType = ConfigurationTypeUtil.findConfigurationType(CakeConfigurationType::class.java)
             val fileSystems = FileSystems.getDefault()
             val projectPath = fileSystems.getPath(project.basePath)

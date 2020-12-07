@@ -1,0 +1,43 @@
+package net.cakebuild.run;
+
+import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.SettingsEditor;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+
+public class CakeConfigurationEditor extends SettingsEditor<CakeConfiguration> {
+    private JPanel myPanel;
+    private JTextField scriptPathField;
+    private JTextField taskField;
+    private JTextField verbosityField;
+
+    @Override
+    protected void resetEditorFrom(@NotNull CakeConfiguration configuration) {
+        CakeConfigurationOptions state = configuration.getState();
+        if(state == null) {
+            state = new CakeConfigurationOptions(); // use defaults.
+        }
+        scriptPathField.setText(state.getScriptPath());
+        taskField.setText(state.getTaskName());
+        verbosityField.setText(state.getVerbosity());
+    }
+
+    @Override
+    protected void applyEditorTo(@NotNull CakeConfiguration configuration) throws ConfigurationException {
+        CakeConfigurationOptions state = configuration.getState();
+        if(state == null) {
+            throw new ConfigurationException("state is null: Can not set state.");
+        }
+
+        state.setScriptPath(scriptPathField.getText());
+        state.setTaskName(taskField.getText());
+        state.setVerbosity(verbosityField.getText());
+    }
+
+    @NotNull
+    @Override
+    protected JComponent createEditor() {
+        return myPanel;
+    }
+}
