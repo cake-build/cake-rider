@@ -49,7 +49,7 @@ class CakeTasksWindow(private val project: Project)
         }
 
         val node = path.lastPathComponent as TreeNode
-        node.children().asIterator().forEach {
+        for (it in node.children()) {
             val nextPath = path.pathByAddingChild(it)
             expandCollapse(expand, nextPath)
         }
