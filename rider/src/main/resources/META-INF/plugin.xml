@@ -29,7 +29,7 @@
       <action id="Cake.CreateRunConfiguration"
               class="net.cakebuild.actions.CakeTasksTreeAction$TaskOnlyActions$CreateRunConfig"
               text="Create a run configuration"
-              icon="AllIcons.Actions.Profile" />
+              icon="AllIcons.RunConfigurations.Application" />
       <separator />
       <action id="CakeTasksWindow.ExpandAll"
               class="net.cakebuild.actions.CakeTasksTreeAction$ExpandAll"
