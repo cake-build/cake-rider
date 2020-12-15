@@ -8,8 +8,8 @@ import com.intellij.openapi.util.Key
 import com.jetbrains.rider.build.tasks.BuildProjectBeforeRunTask
 import com.jetbrains.rider.build.tasks.BuildProjectBeforeRunTaskProvider
 
-class CakeConfigurationFactory(cakeConfigurationType: CakeConfigurationType)
-    : ConfigurationFactory(cakeConfigurationType) {
+class CakeConfigurationFactory(cakeConfigurationType: CakeConfigurationType) :
+    ConfigurationFactory(cakeConfigurationType) {
 
     override fun isConfigurationSingletonByDefault() = true
 
@@ -30,8 +30,9 @@ class CakeConfigurationFactory(cakeConfigurationType: CakeConfigurationType)
         providerID: Key<out BeforeRunTask<BeforeRunTask<*>>>?,
         task: BeforeRunTask<out BeforeRunTask<*>>?
     ) {
-        if (providerID == BuildProjectBeforeRunTaskProvider.providerId
-            && task is BuildProjectBeforeRunTask) {
+        if (providerID == BuildProjectBeforeRunTaskProvider.providerId &&
+            task is BuildProjectBeforeRunTask
+        ) {
             task.isEnabled = false
         }
     }
