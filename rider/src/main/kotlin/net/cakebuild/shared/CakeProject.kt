@@ -70,7 +70,7 @@ class CakeProject(private val project: Project) {
             val fileSystems = FileSystems.getDefault()
             val projectPath = fileSystems.getPath(project.basePath!!)
             val path = projectPath.relativize(fileSystems.getPath(file.path))
-            val cfgName = "${path.fileName}: $taskName"
+            val cfgName = runManager.suggestUniqueName("${path.fileName}: $taskName", configurationType)
             val runConfiguration = runManager.createConfiguration(cfgName, configurationType.cakeFactory)
             val cakeConfiguration = runConfiguration.configuration as CakeConfiguration
             val settings = CakeSettings.getInstance(project)
@@ -81,11 +81,14 @@ class CakeProject(private val project: Project) {
                 CakeTaskRunMode.Run -> DefaultRunExecutor.getRunExecutorInstance()
                 else -> {
                     runManager.addConfiguration(runConfiguration, true)
-                    return
+                    runManager.selectedConfiguration = runConfiguration
+                    null
                 }
             }
 
-            ProgramRunnerUtil.executeConfiguration(runConfiguration, executor)
+            if (executor != null) {
+                ProgramRunnerUtil.executeConfiguration(runConfiguration, executor)
+            }
         }
     }
 
