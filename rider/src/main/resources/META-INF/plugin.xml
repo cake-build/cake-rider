@@ -1,10 +1,12 @@
 <idea-plugin>
-  <name>Plugin display name here</name>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+  <id>net.cakebuild.cakerider</id>
+  <name>Cake Rider</name>
+  <vendor url="https://www.cakebuild.net">Cake</vendor>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-       on how to target different products -->
-  <depends>com.intellij.modules.lang</depends>
+  <!-- Product and plugin compatibility requirements -->
+  <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.rider</depends>
 
   <extensions defaultExtensionNs="com.intellij">
     <configurationType implementation="net.cakebuild.run.CakeConfigurationType" id="Cake" />
@@ -13,9 +15,9 @@
 
   <actions>
     <action id="Cake.ExecuteTask"
-            class="net.cakebuild.actions.CakeTasksTreeAction$Execute"
+            class="net.cakebuild.actions.CakeTasksTreeAction$TaskOnlyActions$Execute"
             text="Execute Cake Task"
-            icon="/icons/CakeIcon.png" />
+            icon="AllIcons.Actions.Execute" />
 
     <group id="CakeTasksWindow">
       <action id="CakeTasksWindow.Refresh"
@@ -24,6 +26,10 @@
               icon="AllIcons.Actions.Refresh" />
       <separator />
       <reference id="Cake.ExecuteTask" />
+      <action id="Cake.CreateRunConfiguration"
+              class="net.cakebuild.actions.CakeTasksTreeAction$TaskOnlyActions$CreateRunConfig"
+              text="Create a run configuration"
+              icon="AllIcons.RunConfigurations.Application" />
       <separator />
       <action id="CakeTasksWindow.ExpandAll"
               class="net.cakebuild.actions.CakeTasksTreeAction$ExpandAll"
