@@ -8,8 +8,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 import net.cakebuild.shared.Constants
 
-@State(name = "net.cakebuild.settings.CakeSettings",
-    storages = [ Storage(Constants.settingsStorageFile) ])
+@State(
+    name = "net.cakebuild.settings.CakeSettings",
+    storages = [ Storage(Constants.settingsStorageFile) ]
+)
 class CakeSettings : PersistentStateComponent<CakeSettings> {
     companion object {
         fun getInstance(project: Project): CakeSettings {

@@ -31,7 +31,7 @@ class CakeRunnerSettingsConfigurable(private val project: Project) : Configurabl
             return true
         }
 
-        if(isModified(settings.cakeRunnerOverrides, editor.cakeRunnerOverrides)) {
+        if (isModified(settings.cakeRunnerOverrides, editor.cakeRunnerOverrides)) {
             return true
         }
         return false

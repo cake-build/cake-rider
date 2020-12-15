@@ -25,7 +25,7 @@ class RegexInputVerifier : InputVerifier() {
 
     override fun shouldYieldFocus(input: JComponent?): Boolean {
         val valid = verify(input)
-        if(valid) {
+        if (valid) {
             input?.putClientProperty("JComponent.outline", null)
             onValidationSuccess?.invoke()
         } else {

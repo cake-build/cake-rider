@@ -14,7 +14,7 @@ import net.cakebuild.run.CakeConfiguration
 import net.cakebuild.run.CakeConfigurationType
 import net.cakebuild.settings.CakeSettings
 import java.nio.file.FileSystems
-import java.util.*
+import java.util.Stack
 
 class CakeProject(private val project: Project) {
 

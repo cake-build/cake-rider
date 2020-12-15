@@ -42,7 +42,7 @@ class CakeGeneralSettingsConfigurable(private val project: Project) : Configurab
         val modified = pairs.any {
             isModified(it.second(), it.first())
         }
-        if(modified){
+        if (modified) {
             return true
         }
 

@@ -8,10 +8,13 @@ import com.intellij.ui.ScrollPaneFactory
 import com.intellij.ui.treeStructure.Tree
 import net.cakebuild.shared.CakeDataKeys
 import net.cakebuild.shared.CakeProject
-import javax.swing.tree.*
+import javax.swing.tree.DefaultMutableTreeNode
+import javax.swing.tree.DefaultTreeModel
+import javax.swing.tree.TreeNode
+import javax.swing.tree.TreePath
+import javax.swing.tree.TreeSelectionModel
 
-class CakeTasksWindow(private val project: Project)
-    : SimpleToolWindowPanel(true, true) {
+class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true, true) {
 
     private val tree: Tree = Tree()
 
@@ -29,7 +32,8 @@ class CakeTasksWindow(private val project: Project)
             actionManager.createActionToolbar(
                 "Cake Tasks Toolbar",
                 actionManager.getAction("CakeTasksWindow") as ActionGroup,
-                true)
+                true
+            )
         actionToolbar.setTargetComponent(this)
         toolbar = actionToolbar.component
     }
@@ -43,7 +47,7 @@ class CakeTasksWindow(private val project: Project)
     }
 
     private fun expandCollapse(expand: Boolean, path: TreePath? = null) {
-        if(path == null) {
+        if (path == null) {
             expandCollapse(expand, TreePath(tree.model.root))
             return
         }
@@ -54,19 +58,20 @@ class CakeTasksWindow(private val project: Project)
             expandCollapse(expand, nextPath)
         }
 
-        if(expand) {
-            if(!tree.isExpanded(path)) {
+        if (expand) {
+            if (!tree.isExpanded(path)) {
                 tree.expandPath(path)
             }
         } else {
-            if(!tree.isCollapsed(path)) {
+            if (!tree.isCollapsed(path)) {
                 tree.collapsePath(path)
             }
         }
     }
 
     private fun getSelectedTask(): CakeProject.CakeTask? {
-        val selected = tree.getSelectedNodes(DefaultMutableTreeNode::class.java) { it.isLeaf }.firstOrNull() ?: return null
+        val selected = tree.getSelectedNodes(DefaultMutableTreeNode::class.java) { it.isLeaf }.firstOrNull()
+            ?: return null
         return selected.userObject as CakeProject.CakeTask
     }
 
@@ -88,11 +93,11 @@ class CakeTasksWindow(private val project: Project)
         val rootNode = DefaultMutableTreeNode(project.name)
         val cakeProject = CakeProject(project)
 
-        for(cakeFile in cakeProject.getCakeFiles()) {
+        for (cakeFile in cakeProject.getCakeFiles()) {
             val fileNode = DefaultMutableTreeNode(cakeFile.file.name)
             rootNode.add(fileNode)
 
-            for(task in cakeFile.getTasks()) {
+            for (task in cakeFile.getTasks()) {
                 val taskNode = DefaultMutableTreeNode(task)
                 fileNode.add(taskNode)
             }

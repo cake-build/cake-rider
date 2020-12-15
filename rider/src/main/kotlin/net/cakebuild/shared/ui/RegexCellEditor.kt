@@ -21,7 +21,7 @@ class RegexCellEditor : DefaultCellEditor(JTextField()) {
 
     override fun stopCellEditing(): Boolean {
         val valid = verifier.shouldYieldFocus(component)
-        if(!valid) return false
+        if (!valid) return false
 
         return super.stopCellEditing()
     }
