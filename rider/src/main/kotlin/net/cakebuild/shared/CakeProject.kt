@@ -5,32 +5,39 @@ import com.intellij.execution.RunManager
 import com.intellij.execution.configurations.ConfigurationTypeUtil
 import com.intellij.execution.executors.DefaultDebugExecutor
 import com.intellij.execution.executors.DefaultRunExecutor
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import net.cakebuild.run.CakeConfiguration
 import net.cakebuild.run.CakeConfigurationType
+import net.cakebuild.settings.CakeSettings
 import java.nio.file.FileSystems
-import java.util.*
+import java.util.Stack
 
 class CakeProject(private val project: Project) {
+
+    private val log = Logger.getInstance(CakeProject::class.java)
+
     fun getCakeFiles() = sequence {
-        val projectDir = project.guessProjectDir()
+        val extension = CakeSettings.getInstance(project).cakeFileExtension
+        val projectDir: VirtualFile? = project.guessProjectDir()
         val bucket = Stack<VirtualFile>()
-        if (projectDir != null) {
-            bucket.add(projectDir)
+        if (projectDir == null) {
+            return@sequence
         }
+        bucket.add(projectDir)
         while (!bucket.isEmpty()) {
             val folder = bucket.pop()
+            log.trace("searching for *.$extension in folder ${folder.path}")
             for (child in folder.children) {
                 if (child.isDirectory) {
                     bucket.push(child)
                     continue
                 }
                 val ext = child.extension
-                // TODO: Can we make the extension configurable?
-                if (ext != null && ext.equals("cake", ignoreCase = true)) {
+                if (ext != null && ext.equals(extension, ignoreCase = true)) {
                     yield(CakeFile(project, child))
                 }
             }
@@ -42,8 +49,8 @@ class CakeProject(private val project: Project) {
         private val content by lazy { VfsUtil.loadText(file) }
 
         fun getTasks() = sequence {
-            val regex = Regex("Task\\s*?\\(\\s*?\"(.*?)\"\\s*?\\)")
-            val tasks =  regex.findAll(content).map {
+            val regex = Regex(CakeSettings.getInstance(project).cakeTaskParsingRegex)
+            val tasks = regex.findAll(content).map {
                 CakeTask(project, file, it.groups[1]!!.value)
             }
             yieldAll(tasks)
@@ -61,14 +68,15 @@ class CakeProject(private val project: Project) {
             val runManager = project.getService(RunManager::class.java)
             val configurationType = ConfigurationTypeUtil.findConfigurationType(CakeConfigurationType::class.java)
             val fileSystems = FileSystems.getDefault()
-            val projectPath = fileSystems.getPath(project.basePath)
+            val projectPath = fileSystems.getPath(project.basePath!!)
             val path = projectPath.relativize(fileSystems.getPath(file.path))
             val cfgName = "${path.fileName}: $taskName"
             val runConfiguration = runManager.createConfiguration(cfgName, configurationType.cakeFactory)
             val cakeConfiguration = runConfiguration.configuration as CakeConfiguration
-            cakeConfiguration.setOptions(path.toString(), taskName)
+            val settings = CakeSettings.getInstance(project)
+            cakeConfiguration.setOptions(path.toString(), taskName, settings.cakeVerbosity)
 
-            val executor = when(mode){
+            val executor = when (mode) {
                 CakeTaskRunMode.Debug -> DefaultDebugExecutor.getDebugExecutorInstance()
                 CakeTaskRunMode.Run -> DefaultRunExecutor.getRunExecutorInstance()
                 else -> {
@@ -77,7 +85,7 @@ class CakeProject(private val project: Project) {
                 }
             }
 
-            ProgramRunnerUtil.executeConfiguration(runConfiguration, executor);
+            ProgramRunnerUtil.executeConfiguration(runConfiguration, executor)
         }
     }
 
