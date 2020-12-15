@@ -8,6 +8,8 @@ import com.intellij.ui.ScrollPaneFactory
 import com.intellij.ui.treeStructure.Tree
 import net.cakebuild.shared.CakeDataKeys
 import net.cakebuild.shared.CakeProject
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeNode
@@ -24,6 +26,16 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
         tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
         refreshTree()
         initToolbar()
+        tree.addMouseListener(
+            object : MouseAdapter() {
+                override fun mouseClicked(e: MouseEvent?) {
+                    if (e?.clickCount == 2) {
+                        runTask()
+                    }
+                    super.mouseClicked(e)
+                }
+            }
+        )
     }
 
     private fun initToolbar() {
