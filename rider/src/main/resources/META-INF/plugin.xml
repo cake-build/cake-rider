@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>net.cakebuild.cakerider</id>
   <name>Cake Rider</name>
-  <vendor url="https://www.cakebuild.net">Cake</vendor>
+  <vendor url="https://www.cakebuild.net">cake-build</vendor>
 
   <!-- Product and plugin compatibility requirements -->
   <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
