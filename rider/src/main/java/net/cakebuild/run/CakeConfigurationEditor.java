@@ -2,15 +2,19 @@ package net.cakebuild.run;
 
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
+import net.cakebuild.shared.ui.VerbosityComboBox;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class CakeConfigurationEditor extends SettingsEditor<CakeConfiguration> {
     private JPanel myPanel;
     private JTextField scriptPathField;
     private JTextField taskField;
-    private JTextField verbosityField;
+    private JComboBox<String> verbosityBox;
 
     @Override
     protected void resetEditorFrom(@NotNull CakeConfiguration configuration) {
@@ -20,7 +24,7 @@ public class CakeConfigurationEditor extends SettingsEditor<CakeConfiguration> {
         }
         scriptPathField.setText(state.getScriptPath());
         taskField.setText(state.getTaskName());
-        verbosityField.setText(state.getVerbosity());
+        ((VerbosityComboBox)verbosityBox).setVerbosity(state.getVerbosity());
     }
 
     @Override
@@ -32,12 +36,16 @@ public class CakeConfigurationEditor extends SettingsEditor<CakeConfiguration> {
 
         state.setScriptPath(scriptPathField.getText());
         state.setTaskName(taskField.getText());
-        state.setVerbosity(verbosityField.getText());
+        state.setVerbosity(((VerbosityComboBox)verbosityBox).getVerbosity());
     }
 
     @NotNull
     @Override
     protected JComponent createEditor() {
         return myPanel;
+    }
+
+    private void createUIComponents() {
+        verbosityBox = new VerbosityComboBox();
     }
 }
