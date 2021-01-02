@@ -32,6 +32,7 @@ val platformType: String by project
 val platformVersion: String by project
 val platformPlugins: String by project
 val platformDownloadSources: String by project
+val marketplaceChannel: String by project
 
 group = pluginGroup
 version = pluginVersion
@@ -95,22 +96,29 @@ tasks {
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
         pluginDescription(
             closure {
-                File("./README.md").readText().lines().run {
+                File("./plugin_description.md").readText().lines().run {
                     val start = "<!-- Plugin description -->"
                     val end = "<!-- Plugin description end -->"
 
                     if (!containsAll(listOf(start, end))) {
-                        throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
+                        throw GradleException("Plugin description section not found in plugin_description.md:\n$start ... $end")
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run { markdownToHTML(this) }
             }
         )
 
-        // Get the latest available change notes from the changelog file
         changeNotes(
             closure {
-                changelog.getLatest().toHTML()
+                File("./plugin_description.md").readText().lines().run {
+                    val start = "<!-- Plugin changeNotes -->"
+                    val end = "<!-- Plugin changeNotes end -->"
+
+                    if (!containsAll(listOf(start, end))) {
+                        throw GradleException("Plugin changeNotes section not found in plugin_description.md:\n$start ... $end")
+                    }
+                    subList(indexOf(start) + 1, indexOf(end))
+                }.joinToString("\n").run { markdownToHTML(this) }
             }
         )
     }
@@ -120,11 +128,7 @@ tasks {
     }
 
     publishPlugin {
-        dependsOn("patchChangelog")
         token(System.getenv("PUBLISH_TOKEN"))
-        // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
-        // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
-        // https://jetbrains.org/intellij/sdk/docs/tutorials/build_system/deployment.html#specifying-a-release-channel
-        channels(pluginVersion.split('-').getOrElse(1) { "default" }.split('.').first())
+        channels(marketplaceChannel)
     }
 }
