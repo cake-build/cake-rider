@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "rider/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "(maint)"
+    target-branch: "develop"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "(maint)"
+    target-branch: "develop"
+  
