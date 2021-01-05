@@ -7,7 +7,7 @@ BuildParameters.SetParameters(
   buildSystem: BuildSystem,
   sourceDirectoryPath: "./rider",
   title: "Cake-Rider",
-  repositoryOwner: "cake-contrib",
+  repositoryOwner: "cake-build",
   marketplaceId: "15729-cake-rider"
 );
 
