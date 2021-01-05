@@ -18,9 +18,16 @@ Go to File -> Settings -> Plugins -> Marketplace and search for *Cake Rider*
 
 ![Cake Rider Plugin](./images/riderPlugin.png)
 
-<!--
-WARNING: THIS WILL ONLY WORK, WHEN THE PLUGIN WAS PUBLISHED!
--->
+### Release channels
+
+JetBrains Marketplace has multiple channels for each plugin. Default is always the `Stable` channel,
+however, Cake for Rider might make use of two other channels:
+
+- **Beta**: The `beta` channel contains pre-releases.
+- **Alpha**: The `alpha` channel contains unstable releases. Here be dragons!
+
+To use one of the channels open the [plugin page in the JetBrains Marketplace](https://plugins.jetbrains.com/plugin/15729-cake-rider/)
+select *Versions* and switch the channel on the left side of the page. Download the desired version and install it manually.
 
 ## Build scripts tool window
 
