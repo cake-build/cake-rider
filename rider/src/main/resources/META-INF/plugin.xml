@@ -1,6 +1,6 @@
 <idea-plugin>
   <id>net.cakebuild.cakerider</id>
-  <name>Cake Rider</name>
+  <name>Cake for Rider</name>
   <vendor url="https://www.cakebuild.net">cake-build</vendor>
 
   <!-- Product and plugin compatibility requirements -->
