@@ -3,7 +3,7 @@ create:
   footer-heading: Where to get it
   footer-content: >
     You can download this release from the
-    [marketplace](https://plugins.jetbrains.com/plugin/15729-cake-rider/versions/).
+    [marketplace](https://plugins.jetbrains.com/plugin/15729-cake-rider/versions/), after it has been released.
   footer-includes-milestone: true
   milestone-replace-text: "{milestone}"
 export:
