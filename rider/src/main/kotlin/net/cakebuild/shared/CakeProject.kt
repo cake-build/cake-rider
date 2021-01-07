@@ -80,7 +80,10 @@ class CakeProject(private val project: Project) {
                 CakeTaskRunMode.Debug -> DefaultDebugExecutor.getDebugExecutorInstance()
                 CakeTaskRunMode.Run -> DefaultRunExecutor.getRunExecutorInstance()
                 else -> {
-                    runManager.addConfiguration(runConfiguration, true)
+                    // this line will cause a deprecation warning.
+                    // when we drop support for versions < 2020.1 we can call the new runConfiguration.storeInDotIdeaFolder()
+                    runConfiguration.isShared = true
+                    runManager.addConfiguration(runConfiguration)
                     runManager.selectedConfiguration = runConfiguration
                     null
                 }
