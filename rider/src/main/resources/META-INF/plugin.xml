@@ -11,7 +11,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <fileType name="Cake" language="Cake" extensions="cake" implementationClass="net.cakebuild.fileTypes.CakeFileType" />
     <configurationType implementation="net.cakebuild.run.CakeConfigurationType" id="Cake" />
-    <toolWindow anchor="right" id="Cake Tasks" icon="/icons/CakeIcon13.svg" factoryClass="net.cakebuild.toolwindow.CakeTasksWindowFactory" />
+    <toolWindow anchor="right" id="Cake Tasks" icon="CakeIcons.CakeAction" factoryClass="net.cakebuild.toolwindow.CakeTasksWindowFactory" />
     <projectConfigurable parentId="build" instance="net.cakebuild.settings.CakeGeneralSettingsConfigurable"
                          id="net.cakebuild.settings.cake" displayName="Cake" nonDefaultProject="false" />
     <projectConfigurable parentId="net.cakebuild.settings.cake" instance="net.cakebuild.settings.CakeRunnerSettingsConfigurable"

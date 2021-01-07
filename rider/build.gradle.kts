@@ -142,6 +142,7 @@ tasks {
 
     runPluginVerifier {
         ideVersions(pluginVerifierIdeVersions)
+        // reports are in ${project.buildDir}/reports/pluginVerifier - or set verificationReportsDirectory()
     }
 
     publishPlugin {
