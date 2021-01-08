@@ -39,6 +39,13 @@ The full documentation of the latest release of Cake for Rider can be found at [
 
 Files with the extension `.cake` have the Cake logo as file icons now. 
 
+
+#### Custom arguments in run configurations
+
+A new setting has been added to run configuration: *Arguments*. It can be used to supply custom arguments when running that configuration.
+
+![arguments](./images/runConfiguration-editor.png)
+
 ## Contribute
 
 Check out the [Cake contribution guidelines](https://cakebuild.net/docs/contributing/contribution-guidelines)

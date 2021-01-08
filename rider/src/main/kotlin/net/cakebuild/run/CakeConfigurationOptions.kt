@@ -21,4 +21,10 @@ class CakeConfigurationOptions : RunConfigurationOptions() {
     var verbosity: String?
         get() = storedVerbosity.getValue(this)
         set(v) { storedVerbosity.setValue(this, v) }
+
+    private val storedAdditionalArguments: StoredProperty<String?> =
+        string("").provideDelegate(this, "additionalArguments")
+    var additionalArguments: String?
+        get() = storedAdditionalArguments.getValue(this)
+        set(v) { storedAdditionalArguments.setValue(this, v) }
 }
