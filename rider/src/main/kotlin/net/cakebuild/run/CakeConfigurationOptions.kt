@@ -11,7 +11,7 @@ class CakeConfigurationOptions : RunConfigurationOptions() {
         set(v) { storedTaskName.setValue(this, v) }
 
     private val storedScriptPath: StoredProperty<String?> =
-        string("build.cake").provideDelegate(this, "file")
+        string("build.cake").provideDelegate(this, "scriptPath")
     var scriptPath: String?
         get() = storedScriptPath.getValue(this)
         set(v) { storedScriptPath.setValue(this, v) }
