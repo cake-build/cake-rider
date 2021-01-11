@@ -35,7 +35,9 @@ The full documentation of the latest release of Cake for Rider can be found at [
 
 ### Documentation changes in the upcoming release
 
-None.
+#### File icons
+
+Files with the extension `.cake` have the Cake logo as file icons now. 
 
 ## Contribute
 
