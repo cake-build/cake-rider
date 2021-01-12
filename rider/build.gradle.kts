@@ -1,4 +1,5 @@
 import io.gitlab.arturbosch.detekt.Detekt
+import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.changelog.closure
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -83,9 +84,25 @@ tasks {
             kotlinOptions.jvmTarget = "1.8"
         }
     }
-
     withType<Detekt> {
         jvmTarget = "1.8"
+    }
+    // workaround for https://youtrack.jetbrains.com/issue/IDEA-210683
+    getByName<JavaExec>("buildSearchableOptions") {
+        jvmArgs(
+            "--illegal-access=deny",
+            "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+            "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.desktop/javax.swing=ALL-UNNAMED",
+            "--add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED",
+            "--add-opens=java.desktop/sun.font=ALL-UNNAMED",
+            "--add-opens=java.desktop/sun.swing=ALL-UNNAMED"
+        )
+
+        if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
+            jvmArgs("--add-opens=java.desktop/com.apple.eawt.event=ALL-UNNAMED")
+        }
     }
 
     patchPluginXml {
