@@ -92,7 +92,10 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
     private fun getSelectedTask(): CakeProject.CakeTask? {
         val selected = tree.getSelectedNodes(DefaultMutableTreeNode::class.java) { it.isLeaf }.firstOrNull()
             ?: return null
-        return selected.userObject as CakeProject.CakeTask
+        return when (selected.userObject) {
+            is CakeProject.CakeTask -> selected.userObject as CakeProject.CakeTask
+            else -> null
+        }
     }
 
     fun isTaskSelected(): Boolean {
