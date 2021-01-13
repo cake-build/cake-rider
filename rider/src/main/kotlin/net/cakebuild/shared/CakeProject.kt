@@ -59,11 +59,6 @@ class CakeProject(private val project: Project) {
 
     data class CakeTask(private val project: Project, val file: VirtualFile, val taskName: String) {
 
-        // to make the task look good when placed in a tree-node.
-        override fun toString(): String {
-            return taskName
-        }
-
         fun run(mode: CakeTaskRunMode) {
             val runManager = project.getService(RunManager::class.java)
             val configurationType = ConfigurationTypeUtil.findConfigurationType(CakeConfigurationType::class.java)

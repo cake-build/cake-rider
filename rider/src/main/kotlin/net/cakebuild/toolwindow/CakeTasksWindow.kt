@@ -8,9 +8,15 @@ import com.intellij.ui.ScrollPaneFactory
 import com.intellij.ui.treeStructure.Tree
 import net.cakebuild.shared.CakeDataKeys
 import net.cakebuild.shared.CakeProject
+import java.awt.Component
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import javax.swing.JComponent
+import javax.swing.JLabel
+import javax.swing.JTree
+import javax.swing.ToolTipManager
 import javax.swing.tree.DefaultMutableTreeNode
+import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeNode
 import javax.swing.tree.TreePath
@@ -23,6 +29,8 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
     init {
         val scrollPane = ScrollPaneFactory.createScrollPane(tree)
         setContent(scrollPane)
+        ToolTipManager.sharedInstance().registerComponent(tree)
+        tree.cellRenderer = MyTreeCellRenderer()
         tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
         refreshTree()
         initToolbar()
@@ -106,7 +114,7 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
         val cakeProject = CakeProject(project)
 
         for (cakeFile in cakeProject.getCakeFiles()) {
-            val fileNode = DefaultMutableTreeNode(cakeFile.file.name)
+            val fileNode = DefaultMutableTreeNode(cakeFile)
             rootNode.add(fileNode)
 
             for (task in cakeFile.getTasks()) {
@@ -121,5 +129,43 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
     override fun getData(dataId: String): Any? {
         if (CakeDataKeys.TASKS_WINDOW.`is`(dataId)) return this
         return super.getData(dataId)
+    }
+
+    class MyTreeCellRenderer : DefaultTreeCellRenderer() {
+
+        init {
+            setClosedIcon(null)
+            setOpenIcon(null)
+            setLeafIcon(null)
+        }
+
+        override fun getTreeCellRendererComponent(
+            tree: JTree,
+            value: Any,
+            sel: Boolean,
+            expanded: Boolean,
+            leaf: Boolean,
+            row: Int,
+            hasFocus: Boolean
+        ): Component {
+            val cell: Component = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus)
+            if (cell is JComponent) {
+                val label = cell as JLabel
+                cell.toolTipText = null
+                when (val data = (value as DefaultMutableTreeNode).userObject) {
+                    is CakeProject.CakeTask -> {
+                        label.text = data.taskName
+                    }
+                    is CakeProject.CakeFile -> {
+                        cell.toolTipText = data.file.path
+                        label.text = data.file.nameWithoutExtension
+                    }
+                    else -> {
+                        label.text = data.toString()
+                    }
+                }
+            }
+            return cell
+        }
     }
 }
