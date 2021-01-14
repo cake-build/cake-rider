@@ -13,6 +13,7 @@ import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
+import com.intellij.util.execution.ParametersListUtil
 import net.cakebuild.settings.CakeSettings
 import java.nio.file.FileSystems
 
@@ -49,15 +50,18 @@ class CakeConfiguration(project: Project, factory: CakeConfigurationFactory) :
                     val scriptPath = fileSystems
                         .getPath(project.basePath!!)
                         .resolve(fileSystems.getPath(options.scriptPath!!))
+                    val arguments = mutableListOf<String>()
+                    arguments.add(scriptPath.toString())
+                    arguments.add("--target=${options.taskName}")
+                    arguments.add("--verbosity=${options.verbosity}")
+                    if (!options.additionalArguments.isNullOrEmpty()) {
+                        arguments.addAll(ParametersListUtil.parseToArray(options.additionalArguments!!))
+                    }
                     val commandLine = GeneralCommandLine()
                         .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.CONSOLE)
                         .withWorkDirectory(scriptPath.parent.toString())
                         .withExePath(exe)
-                        .withParameters(
-                            scriptPath.toString(),
-                            "--target=${options.taskName}",
-                            "--verbosity=${options.verbosity}"
-                        )
+                        .withParameters(arguments)
                     val processHandler = ProcessHandlerFactory.getInstance().createColoredProcessHandler(commandLine)
                     ProcessTerminatedListener.attach(processHandler)
                     return processHandler
