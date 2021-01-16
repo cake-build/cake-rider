@@ -46,6 +46,12 @@ A new setting has been added to run configuration: *Arguments*. It can be used t
 
 ![arguments](./images/runConfiguration-editor.png)
 
+## Discussion
+
+If you have questions, search for an existing one, or create a new discussion on the Cake GitHub repository.
+
+[![Join in the discussion on the Cake repository](https://img.shields.io/badge/GitHub-Discussions-green?logo=github)](https://github.com/cake-build/cake/discussions)
+
 ## Contribute
 
 Check out the [Cake contribution guidelines](https://cakebuild.net/docs/contributing/contribution-guidelines)
