@@ -39,12 +39,24 @@ The full documentation of the latest release of Cake for Rider can be found at [
 
 Files with the extension `.cake` have the Cake logo as file icons now. 
 
-
 #### Custom arguments in run configurations
 
 A new setting has been added to run configuration: *Arguments*. It can be used to supply custom arguments when running that configuration.
 
 ![arguments](./images/runConfiguration-editor.png)
+
+#### Search path and excludes
+
+The search path for where Cake files are searched to populate the Cake Tasks Window are now 
+configurable. Additionally excludes can be defined.
+
+The Paths are relative to the project root and should use "/" as separator between directories.
+(e.g.`../build`.) Default is `.`.
+
+Excludes are regular expressions that each path is match against. Paths that match one of the expressions will be excluded.
+Default: `.*/tools/.*`.
+
+![Search paths settings](./images/searchPathsSettings.png)
 
 ## Discussion
 

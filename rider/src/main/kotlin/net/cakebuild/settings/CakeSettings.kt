@@ -24,6 +24,8 @@ class CakeSettings : PersistentStateComponent<CakeSettings> {
     var cakeVerbosity = "normal"
     var cakeRunner = "dotnet-cake"
     var cakeRunnerOverrides = mapOf(Pair("^.*windows.*$", "dotnet-cake.exe"))
+    var cakeScriptSearchPaths: Collection<String> = mutableListOf(".")
+    var cakeScriptSearchIgnores: Collection<String> = mutableListOf(".*/tools/.*")
 
     override fun getState(): CakeSettings {
         return this
