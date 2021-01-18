@@ -9,3 +9,5 @@ formatting:
 style:
   ReturnCount:
     max: 10
+  LoopWithTooManyJumpStatements:
+    maxJumpCount: 5

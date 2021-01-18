@@ -3,5 +3,9 @@ package icons
 import com.intellij.openapi.util.IconLoader
 
 object CakeIcons {
-    val Cake = IconLoader.getIcon("/icons/CakeIcon.png")
+    @JvmField
+    val CakeAction = IconLoader.getIcon("/icons/CakeIcon16.svg")
+
+    @JvmField
+    val CakeFileType = IconLoader.getIcon("/icons/CakeIcon16.svg")
 }

@@ -8,8 +8,11 @@ import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
+import com.jetbrains.rider.projectView.hasSolution
+import com.jetbrains.rider.projectView.solutionDirectory
 import net.cakebuild.run.CakeConfiguration
 import net.cakebuild.run.CakeConfigurationType
 import net.cakebuild.settings.CakeSettings
@@ -20,18 +23,70 @@ class CakeProject(private val project: Project) {
 
     private val log = Logger.getInstance(CakeProject::class.java)
 
+    private fun getProjectDir(): VirtualFile? {
+        var projectDir = project.guessProjectDir()
+        if (project.hasSolution) {
+            // projectDir is weird, if a solution is loaded (probably because
+            // guessProjectDir is intellij-code and does not know about rider and solutions)
+            projectDir = LocalFileSystem.getInstance().findFileByIoFile(project.solutionDirectory)
+        }
+        return projectDir
+    }
+
+    private fun getSearchPaths(settings: CakeSettings, projectDir: VirtualFile): Collection<VirtualFile> {
+        return settings.cakeScriptSearchPaths.mapNotNull {
+            // VfsUtil.findRelativeFile does not work for "./foo" or "../foo"
+            val parts = it.split("/", "\\")
+            var path: VirtualFile? = projectDir
+            for (p in parts) {
+                if (path == null) {
+                    break
+                }
+                if (p == ".") {
+                    continue
+                }
+                if (p == "..") {
+                    path = path.parent
+                    continue
+                }
+
+                val child = path.findChild(p)
+                path = if (child == null) {
+                    log.warn("could not access $p as child of ${path.path}")
+                    null
+                } else {
+                    child
+                }
+            }
+            path
+        }
+    }
+
     fun getCakeFiles() = sequence {
-        val extension = CakeSettings.getInstance(project).cakeFileExtension
-        val projectDir: VirtualFile? = project.guessProjectDir()
-        val bucket = Stack<VirtualFile>()
+        val settings = CakeSettings.getInstance(project)
+        val extension = settings.cakeFileExtension
+        val projectDir = getProjectDir()
         if (projectDir == null) {
+            log.warn("Unable to find a folder to search for cake files.")
             return@sequence
         }
-        bucket.add(projectDir)
+        val searchPaths = getSearchPaths(settings, projectDir)
+        val bucket = Stack<VirtualFile>()
+        bucket.addAll(searchPaths)
+        val excludePatterns = settings.cakeScriptSearchIgnores.map {
+            Regex(it)
+        }
         while (!bucket.isEmpty()) {
             val folder = bucket.pop()
             log.trace("searching for *.$extension in folder ${folder.path}")
-            for (child in folder.children) {
+            children@ for (child in folder.children) {
+                val normalizedPath = child.path.replace("\\", "/")
+                for (exclude in excludePatterns) {
+                    if (normalizedPath.matches(exclude)) {
+                        log.trace("$normalizedPath excluded by pattern ${exclude.pattern}")
+                        continue@children
+                    }
+                }
                 if (child.isDirectory) {
                     bucket.push(child)
                     continue
@@ -59,11 +114,6 @@ class CakeProject(private val project: Project) {
 
     data class CakeTask(private val project: Project, val file: VirtualFile, val taskName: String) {
 
-        // to make the task look good when placed in a tree-node.
-        override fun toString(): String {
-            return taskName
-        }
-
         fun run(mode: CakeTaskRunMode) {
             val runManager = project.getService(RunManager::class.java)
             val configurationType = ConfigurationTypeUtil.findConfigurationType(CakeConfigurationType::class.java)
@@ -80,7 +130,11 @@ class CakeProject(private val project: Project) {
                 CakeTaskRunMode.Debug -> DefaultDebugExecutor.getDebugExecutorInstance()
                 CakeTaskRunMode.Run -> DefaultRunExecutor.getRunExecutorInstance()
                 else -> {
-                    runManager.addConfiguration(runConfiguration, true)
+                    // this line will cause a deprecation warning.
+                    // when we drop support for versions < 2020.1
+                    // we can call the new runConfiguration.storeInDotIdeaFolder()
+                    runConfiguration.isShared = true
+                    runManager.addConfiguration(runConfiguration)
                     runManager.selectedConfiguration = runConfiguration
                     null
                 }

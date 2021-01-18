@@ -2,6 +2,7 @@ package net.cakebuild.run
 
 import com.intellij.execution.BeforeRunTask
 import com.intellij.execution.configurations.ConfigurationFactory
+import com.intellij.execution.configurations.RunConfigurationSingletonPolicy
 import com.intellij.openapi.components.BaseState
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
@@ -11,7 +12,7 @@ import com.jetbrains.rider.build.tasks.BuildProjectBeforeRunTaskProvider
 class CakeConfigurationFactory(cakeConfigurationType: CakeConfigurationType) :
     ConfigurationFactory(cakeConfigurationType) {
 
-    override fun isConfigurationSingletonByDefault() = true
+    override fun getSingletonPolicy() = RunConfigurationSingletonPolicy.SINGLE_INSTANCE
 
     override fun createTemplateConfiguration(project: Project): CakeConfiguration {
         return CakeConfiguration(project, this)

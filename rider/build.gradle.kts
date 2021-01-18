@@ -1,4 +1,5 @@
 import io.gitlab.arturbosch.detekt.Detekt
+import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.changelog.closure
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -11,7 +12,7 @@ plugins {
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "0.6.5"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-    id("org.jetbrains.changelog") version "0.6.2"
+    id("org.jetbrains.changelog") version "1.0.1"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
     id("io.gitlab.arturbosch.detekt") version "1.15.0"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
@@ -83,9 +84,25 @@ tasks {
             kotlinOptions.jvmTarget = "1.8"
         }
     }
-
     withType<Detekt> {
         jvmTarget = "1.8"
+    }
+    // workaround for https://youtrack.jetbrains.com/issue/IDEA-210683
+    getByName<JavaExec>("buildSearchableOptions") {
+        jvmArgs(
+            "--illegal-access=deny",
+            "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+            "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.desktop/javax.swing=ALL-UNNAMED",
+            "--add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED",
+            "--add-opens=java.desktop/sun.font=ALL-UNNAMED",
+            "--add-opens=java.desktop/sun.swing=ALL-UNNAMED"
+        )
+
+        if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
+            jvmArgs("--add-opens=java.desktop/com.apple.eawt.event=ALL-UNNAMED")
+        }
     }
 
     patchPluginXml {
@@ -125,6 +142,7 @@ tasks {
 
     runPluginVerifier {
         ideVersions(pluginVerifierIdeVersions)
+        // reports are in ${project.buildDir}/reports/pluginVerifier - or set verificationReportsDirectory()
     }
 
     publishPlugin {

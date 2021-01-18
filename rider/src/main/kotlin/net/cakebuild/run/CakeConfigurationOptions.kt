@@ -11,7 +11,7 @@ class CakeConfigurationOptions : RunConfigurationOptions() {
         set(v) { storedTaskName.setValue(this, v) }
 
     private val storedScriptPath: StoredProperty<String?> =
-        string("build.cake").provideDelegate(this, "file")
+        string("build.cake").provideDelegate(this, "scriptPath")
     var scriptPath: String?
         get() = storedScriptPath.getValue(this)
         set(v) { storedScriptPath.setValue(this, v) }
@@ -21,4 +21,10 @@ class CakeConfigurationOptions : RunConfigurationOptions() {
     var verbosity: String?
         get() = storedVerbosity.getValue(this)
         set(v) { storedVerbosity.setValue(this, v) }
+
+    private val storedAdditionalArguments: StoredProperty<String?> =
+        string("").provideDelegate(this, "additionalArguments")
+    var additionalArguments: String?
+        get() = storedAdditionalArguments.getValue(this)
+        set(v) { storedAdditionalArguments.setValue(this, v) }
 }
