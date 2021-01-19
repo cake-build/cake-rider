@@ -2,6 +2,7 @@ package net.cakebuild.toolwindow
 
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.ActionManager
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.ScrollPaneFactory
@@ -136,6 +137,8 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
 
     class MyTreeCellRenderer : DefaultTreeCellRenderer() {
 
+        private val log = Logger.getInstance(MyTreeCellRenderer::class.java)
+
         init {
             setClosedIcon(null)
             setOpenIcon(null)
@@ -164,7 +167,12 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
                         label.text = data.file.nameWithoutExtension
                     }
                     else -> {
-                        label.text = data.toString()
+                        // do not modify the label - it's probably fine the way it is.
+                        log.trace(
+                            "found userObject of ${
+                            data?.javaClass?.name ?: "[null]"
+                            } to override the label '${label.text}'"
+                        )
                     }
                 }
             }
