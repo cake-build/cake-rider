@@ -35,7 +35,9 @@ The full documentation of the latest release of Cake for Rider can be found at [
 
 ### Documentation changes in the upcoming release
 
-None.
+#### Cake .NET Tool install option
+It is now possible to install (or update to) the current version of the Cake .NET Tool:
+![Cake tool install menu](./images/tool-menu.png)
 
 ## Discussion
 

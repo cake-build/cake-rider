@@ -23,6 +23,7 @@
   </extensions>
 
   <actions>
+    <!-- Tree & execute -->
     <action id="Cake.ExecuteTask"
             class="net.cakebuild.actions.CakeTasksTreeAction$TaskOnlyActions$Execute"
             text="Execute Cake Task"
@@ -48,6 +49,17 @@
               class="net.cakebuild.actions.CakeTasksTreeAction$CollapseAll"
               icon="AllIcons.Actions.Collapseall"
               use-shortcut-of="CollapseAll" />
+    </group>
+
+    <!-- tool installation -->
+    <action id="Cake.Install.DotNetTool"
+            class="net.cakebuild.actions.CakeToolInstallAction$DotNetToolInstallAction"
+            text="Install .NET Tool" />
+    <group id="CakeMainMenu" text="Cake" popup="true" icon="CakeIcons.CakeAction">
+      <add-to-group group-id="ToolsMenu" />
+      <group id="CakeMainMenu.Runner" text="Runner" popup="true">
+        <reference id="Cake.Install.DotNetTool" />
+      </group>
     </group>
   </actions>
 </idea-plugin>

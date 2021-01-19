@@ -45,6 +45,10 @@ repositories {
 }
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.0")
 }
 
 // Configure gradle-intellij-plugin plugin.
@@ -118,7 +122,9 @@ tasks {
                     val end = "<!-- Plugin description end -->"
 
                     if (!containsAll(listOf(start, end))) {
-                        throw GradleException("Plugin description section not found in plugin_description.md:\n$start ... $end")
+                        throw GradleException(
+                            "Plugin description section not found in plugin_description.md:\n$start ... $end"
+                        )
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run { markdownToHTML(this) }
@@ -132,7 +138,9 @@ tasks {
                     val end = "<!-- Plugin changeNotes end -->"
 
                     if (!containsAll(listOf(start, end))) {
-                        throw GradleException("Plugin changeNotes section not found in plugin_description.md:\n$start ... $end")
+                        throw GradleException(
+                            "Plugin changeNotes section not found in plugin_description.md:\n$start ... $end"
+                        )
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run { markdownToHTML(this) }
@@ -148,5 +156,9 @@ tasks {
     publishPlugin {
         token(System.getenv("PUBLISH_TOKEN"))
         channels(marketplaceChannel)
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }

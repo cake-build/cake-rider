@@ -26,11 +26,11 @@ class CakeConfigurationFactory(cakeConfigurationType: CakeConfigurationType) :
         return CakeConfigurationOptions::class.java
     }
 
-    // Do not build the project before running cake-tasks
     override fun configureBeforeRunTaskDefaults(
         providerID: Key<out BeforeRunTask<BeforeRunTask<*>>>?,
         task: BeforeRunTask<out BeforeRunTask<*>>?
     ) {
+        // Do not build the project before running cake-tasks
         if (providerID == BuildProjectBeforeRunTaskProvider.providerId &&
             task is BuildProjectBeforeRunTask
         ) {
