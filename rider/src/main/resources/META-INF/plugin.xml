@@ -20,6 +20,7 @@
                          id="net.cakebuild.settings.cake.runner" displayName="Runner" nonDefaultProject="false" />
     <projectService serviceImplementation="net.cakebuild.settings.CakeSettings" />
     <errorHandler implementation="net.cakebuild.shared.GitHubErrorReporter" />
+    <stepsBeforeRunProvider implementation="net.cakebuild.beforeRunner.EnsureNetToolBeforeRunTaskProvider"/>
   </extensions>
 
   <actions>

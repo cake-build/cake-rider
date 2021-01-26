@@ -30,6 +30,8 @@ class CakeConfigurationFactory(cakeConfigurationType: CakeConfigurationType) :
         providerID: Key<out BeforeRunTask<BeforeRunTask<*>>>?,
         task: BeforeRunTask<out BeforeRunTask<*>>?
     ) {
+        super.configureBeforeRunTaskDefaults(providerID, task)
+
         // Do not build the project before running cake-tasks
         if (providerID == BuildProjectBeforeRunTaskProvider.providerId &&
             task is BuildProjectBeforeRunTask
