@@ -55,7 +55,7 @@
     <!-- tool installation -->
     <action id="Cake.Install.DotNetTool"
             class="net.cakebuild.actions.CakeToolInstallAction$DotNetToolInstallAction"
-            text="Install .NET Tool" />
+            text="Install Cake .NET Tool (Global)" />
     <group id="CakeMainMenu" text="Cake" popup="true" icon="CakeIcons.CakeAction">
       <add-to-group group-id="ToolsMenu" />
       <group id="CakeMainMenu.Runner" text="Runner" popup="true">

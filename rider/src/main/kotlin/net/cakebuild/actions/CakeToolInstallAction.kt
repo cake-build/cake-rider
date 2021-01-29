@@ -21,7 +21,7 @@ abstract class CakeToolInstallAction : AnAction() {
             const val PROCESS_DONE: Double = 1.0
         }
         override fun actionPerformed(e: AnActionEvent) {
-            val task: Task.Backgroundable = object : Task.Backgroundable(e.project, "Ensuring Cake.Tool") {
+            val task: Task.Backgroundable = object : Task.Backgroundable(e.project, "Ensuring Cake.Tool (Global)") {
                 override fun run(indicator: ProgressIndicator) {
                     doInstallOrUpdate(e.project, indicator)
                 }
@@ -38,7 +38,7 @@ abstract class CakeToolInstallAction : AnAction() {
             }
             indicator.isIndeterminate = false
             indicator.fraction = PROCESS_START
-            indicator.text = "Checking Cake.Tool installed version"
+            indicator.text = "Checking Cake.Tool (Global) installed version"
             val installer = CakeNetToolInstaller()
             val installedVersion = installer.getInstalledCakeVersion()
             if (indicator.isCanceled) {
@@ -46,7 +46,7 @@ abstract class CakeToolInstallAction : AnAction() {
             }
             if (installedVersion == null) {
                 indicator.fraction = PROCESS_HALF
-                indicator.text = "Installing Cake.Tool"
+                indicator.text = "Installing Cake.Tool (Global)"
                 installCakeTool(installer, project)
                 indicator.fraction = PROCESS_DONE
                 return
@@ -64,7 +64,7 @@ abstract class CakeToolInstallAction : AnAction() {
                     ApplicationManager.getApplication().invokeLater {
                         CakeBalloonNotifications.notifyInformation(
                             project,
-                            "Cake.Tool already installed."
+                            "Cake.Tool (Global) already installed."
                         )
                     }
                 }
@@ -72,7 +72,7 @@ abstract class CakeToolInstallAction : AnAction() {
             }
 
             indicator.fraction = PROCESS_TWO_THIRDS
-            indicator.text = "Updating Cake.Tool version"
+            indicator.text = "Updating Cake.Tool (Global) version"
             updateCakeTool(installer, project)
             indicator.fraction = PROCESS_DONE
         }
@@ -87,12 +87,12 @@ abstract class CakeToolInstallAction : AnAction() {
                 if (success) {
                     CakeBalloonNotifications.notifyInformation(
                         project,
-                        "Cake.Tool successfully updated."
+                        "Cake.Tool (Global) successfully updated."
                     )
                 } else {
                     CakeBalloonNotifications.notifyError(
                         project,
-                        "update of Cake.Tool failed."
+                        "update of Cake.Tool (Global) failed."
                     )
                 }
             }
@@ -108,12 +108,12 @@ abstract class CakeToolInstallAction : AnAction() {
                 if (success) {
                     CakeBalloonNotifications.notifyInformation(
                         project,
-                        "Cake.Tool successfully installed."
+                        "Cake.Tool (Global) successfully installed."
                     )
                 } else {
                     CakeBalloonNotifications.notifyError(
                         project,
-                        "installation of Cake.Tool failed."
+                        "installation of Cake.Tool (Global) failed."
                     )
                 }
             }

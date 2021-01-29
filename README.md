@@ -35,11 +35,11 @@ The full documentation of the latest release of Cake for Rider can be found at [
 
 ### Documentation changes in the upcoming release
 
-#### Cake .NET Tool install option
+#### Cake .NET Tool (Global) install option
 It is now possible to install (or update to) the current version of the Cake .NET Tool:
 ![Cake tool install menu](./images/tool-menu.png)
 
-#### Ensure Cake .NET Tool BeforeRunAction
+#### Ensure Cake .NET Tool (Global) BeforeRunAction
 It is now possible to ensure Cake .NET Tool is installed using a before run action from in a run configuration:
 
 ![Ensure Cake .NET Tool in before run actions](./images/beforeRunAction-ensureTool.png)

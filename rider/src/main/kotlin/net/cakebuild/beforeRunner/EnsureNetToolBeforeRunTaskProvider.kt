@@ -20,11 +20,11 @@ class EnsureNetToolBeforeRunTaskProvider :
 
     override fun getId() = providerId
 
-    override fun getName() = "Ensure .NET Tool"
+    override fun getName() = "Ensure .NET Tool (Global)"
 
     override fun getIcon() = CakeIcons.CakeAction
 
-    override fun getDescription(task: EnsureNetToolBeforeRunTask?) = "Ensure Cake .NET Tool is installed"
+    override fun getDescription(task: EnsureNetToolBeforeRunTask?) = "Ensure Cake .NET Tool (Global) is installed"
 
     override fun createTask(runConfiguration: RunConfiguration): EnsureNetToolBeforeRunTask? {
         if (runConfiguration is CakeConfiguration) {
@@ -50,12 +50,12 @@ class EnsureNetToolBeforeRunTaskProvider :
         if (ok) {
             CakeBalloonNotifications.notifyInformation(
                 env.project,
-                "Cake.Tool successfully installed."
+                "Cake.Tool (Global) successfully installed."
             )
         } else {
             CakeBalloonNotifications.notifyError(
                 env.project,
-                "Installation of Cake.Tool failed."
+                "Installation of Cake.Tool (Global) failed."
             )
         }
         return ok
