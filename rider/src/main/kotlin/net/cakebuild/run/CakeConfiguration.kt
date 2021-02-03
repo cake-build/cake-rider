@@ -34,17 +34,7 @@ class CakeConfiguration(project: Project, factory: CakeConfigurationFactory) :
             return object : CommandLineState(environment) {
                 override fun startProcess(): ProcessHandler {
                     val settings = CakeSettings.getInstance(project)
-                    val os = System.getProperty("os.name")
-                    var exe = settings.cakeRunner
-                    settings.cakeRunnerOverrides.forEach forEach@{
-                        val regex = Regex(it.key, RegexOption.IGNORE_CASE)
-                        if (regex.matches(os)) {
-                            log.trace("os $os matches regex ${it.key}")
-                            exe = it.value
-                            return@forEach
-                        }
-                    }
-                    log.info("cake runner is set to $exe")
+                    val runner = settings.getCurrentCakeRunner()
                     val options = options
                     val fileSystems = FileSystems.getDefault()
                     val scriptPath = fileSystems
@@ -60,8 +50,9 @@ class CakeConfiguration(project: Project, factory: CakeConfigurationFactory) :
                     val commandLine = GeneralCommandLine()
                         .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.CONSOLE)
                         .withWorkDirectory(scriptPath.parent.toString())
-                        .withExePath(exe)
+                        .withExePath(runner)
                         .withParameters(arguments)
+                    log.trace("calling cake: ${commandLine.commandLineString}")
                     val processHandler = ProcessHandlerFactory.getInstance().createColoredProcessHandler(commandLine)
                     ProcessTerminatedListener.attach(processHandler)
                     return processHandler

@@ -44,6 +44,12 @@ It is now possible to ensure Cake .NET Tool is installed using a before run acti
 
 ![Ensure Cake .NET Tool in before run actions](./images/beforeRunAction-ensureTool.png)
 
+#### Modified Cake runner settings
+
+The Cake runner settings are now able to process environment variables. Use a specific variable like this: `${VARIABLE}` and the environment variable will be expanded when the runner is called.
+
+Defaults for the Cake runner have changed: Default for Cake runner is now `~/.dotnet/tools/dotnet-cake` and on windows the default is `${USERPROFILE}\.dotnet\tools\dotnet-cake.exe`
+
 ## Discussion
 
 If you have questions, search for an existing one, or create a new discussion on the Cake GitHub repository.
