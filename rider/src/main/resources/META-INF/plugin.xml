@@ -18,7 +18,8 @@
                          id="net.cakebuild.settings.cake.runner.paths" displayName="Search paths" nonDefaultProject="false" />
     <projectConfigurable parentId="net.cakebuild.settings.cake" instance="net.cakebuild.settings.CakeRunnerSettingsConfigurable"
                          id="net.cakebuild.settings.cake.runner" displayName="Runner" nonDefaultProject="false" />
-    <projectService serviceImplementation="net.cakebuild.settings.CakeSettings"/>
+    <projectService serviceImplementation="net.cakebuild.settings.CakeSettings" />
+    <errorHandler implementation="net.cakebuild.shared.GitHubErrorReporter" />
   </extensions>
 
   <actions>
