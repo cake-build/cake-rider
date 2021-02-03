@@ -21,6 +21,7 @@
     <projectService serviceImplementation="net.cakebuild.settings.CakeSettings" />
     <errorHandler implementation="net.cakebuild.shared.GitHubErrorReporter" />
     <stepsBeforeRunProvider implementation="net.cakebuild.beforeRunner.EnsureNetToolBeforeRunTaskProvider"/>
+    <internalFileTemplate name="Cake File" />
   </extensions>
 
   <actions>
@@ -62,5 +63,14 @@
         <reference id="Cake.Install.DotNetTool" />
       </group>
     </group>
+
+    <!-- New File actions -->
+    <action
+      id="Cake.CakeFile.New"
+      class="net.cakebuild.actions.CreateNewCakeBuildFile"
+      text="Cake File"
+      description="Create a new Cake file" >
+      <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
+    </action>
   </actions>
 </idea-plugin>

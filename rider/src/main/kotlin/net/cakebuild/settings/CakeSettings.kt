@@ -29,6 +29,21 @@ class CakeSettings : PersistentStateComponent<CakeSettings> {
     var cakeRunnerOverrides = mapOf(Pair("^.*windows.*$", "\${USERPROFILE}\\.dotnet\\tools\\dotnet-cake.exe"))
     var cakeScriptSearchPaths: Collection<String> = mutableListOf(".")
     var cakeScriptSearchIgnores: Collection<String> = mutableListOf(".*/tools/.*")
+    // do we need a settings-UI for these?
+    var downloadContentUrlConfigurationFile =
+        "https://cakebuild.net/download/configuration"
+    var downloadContentUrlBootstrapperNetFrameworkPs =
+        "https://cakebuild.net/download/bootstrapper/dotnet-framework/powershell"
+    var downloadContentUrlBootstrapperNetFrameworkSh =
+        "https://cakebuild.net/download/bootstrapper/dotnet-framework/bash"
+    var downloadContentUrlBootstrapperNetCorePs =
+        "https://cakebuild.net/download/bootstrapper/dotnet-core/powershell"
+    var downloadContentUrlBootstrapperNetCoreSh =
+        "https://cakebuild.net/download/bootstrapper/dotnet-core/bash"
+    var downloadContentUrlBootstrapperNetToolPs =
+        "https://cakebuild.net/download/bootstrapper/dotnet-tool/powershell"
+    var downloadContentUrlBootstrapperNetToolSh =
+        "https://cakebuild.net/download/bootstrapper/dotnet-tool/bash"
 
     fun getCurrentCakeRunner(): String {
         val os = System.getProperty("os.name")
