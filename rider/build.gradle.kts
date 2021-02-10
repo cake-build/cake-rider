@@ -48,7 +48,7 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.0")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.1")
 }
 
 // Configure gradle-intellij-plugin plugin.
