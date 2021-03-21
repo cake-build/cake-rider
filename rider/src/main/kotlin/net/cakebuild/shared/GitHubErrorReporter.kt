@@ -5,6 +5,7 @@ import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.SubmittedReportInfo
 import com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.FAILED
 import com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.NEW_ISSUE
@@ -17,6 +18,8 @@ import java.net.URLEncoder
 // and is there licensed under MIT by Jakub Błach (@exigow)
 
 class GitHubErrorReporter : ErrorReportSubmitter() {
+    private val log = Logger.getInstance(GitHubErrorReporter::class.java)
+
     override fun getReportActionText() = "Create an issue on GitHub"
 
     @Suppress("TooGenericExceptionCaught")
@@ -34,6 +37,7 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
                 submitOnGithub(issue)
             }
         } catch (e: Exception) {
+            log.error("Error submitting issue to GitHub.", e)
             consumer.consume(SubmittedReportInfo(FAILED))
             return false
         }
