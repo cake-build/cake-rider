@@ -7,11 +7,12 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
+import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import net.cakebuild.installers.CakeNetToolInstaller
 import net.cakebuild.shared.CakeBalloonNotifications
 
-abstract class CakeToolInstallAction : AnAction() {
+abstract class CakeToolInstallAction : AnAction(), DumbAware {
     class DotNetToolInstallAction : CakeToolInstallAction() {
         companion object {
             const val PROCESS_START: Double = 0.1
