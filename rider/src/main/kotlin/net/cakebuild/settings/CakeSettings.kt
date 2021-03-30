@@ -42,6 +42,14 @@ class CakeSettings : PersistentStateComponent<CakeSettings> {
             }
         }
 
+        log.trace("runner setting resolved to: $runner")
+
+        // shell like tilde expansion
+        if (runner.startsWith("~")) {
+            runner = "\${HOME}${runner.substring(1)}"
+            log.trace("tilde-expanded runner: $runner")
+        }
+
         val variableRegex = Regex("\\\$\\{([^}]+)}")
         runner = runner.replace(variableRegex) {
             val varName = it.groupValues[1]
