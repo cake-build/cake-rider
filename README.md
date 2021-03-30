@@ -35,20 +35,7 @@ The full documentation of the latest release of Cake for Rider can be found at [
 
 ### Documentation changes in the upcoming release
 
-#### Cake .NET Tool (Global) install option
-It is now possible to install (or update to) the current version of the Cake .NET Tool:
-![Cake tool install menu](./images/tool-menu.png)
-
-#### Ensure Cake .NET Tool (Global) BeforeRunAction
-It is now possible to ensure Cake .NET Tool is installed using a before run action from in a run configuration:
-
-![Ensure Cake .NET Tool in before run actions](./images/beforeRunAction-ensureTool.png)
-
-#### Modified Cake runner settings
-
-The Cake runner settings are now able to process environment variables. Use a specific variable like this: `${VARIABLE}` and the environment variable will be expanded when the runner is called.
-
-Defaults for the Cake runner have changed: Default for Cake runner is now `~/.dotnet/tools/dotnet-cake` and on windows the default is `${USERPROFILE}\.dotnet\tools\dotnet-cake.exe`
+None.
 
 ## Discussion
 
