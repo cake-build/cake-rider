@@ -13,7 +13,6 @@ import com.intellij.util.ui.ConfirmationDialog
 import net.cakebuild.settings.CakeSettings
 import net.cakebuild.shared.CakeProject
 
-
 abstract class InstallFileToProjectAction : AnAction(), DumbAware {
 
     private val log = Logger.getInstance(InstallFileToProjectAction::class.java)
@@ -25,14 +24,15 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
     override fun actionPerformed(e: AnActionEvent) {
         val projectDir = CakeProject(e.project!!).getProjectDir()!!
         val existing = projectDir.findChild(fileName)
-        if(null != existing && existing.exists()) {
+        if (null != existing && existing.exists()) {
             val dlg = ConfirmationDialog.requestForConfirmation(
                 VcsShowConfirmationOption.STATIC_SHOW_CONFIRMATION,
                 e.project!!,
                 "File $fileName already exists. Override?",
                 "Override?",
-                Messages.getQuestionIcon())
-            if(!dlg) {
+                Messages.getQuestionIcon()
+            )
+            if (!dlg) {
                 return
             }
 
@@ -43,10 +43,13 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
         val service = DownloadableFileService.getInstance()
         val fileDescription = service.createFileDescription(getUrl(settings), fileName)
         service.createDownloader(
-            arrayOf(fileDescription).toMutableList(), fileName).downloadFilesWithProgress(
+            arrayOf(fileDescription).toMutableList(),
+            fileName
+        ).downloadFilesWithProgress(
             projectDir.path,
             e.project,
-            null)
+            null
+        )
     }
 
     class ConfigurationFile : InstallFileToProjectAction() {
@@ -74,7 +77,6 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
     class NetToolPs : InstallBootstrapper() {
         override val extension: String
             get() = "ps1"
-
 
         override val fileType: FileType
             get() = StdFileTypes.PLAIN_TEXT

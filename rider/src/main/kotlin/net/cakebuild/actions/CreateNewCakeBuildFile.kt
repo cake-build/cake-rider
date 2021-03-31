@@ -7,10 +7,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
 import icons.CakeIcons
 
-class CreateNewCakeBuildFile : CreateFileFromTemplateAction (
-    "Cake File",
-    "Adds a new Cake script file.",
-    CakeIcons.CakeFileType), DumbAware {
+class CreateNewCakeBuildFile :
+    CreateFileFromTemplateAction(
+        "Cake File",
+        "Adds a new Cake script file.",
+        CakeIcons.CakeFileType
+    ),
+    DumbAware {
 
     override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
         builder
@@ -21,5 +24,4 @@ class CreateNewCakeBuildFile : CreateFileFromTemplateAction (
     }
 
     override fun getActionName(directory: PsiDirectory, p1: String, p2: String) = "Cake File"
-
 }
