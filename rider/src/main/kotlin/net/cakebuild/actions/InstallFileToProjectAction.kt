@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileTypes.FileType
-import com.intellij.openapi.fileTypes.StdFileTypes
+import com.intellij.openapi.fileTypes.FileTypes
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vcs.VcsShowConfirmationOption
@@ -57,7 +57,7 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
             get() = "cake.config"
 
         override val fileType: FileType
-            get() = StdFileTypes.PLAIN_TEXT
+            get() = FileTypes.PLAIN_TEXT
 
         override fun getUrl(settings: CakeSettings): String {
             return settings.downloadContentUrlConfigurationFile
@@ -68,7 +68,7 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
         protected abstract val extension: String
 
         override val fileType: FileType
-            get() = StdFileTypes.PLAIN_TEXT
+            get() = FileTypes.PLAIN_TEXT
 
         override val fileName: String
             get() = "build.$extension"
@@ -79,7 +79,7 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
             get() = "ps1"
 
         override val fileType: FileType
-            get() = StdFileTypes.PLAIN_TEXT
+            get() = FileTypes.PLAIN_TEXT
 
         override fun getUrl(settings: CakeSettings): String {
             return settings.downloadContentUrlBootstrapperNetToolPs
@@ -91,7 +91,7 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
             get() = "sh"
 
         override val fileType: FileType
-            get() = StdFileTypes.PLAIN_TEXT
+            get() = FileTypes.PLAIN_TEXT
 
         override fun getUrl(settings: CakeSettings): String {
             return settings.downloadContentUrlBootstrapperNetToolSh
@@ -103,7 +103,7 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
             get() = "ps1"
 
         override val fileType: FileType
-            get() = StdFileTypes.PLAIN_TEXT
+            get() = FileTypes.PLAIN_TEXT
 
         override fun getUrl(settings: CakeSettings): String {
             return settings.downloadContentUrlBootstrapperNetFrameworkPs
@@ -115,7 +115,7 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
             get() = "sh"
 
         override val fileType: FileType
-            get() = StdFileTypes.PLAIN_TEXT
+            get() = FileTypes.PLAIN_TEXT
 
         override fun getUrl(settings: CakeSettings): String {
             return settings.downloadContentUrlBootstrapperNetFrameworkSh
@@ -127,7 +127,7 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
             get() = "ps1"
 
         override val fileType: FileType
-            get() = StdFileTypes.PLAIN_TEXT
+            get() = FileTypes.PLAIN_TEXT
 
         override fun getUrl(settings: CakeSettings): String {
             return settings.downloadContentUrlBootstrapperNetCorePs
@@ -139,7 +139,7 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
             get() = "sh"
 
         override val fileType: FileType
-            get() = StdFileTypes.PLAIN_TEXT
+            get() = FileTypes.PLAIN_TEXT
 
         override fun getUrl(settings: CakeSettings): String {
             return settings.downloadContentUrlBootstrapperNetCoreSh

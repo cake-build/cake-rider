@@ -21,7 +21,7 @@
     <projectService serviceImplementation="net.cakebuild.settings.CakeSettings" />
     <errorHandler implementation="net.cakebuild.shared.GitHubErrorReporter" />
     <stepsBeforeRunProvider implementation="net.cakebuild.beforeRunner.EnsureNetToolBeforeRunTaskProvider"/>
-    <internalFileTemplate name="Cake File" />
+    <createFromTemplateHandler implementation="net.cakebuild.actions.CakeCreateFromTemplateHandler"/>
   </extensions>
 
   <actions>
