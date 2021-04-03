@@ -22,6 +22,8 @@
     <errorHandler implementation="net.cakebuild.shared.GitHubErrorReporter" />
     <stepsBeforeRunProvider implementation="net.cakebuild.beforeRunner.EnsureNetToolBeforeRunTaskProvider"/>
     <createFromTemplateHandler implementation="net.cakebuild.actions.CakeCreateFromTemplateHandler"/>
+    <defaultLiveTemplates file="/liveTemplates/Cake.xml"/>
+    <liveTemplateContext implementation="net.cakebuild.liveTemplates.CakeContext"/>
   </extensions>
 
   <actions>
