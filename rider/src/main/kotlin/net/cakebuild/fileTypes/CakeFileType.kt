@@ -11,7 +11,7 @@ class CakeFileType : LanguageFileType(CakeLanguage), FileTypeIdentifiableByVirtu
     override fun getName() = CakeLanguage.displayName
     override fun getDescription() = "Cake scripts"
     override fun getIcon() = CakeIcons.CakeFileType
-    override fun getDefaultExtension() = "cake"
+    override fun getDefaultExtension() = EXTENSION
 
     override fun isMyFileType(file: VirtualFile): Boolean {
         val extension = file.extension?.toLowerCase() ?: ""
@@ -26,5 +26,10 @@ class CakeFileType : LanguageFileType(CakeLanguage), FileTypeIdentifiableByVirtu
         }.distinct()
 
         return extensions.contains(extension.toLowerCase())
+    }
+
+    companion object {
+        const val EXTENSION = "cake"
+        val INSTANCE = CakeFileType()
     }
 }
