@@ -10,7 +10,9 @@ BuildParameters.SetParameters(
   repositoryName: "Cake-Rider",
   appVeyorProjectSlug: "Cake-Rider", // https://github.com/cake-contrib/Cake.Recipe/issues/816
   repositoryOwner: "cake-build",
-  marketplaceId: "15729-cake-rider"
+  marketplaceId: "15729-cake-rider",
+  webLinkRoot: "", // do *not* create a virtual directory for wyam docs. This setting will break gh-pages. (But work for preview)
+  wyamConfigurationFile: MakeAbsolute((FilePath)"docs/wyam.config")
 );
 
 BuildParameters.PrintParameters(Context);
