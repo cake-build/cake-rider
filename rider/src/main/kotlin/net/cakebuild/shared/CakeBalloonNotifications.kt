@@ -19,4 +19,10 @@ object CakeBalloonNotifications {
     fun notifyError(project: Project, content: String) {
         notify(project, content, NotificationType.ERROR)
     }
+    fun notifyInformation(project: Project, content: String) {
+        notify(project, content, NotificationType.INFORMATION)
+    }
+    fun notifyWarning(project: Project, content: String) {
+        notify(project, content, NotificationType.WARNING)
+    }
 }

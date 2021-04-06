@@ -8,15 +8,15 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.4.21-2"
+    id("org.jetbrains.kotlin.jvm") version "1.4.32"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "0.6.5"
+    id("org.jetbrains.intellij") version "0.7.2"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-    id("org.jetbrains.changelog") version "1.0.1"
+    id("org.jetbrains.changelog") version "1.1.2"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
-    id("io.gitlab.arturbosch.detekt") version "1.15.0"
+    id("io.gitlab.arturbosch.detekt") version "1.16.0"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
+    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
 // Import variables from gradle.properties file
@@ -44,7 +44,11 @@ repositories {
     jcenter()
 }
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.16.0")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.1")
 }
 
 // Configure gradle-intellij-plugin plugin.
@@ -118,7 +122,9 @@ tasks {
                     val end = "<!-- Plugin description end -->"
 
                     if (!containsAll(listOf(start, end))) {
-                        throw GradleException("Plugin description section not found in plugin_description.md:\n$start ... $end")
+                        throw GradleException(
+                            "Plugin description section not found in plugin_description.md:\n$start ... $end"
+                        )
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run { markdownToHTML(this) }
@@ -132,7 +138,9 @@ tasks {
                     val end = "<!-- Plugin changeNotes end -->"
 
                     if (!containsAll(listOf(start, end))) {
-                        throw GradleException("Plugin changeNotes section not found in plugin_description.md:\n$start ... $end")
+                        throw GradleException(
+                            "Plugin changeNotes section not found in plugin_description.md:\n$start ... $end"
+                        )
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run { markdownToHTML(this) }
@@ -148,5 +156,9 @@ tasks {
     publishPlugin {
         token(System.getenv("PUBLISH_TOKEN"))
         channels(marketplaceChannel)
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }

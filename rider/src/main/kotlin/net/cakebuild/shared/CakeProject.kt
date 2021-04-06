@@ -23,7 +23,7 @@ class CakeProject(private val project: Project) {
 
     private val log = Logger.getInstance(CakeProject::class.java)
 
-    private fun getProjectDir(): VirtualFile? {
+    fun getProjectDir(): VirtualFile? {
         var projectDir = project.guessProjectDir()
         if (project.hasSolution) {
             // projectDir is weird, if a solution is loaded (probably because

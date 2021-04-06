@@ -2,6 +2,14 @@ name: Build
 
 on:
   push:
+    branches:
+      - main
+      - develop
+      - "feature/**"
+      - "release/**"
+      - "hotfix/**"
+    tags:
+      - "*"
     paths-ignore:
       - "README.md"
   pull_request:
@@ -9,22 +17,20 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    #mimic "skip_branch_with_pr: true", see https://github.community/t/duplicate-checks-on-push-and-pull-request-simultaneous-event/18012/4
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest] 
+        os: [ windows-2019, ubuntu-18.04, macos-10.15 ] 
 
     steps:
       - name: Checkout the requested branch
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.ref }}
+
+      - name: Fetch all tags and branches
+        run: git fetch --prune --unshallow
 
       # Validates the gradle wrappers and saves us from getting malicious PRs
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1.0.3
+        uses: gradle/wrapper-validation-action@v1
 
       # Setup Java 1.8 environment which is needed to build
       - name: Setup Java
@@ -72,7 +78,7 @@ jobs:
             BuildArtifacts/**/coverlet/*.xml
       - name: Upload Packages
         uses: actions/upload-artifact@v2
-        if: matrix.os == 'ubuntu-latest'
+        if:  runner.os == 'Linux'
         with:
           if-no-files-found: warn
           name: package
