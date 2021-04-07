@@ -35,7 +35,7 @@ The full documentation of the latest release of Cake for Rider can be found at [
 
 ### Documentation changes in the upcoming release
 
-None.
+Modified versions of the official documentation can be found [here](./input/docs/integrations/editors/rider).
 
 ## Discussion
 
