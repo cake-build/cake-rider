@@ -26,7 +26,7 @@ class CakeSettings : PersistentStateComponent<CakeSettings> {
     var cakeTaskParsingRegex = "Task\\s*?\\(\\s*?\"(.*?)\"\\s*?\\)"
     var cakeVerbosity = "normal"
     var cakeRunner = "~/.dotnet/tools/dotnet-cake"
-    var cakeRunnerOverrides = mapOf(Pair("^.*windows.*$", "\${USERPROFILE}\\.dotnet\\tools\\dotnet-cake.exe"))
+    var cakeRunnerOverrides = mutableMapOf(Pair("^.*windows.*$", "\${USERPROFILE}\\.dotnet\\tools\\dotnet-cake.exe"))
     var cakeScriptSearchPaths: Collection<String> = mutableListOf(".")
     var cakeScriptSearchIgnores: Collection<String> = mutableListOf(".*/tools/.*")
     // do we need a settings-UI for these?
