@@ -50,15 +50,24 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
             title = event.throwableText.lines().first(),
             pluginVersion = discoverPluginVersion(),
             ideVersion = discoverIdeaVersion(),
+            os = System.getProperty("os.name"),
             additionalInfo = additionalInfo,
-            stacktrace = event.throwableText
+            stacktrace = event.throwableText.orCopyManuallyHint(maxLengthForStackTrace)
         )
+
+    private fun String.orCopyManuallyHint(chars: Int): String {
+        if (this.length < chars) {
+            return this
+        }
+
+        return "\n\nStackTrace too long. Please copy the StackTrace here manually.\n\n"
+    }
 
     private fun discoverPluginVersion() =
         (pluginDescriptor as? IdeaPluginDescriptor)?.version
 
     private fun discoverIdeaVersion() =
-        ApplicationInfo.getInstance().build.toString()
+        "${ApplicationInfo.getInstance().fullVersion} (${ApplicationInfo.getInstance().build})"
 
     private fun submitOnGithub(report: Report) {
         val markdown = MarkdownDescriptionBaker.bake(report)
@@ -90,6 +99,7 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
         private fun createEntries(report: Report) = mapOf(
             "Plugin version" to report.pluginVersion,
             "IDE version" to report.ideVersion,
+            "Operating system" to report.os,
             "Additional information" to report.additionalInfo,
             "Exception" to report.title,
             "Stacktrace" to report.stacktrace
@@ -99,11 +109,11 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
             if (isMultiline(text)) {
                 "$label:\n```text\n$text\n```"
             } else {
-                "$label: ```$text```"
+                "$label: `$text`"
             }
 
         private fun isMultiline(text: String) =
-            text.lines().size != 1
+            text.lines().size > 1
     }
 
     private data class Report(
@@ -111,6 +121,11 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
         val pluginVersion: String?,
         val ideVersion: String?,
         val additionalInfo: String?,
-        val stacktrace: String?
+        val stacktrace: String?,
+        val os: String?
     )
+
+    companion object {
+        const val maxLengthForStackTrace = 5000 // GitHub does not like very long URLs
+    }
 }
