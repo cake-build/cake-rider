@@ -4,6 +4,8 @@ import org.jetbrains.changelog.closure
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+fun properties(key: String) = project.findProperty(key).toString()
+
 plugins {
     // Java support
     id("java")
@@ -19,24 +21,8 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
-// Import variables from gradle.properties file
-val pluginGroup: String by project
-// `pluginName_` variable ends with `_` because of the collision with Kotlin magic getter in the `intellij` closure.
-// Read more about the issue: https://github.com/JetBrains/intellij-platform-plugin-template/issues/29
-val pluginName_: String by project
-val pluginVersion: String by project
-val pluginSinceBuild: String by project
-val pluginUntilBuild: String by project
-val pluginVerifierIdeVersions: String by project
-
-val platformType: String by project
-val platformVersion: String by project
-val platformPlugins: String by project
-val platformDownloadSources: String by project
-val marketplaceChannel: String by project
-
-group = pluginGroup
-version = pluginVersion
+group = properties("pluginGroup")
+version = properties("pluginVersion")
 
 // Configure project's dependencies
 repositories {
@@ -54,14 +40,14 @@ dependencies {
 // Configure gradle-intellij-plugin plugin.
 // Read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
-    pluginName = pluginName_
-    version = platformVersion
-    type = platformType
-    downloadSources = platformDownloadSources.toBoolean()
+    pluginName = properties("pluginName")
+    version = properties("platformVersion")
+    type = properties("platformType")
+    downloadSources = properties("platformDownloadSources").toBoolean()
     updateSinceUntilBuild = true
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    setPlugins(*platformPlugins.split(',').map(String::trim).filter(String::isNotEmpty).toTypedArray())
+    setPlugins(*properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty).toTypedArray())
 }
 
 // Configure detekt plugin.
@@ -110,14 +96,14 @@ tasks {
     }
 
     patchPluginXml {
-        version(pluginVersion)
-        sinceBuild(pluginSinceBuild)
-        untilBuild(pluginUntilBuild)
+        version(properties("pluginVersion"))
+        sinceBuild(properties("pluginSinceBuild"))
+        untilBuild(properties("pluginUntilBuild"))
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
         pluginDescription(
             closure {
-                rootDir.resolve("./plugin_description.md").readText().lines().run {
+                File(projectDir, "./plugin_description.md").readText().lines().run {
                     val start = "<!-- Plugin description -->"
                     val end = "<!-- Plugin description end -->"
 
@@ -133,7 +119,7 @@ tasks {
 
         changeNotes(
             closure {
-                rootDir.resolve("./plugin_description.md").readText().lines().run {
+                File(projectDir, "./plugin_description.md").readText().lines().run {
                     val start = "<!-- Plugin changeNotes -->"
                     val end = "<!-- Plugin changeNotes end -->"
 
@@ -149,13 +135,13 @@ tasks {
     }
 
     runPluginVerifier {
-        ideVersions(pluginVerifierIdeVersions)
+        ideVersions(properties("pluginVerifierIdeVersions"))
         // reports are in ${project.buildDir}/reports/pluginVerifier - or set verificationReportsDirectory()
     }
 
     publishPlugin {
         token(System.getenv("PUBLISH_TOKEN"))
-        channels(marketplaceChannel)
+        channels(properties("marketplaceChannel"))
     }
 
     test {
