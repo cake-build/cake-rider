@@ -1,4 +1,4 @@
-package net.cakebuild.fileTypes
+package net.cakebuild.language
 
 import com.intellij.lang.Language
 
