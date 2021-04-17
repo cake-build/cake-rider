@@ -1,0 +1,21 @@
+{
+  parserClass="net.cakebuild.language.psi.CakeParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Cake"
+  psiImplClassSuffix="Impl"
+  psiPackage="net.cakebuild.language.psi"
+  psiImplPackage="net.cakebuild.language.psi"
+
+  elementTypeHolderClass="net.cakebuild.language.psi.CakeTypes"
+  elementTypeClass="net.cakebuild.language.psi.CakeElementType"
+  tokenTypeClass="net.cakebuild.language.psi.CakeTokenType"
+}
+
+CakeFile ::= (Line | BLOCK_COMMENT)* WHITE_SPACE?
+Line ::= (EmptyLine | CodeLine)
+EmptyLine ::= WHITE_SPACE+
+CodeLine ::= (Task | UNKNOWN | BLOCK_COMMENT)+ EOL_COMMENT? WHITE_SPACE?
+Task ::= (TASK_START TASK_NAME TASK_END)
+

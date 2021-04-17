@@ -45,3 +45,4 @@ Desktop.ini
 /BuildArtifacts/
 .history/
 /docs/wyam.config.*
+/rider/src/main/gen/

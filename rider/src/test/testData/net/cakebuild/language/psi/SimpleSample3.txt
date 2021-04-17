@@ -1,0 +1,7 @@
+Cake File(0,173)
+  PsiComment(CakeTokenType.BLOCK_COMMENT)('/*')(0,2)
+  PsiComment(CakeTokenType.BLOCK_COMMENT)('*****************************************************************************')(2,79)
+  PsiComment(CakeTokenType.BLOCK_COMMENT)('\n')(79,80)
+  PsiComment(CakeTokenType.BLOCK_COMMENT)('** ARGUMENTS')(80,92)
+  PsiComment(CakeTokenType.BLOCK_COMMENT)('\n')(92,93)
+  PsiComment(CakeTokenType.BLOCK_COMMENT)('*******************************************************************************/')(93,173)

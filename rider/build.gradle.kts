@@ -19,6 +19,8 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.16.0"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+    // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
+    id("org.jetbrains.grammarkit") version "2020.3.2"
 }
 
 group = properties("pluginGroup")
@@ -63,13 +65,50 @@ detekt {
     }
 }
 
+// configure grammarkit
+grammarKit {
+    // version of IntelliJ patched JFlex (see bintray link below), Default is 1.7.0-1
+    // jflexRelease = "1.7.0-1"
+
+    // tag or short commit hash of Grammar-Kit to use (see link below). Default is 2020.3.1
+    // use 2020.1 to have java-compatibility to rider 2020.1
+    grammarKitRelease = "2020.1"
+}
+
+// add generated code to compilation
+sourceSets["main"].java.srcDirs("src/main/gen")
+
 tasks {
+    // generate the lexer (uses grammarkit)
+    register<org.jetbrains.grammarkit.tasks.GenerateLexer>("gen-lexer") {
+        dependsOn("gen-parser")
+        this.source = "src/main/kotlin/net/cakebuild/language/psi/Cake.flex"
+        this.targetDir = "src/main/gen/net/cakebuild/language/psi"
+        this.targetClass = "CakeLexer"
+    }
+
+    clean {
+        doFirst {
+            logger.log(LogLevel.INFO, "removing gen folder to cleanup all generated sources.")
+            delete("src/main/gen")
+        }
+    }
+
+    // generate the parser (uses grammarkit)
+    register<org.jetbrains.grammarkit.tasks.GenerateParser>("gen-parser") {
+        this.source = "src/main/kotlin/net/cakebuild/language/psi/Cake.bnf"
+        this.targetRoot = "src/main/gen"
+        this.pathToParser = "/net/cakebuild/language/psi/CakeParser.java"
+        this.pathToPsiRoot = "/net/cakebuild/language/psi/parse"
+    }
+
     // Set the compatibility versions to 1.8
     withType<JavaCompile> {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
     }
     withType<KotlinCompile> {
+        dependsOn("gen-lexer", "gen-parser")
         kotlinOptions.jvmTarget = "1.8"
     }
     withType<Detekt> {

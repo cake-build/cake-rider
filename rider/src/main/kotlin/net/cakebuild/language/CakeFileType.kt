@@ -1,4 +1,4 @@
-package net.cakebuild.fileTypes
+package net.cakebuild.language
 
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile
