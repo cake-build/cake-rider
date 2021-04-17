@@ -68,7 +68,7 @@ detekt {
 // configure grammarkit
 grammarKit {
     // version of IntelliJ patched JFlex (see bintray link below), Default is 1.7.0-1
-    //jflexRelease = "1.7.0-1"
+    // jflexRelease = "1.7.0-1"
 
     // tag or short commit hash of Grammar-Kit to use (see link below). Default is 2020.3.1
     // use 2020.1 to have java-compatibility to rider 2020.1
@@ -85,7 +85,13 @@ tasks {
         this.source = "src/main/kotlin/net/cakebuild/language/psi/Cake.flex"
         this.targetDir = "src/main/gen/net/cakebuild/language/psi"
         this.targetClass = "CakeLexer"
-        //this.purgeOldFiles = true
+    }
+
+    clean {
+        doFirst {
+            logger.log(LogLevel.INFO, "removing gen folder to cleanup all generated sources.")
+            delete("src/main/gen")
+        }
     }
 
     // generate the parser (uses grammarkit)
@@ -94,11 +100,6 @@ tasks {
         this.targetRoot = "src/main/gen"
         this.pathToParser = "/net/cakebuild/language/psi/CakeParser.java"
         this.pathToPsiRoot = "/net/cakebuild/language/psi/parse"
-        //this.purgeOldFiles = true
-    }
-
-    register<Delete>("gen-clean") {
-        delete( "src/main/gen")
     }
 
     // Set the compatibility versions to 1.8
@@ -107,7 +108,7 @@ tasks {
         targetCompatibility = "1.8"
     }
     withType<KotlinCompile> {
-        dependsOn("gen-clean", "gen-lexer", "gen-parser")
+        dependsOn("gen-lexer", "gen-parser")
         kotlinOptions.jvmTarget = "1.8"
     }
     withType<Detekt> {

@@ -8,7 +8,7 @@ import net.cakebuild.language.CakeParserDefinition
  hence, to NOT use @Test annotations here,
  and DO name all tests starting with test. (i.e. testSimple())
  */
-class CakeParserTests  : ParsingTestCase(
+class CakeParserTests : ParsingTestCase(
     "net/cakebuild/language/psi/",
     "cake",
     CakeParserDefinition()
@@ -17,7 +17,7 @@ class CakeParserTests  : ParsingTestCase(
     /**
      * @return path to test data file directory relative to root of this module.
      */
-    override fun getTestDataPath(): String? {
+    override fun getTestDataPath(): String {
         return "src/test/testData"
     }
 

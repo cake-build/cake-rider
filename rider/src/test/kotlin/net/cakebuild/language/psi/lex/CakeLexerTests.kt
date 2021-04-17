@@ -14,7 +14,9 @@ class CakeLexerTests : LexerTestCase() {
     override fun getDirPath() = "src/test/testData/net/cakebuild/language/psi/"
 
     fun `test unknown word`() {
-        doTest("someWord", """
+        doTest(
+            "someWord",
+            """
             CakeTokenType.UNKNOWN ('s')
             CakeTokenType.UNKNOWN ('o')
             CakeTokenType.UNKNOWN ('m')
@@ -23,7 +25,8 @@ class CakeLexerTests : LexerTestCase() {
             CakeTokenType.UNKNOWN ('o')
             CakeTokenType.UNKNOWN ('r')
             CakeTokenType.UNKNOWN ('d')
-            """.trimIndent())
+            """.trimIndent()
+        )
     }
 
     fun `test eol-comment`() {
@@ -84,10 +87,10 @@ class CakeLexerTests : LexerTestCase() {
     fun `test task`() {
         val input = "Task(\"Default\")"
         val expected = """
-            CakeTokenType.TASK_START ('Task("')
-            CakeTokenType.TASK_NAME ('Default')
-            CakeTokenType.TASK_END ('")')
-            """.trimIndent()
+        CakeTokenType.TASK_START ('Task("')
+        CakeTokenType.TASK_NAME ('Default')
+        CakeTokenType.TASK_END ('")')
+        """.trimIndent()
         doTest(input, expected)
     }
 }
