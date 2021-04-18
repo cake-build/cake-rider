@@ -12,11 +12,8 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import icons.CakeIcons
 import net.cakebuild.language.psi.CakeCodeLine
-import net.cakebuild.language.psi.CakeCodeLineImpl
-import net.cakebuild.language.psi.CakeElementType
 import net.cakebuild.language.psi.CakeFile
 import net.cakebuild.language.psi.CakeLine
-import net.cakebuild.language.psi.CakeLineImpl
 import net.cakebuild.language.psi.CakeTask
 import net.cakebuild.language.psi.CakeTaskImpl
 import net.cakebuild.language.psi.CakeTypes
@@ -46,7 +43,7 @@ class CakeStructureViewElement(private val myElement: NavigatablePsiElement) :
 
     override fun getPresentation(): ItemPresentation {
         val icon = CakeIcons.CakeAction
-        val textAttributes : TextAttributesKey? = null
+        val textAttributes: TextAttributesKey? = null
         val location = ""
         var presentation = myElement.presentation // presentation is set for CakeFile
 
@@ -58,7 +55,7 @@ class CakeStructureViewElement(private val myElement: NavigatablePsiElement) :
                     it.text
                 }.firstOrNull()
 
-            if(taskName != null) {
+            if (taskName != null) {
                 presentation = PresentationData(
                     taskName,
                     location,
@@ -77,7 +74,7 @@ class CakeStructureViewElement(private val myElement: NavigatablePsiElement) :
     }
 
     override fun getChildren(): Array<TreeElement> {
-        if(myElement is CakeFile) {
+        if (myElement is CakeFile) {
             return PsiTreeUtil.getChildrenOfTypeAsList(myElement, CakeLine::class.java).flatMap { l ->
                 PsiTreeUtil.getChildrenOfTypeAsList(l, CakeCodeLine::class.java).flatMap { cl ->
                     PsiTreeUtil.getChildrenOfTypeAsList(cl, CakeTask::class.java).map {
