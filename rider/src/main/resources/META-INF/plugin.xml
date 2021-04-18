@@ -26,6 +26,8 @@
     <liveTemplateContext implementation="net.cakebuild.liveTemplates.CakeContext"/>
     <lang.parserDefinition language="Cake"
                            implementationClass="net.cakebuild.language.CakeParserDefinition"/>
+    <lang.psiStructureViewFactory language="Cake"
+                                  implementationClass="net.cakebuild.language.structure.CakeStructureViewFactory"/>
   </extensions>
 
   <actions>
