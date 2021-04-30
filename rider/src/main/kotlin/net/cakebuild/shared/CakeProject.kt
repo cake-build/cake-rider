@@ -99,22 +99,8 @@ class CakeProject(private val project: Project) {
         }
     }
 
-    class CakeFile(private val project: Project, val file: VirtualFile) {
-
-        private val content by lazy { VfsUtil.loadText(file) }
-
-        fun getTasks() = sequence {
-            val regex = Regex(CakeSettings.getInstance(project).cakeTaskParsingRegex)
-            val tasks = regex.findAll(content).map {
-                CakeTask(project, file, it.groups[1]!!.value)
-            }
-            yieldAll(tasks)
-        }
-    }
-
-    data class CakeTask(private val project: Project, val file: VirtualFile, val taskName: String) {
-
-        fun run(mode: CakeTaskRunMode) {
+    companion object {
+        fun runCakeTarget(project: Project, file: VirtualFile, taskName: String, mode: CakeTaskRunMode) {
             val runManager = project.getService(RunManager::class.java)
             val configurationType = ConfigurationTypeUtil.findConfigurationType(CakeConfigurationType::class.java)
             val fileSystems = FileSystems.getDefault()
@@ -140,6 +126,26 @@ class CakeProject(private val project: Project) {
             if (executor != null) {
                 ProgramRunnerUtil.executeConfiguration(runConfiguration, executor)
             }
+        }
+    }
+
+    class CakeFile(private val project: Project, val file: VirtualFile) {
+
+        private val content by lazy { VfsUtil.loadText(file) }
+
+        fun getTasks() = sequence {
+            val regex = Regex(CakeSettings.getInstance(project).cakeTaskParsingRegex)
+            val tasks = regex.findAll(content).map {
+                CakeTask(project, file, it.groups[1]!!.value)
+            }
+            yieldAll(tasks)
+        }
+    }
+
+    data class CakeTask(private val project: Project, val file: VirtualFile, val taskName: String) {
+
+        fun run(mode: CakeTaskRunMode) {
+            runCakeTarget(project, file, taskName, mode)
         }
     }
 
