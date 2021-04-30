@@ -1,6 +1,9 @@
 # Default detekt configuration:
 # https://github.com/detekt/detekt/blob/master/detekt-core/src/main/resources/default-detekt-config.yml
 
+empty-blocks:
+  EmptyFunctionBlock:
+    ignoreOverridden: true
 formatting:
   Indentation:
     continuationIndentSize: 8

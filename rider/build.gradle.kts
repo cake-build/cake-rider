@@ -109,7 +109,10 @@ tasks {
     }
     withType<KotlinCompile> {
         dependsOn("gen-lexer", "gen-parser")
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions {
+            jvmTarget = "1.8"
+            freeCompilerArgs = listOf("-Xjvm-default=compatibility")
+        }
     }
     withType<Detekt> {
         jvmTarget = "1.8"
