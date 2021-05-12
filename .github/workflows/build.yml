@@ -30,7 +30,7 @@ jobs:
 
       # Validates the gradle wrappers and saves us from getting malicious PRs
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v1.0.3
 
       # Setup Java 1.8 environment which is needed to build
       - name: Setup Java
