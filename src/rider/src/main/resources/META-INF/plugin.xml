@@ -35,6 +35,13 @@
   </extensions>
 
   <actions>
+    <!--
+    Simple action to test if dotnet component is working correctly.
+    Does nothing else.
+     -->
+    <action id="Cake.CakeRiderDotnetTestAction"
+            class="net.cakebuild.actions.CakeRiderDotnetTestAction" />
+
     <!-- Tree & execute -->
     <action id="Cake.ExecuteTask"
             class="net.cakebuild.actions.CakeTasksTreeAction$TaskOnlyActions$Execute"

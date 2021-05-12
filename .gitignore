@@ -26,8 +26,8 @@
 
 # NOTE: We normally include *.iml for JetBrains IDEs, but Gradle based projects auto generate
 # this on import, so we can happily ignore them. Don't do this for the Rider controlled project!
-rider/.idea/**/modules.xml
-rider/.idea/**/modules/*.iml
+src/rider/.idea/**/modules.xml
+src/rider/.idea/**/modules/*.iml
 
 # IntelliJ
 build/
@@ -45,4 +45,6 @@ Desktop.ini
 /BuildArtifacts/
 .history/
 /docs/wyam.config.*
-/rider/src/main/gen/
+/src/rider/src/main/gen/
+bin/
+obj/

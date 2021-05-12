@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net461</TargetFramework>
+        <AssemblyName>cake-rider</AssemblyName>
+        <RootNamespace>net.cakebuild</RootNamespace>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <IsPackable>false</IsPackable>
+        <DefineConstants>$(DefineConstants);RIDER</DefineConstants>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <!-- will be injected by gradle at build -->
+        <SdkVersion Condition="'$(SdkVersion)' == ''">2020.1.1</SdkVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Rider.SDK" Version="$(SdkVersion)" />
+    </ItemGroup>
+</Project>

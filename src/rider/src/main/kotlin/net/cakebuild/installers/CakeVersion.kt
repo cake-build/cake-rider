@@ -28,8 +28,8 @@ class CakeVersion internal constructor(private val parts: List<Int>) : Comparabl
                 suffix = parseInt(suffixMatch.groups[2]!!.value)
             }
 
-            val txtParts = text.split(delimiters = arrayOf("-"), limit = 2)[0].split(".")
-            val parts = txtParts.map {
+            val txtParts = text.split("-")[0].split(".")
+            val parts = txtParts.map { it ->
                 parseInt(it)
             }
 

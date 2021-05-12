@@ -5,7 +5,7 @@ Environment.SetVariableNames();
 BuildParameters.SetParameters(
   context: Context,
   buildSystem: BuildSystem,
-  sourceDirectoryPath: "./rider",
+  sourceDirectoryPath: "./src/rider",
   title: "Cake for Rider",
   repositoryName: "Cake-Rider",
   appVeyorProjectSlug: "Cake-Rider", // https://github.com/cake-contrib/Cake.Recipe/issues/816

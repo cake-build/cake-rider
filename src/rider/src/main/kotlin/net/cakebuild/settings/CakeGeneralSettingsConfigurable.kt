@@ -37,7 +37,7 @@ class CakeGeneralSettingsConfigurable(private val project: Project) : Configurab
         val settings = CakeSettings.getInstance(project)
         val pairs = arrayOf(
             Pair({ settings.cakeFileExtension }, { editor.fileExtensionField }),
-            Pair({ settings.cakeTaskParsingRegex }, { editor.taskRegexField }),
+            Pair({ settings.cakeTaskParsingRegex }, { editor.taskRegexField })
         )
         val modified = pairs.any {
             isModified(it.second(), it.first())
