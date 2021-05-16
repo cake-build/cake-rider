@@ -7,10 +7,19 @@ Description: Support for templates
 
 Templates are provided by the [Cake for Rider](https://plugins.jetbrains.com/plugin/15729-cake-rider) plugin.
 
+# Project templates
+
+In the context menu of a solution in the project window, 
+select **Add | New Project** to create a new project.
+
+![Run configurations](/assets/img/cake-rider/docs/project-templates.png){.img-responsive}
+
 # File templates
 
 In the context menu of a solution item (project or folder) in the project window, 
 select **Add | Cake File** to create a new Cake file containing some sample code.
+
+![Run configurations](/assets/img/cake-rider/docs/item-templates.png){.img-responsive}
 
 # Live templates (sometimes called code snippets)
 
