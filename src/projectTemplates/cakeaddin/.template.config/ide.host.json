@@ -1,0 +1,35 @@
+﻿{
+  "$schema": "http://json.schemastore.org/vs-2017.3.host",
+  "icon": "icon.ico",
+  "learnMoreLink": "https://cakebuild.net/",
+  "name": {
+    "text": "Addin"
+  },
+  "symbolInfo": [
+    {
+      "id": "skipRestore",
+      "isVisible": false
+    },
+    {
+      "id": "cakeAliasCategory",
+      "isVisible": true,
+      "name": {
+        "text": "Cake alias category"
+      }
+    },
+    {
+      "id": "addNet5",
+      "isVisible": true,
+      "name": {
+        "text": "additionally target net5.0"
+      }
+    },
+    {
+      "id": "addNet461",
+      "isVisible": true,
+      "name": {
+        "text": "additionally target net461"
+      }
+    }
+  ]
+}
