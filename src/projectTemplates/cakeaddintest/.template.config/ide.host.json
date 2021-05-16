@@ -1,0 +1,21 @@
+﻿{
+  "$schema": "http://json.schemastore.org/vs-2017.3.host",
+  "icon": "icon.ico",
+  "learnMoreLink": "https://cakebuild.net/",
+  "name": {
+    "text": "Addin testproject"
+  },
+  "symbolInfo": [
+    {
+      "id": "skipRestore",
+      "isVisible": false
+    },
+    {
+      "id": "empty",
+      "isVisible": true,
+      "name": {
+        "text": "Create minimal (empty) project"
+      }
+    }
+  ]
+}

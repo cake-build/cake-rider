@@ -218,18 +218,22 @@ tasks {
     getByName<PrepareSandboxTask>("prepareSandbox") {
         dependsOn.add("buildDotNet")
 
-        doLast {
-            val dotNetConfiguration = properties("dotNetConfiguration")
-            val dotNetOutput = File(rootDir, "../dotnet/$pluginName/bin/$dotNetConfiguration")
-            val sandboxOutput = File(pluginJarFromSandbox.parent, "../dotnet")
-            project.logger.warn("dotNetOutput is at: $dotNetOutput")
-            project.logger.warn("sandbox output is at: $sandboxOutput")
-            sandboxOutput.mkdirs()
-            copy {
-                from(dotNetOutput.absolutePath) {
-                    include("$pluginName.*")
-                }
-                into(sandboxOutput.absolutePath)
+        // copy projectTemplates
+        val projectTemplates = File(rootDir, "../projectTemplates")
+        into(
+            "${intellij.pluginName}/projectTemplates"
+        ) {
+            from(projectTemplates)
+        }
+
+        // copy dotnet component
+        val dotNetConfiguration = properties("dotNetConfiguration")
+        val dotNetOutput = File(rootDir, "../dotnet/$pluginName/bin/$dotNetConfiguration")
+        into(
+            "${intellij.pluginName}/dotnet"
+        ) {
+            from(dotNetOutput) {
+                include("$pluginName.*")
             }
         }
     }

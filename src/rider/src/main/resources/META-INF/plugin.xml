@@ -32,6 +32,14 @@
                                     implementationClass="net.cakebuild.language.codeInsight.TaskLineMarkerProvider"/>
     <codeInsight.inlayProvider language="Cake"
                                implementationClass="net.cakebuild.language.codeInsight.TaskInlayHintsProvider"/>
+    <rider.projectView.actions.projectTemplating.backend.reSharperProjectTemplateCustomizer
+            implementation="net.cakebuild.templates.CakeTemplateProjectCustomizer$CakeAddin" />
+    <rider.projectView.actions.projectTemplating.backend.reSharperProjectTemplateCustomizer
+            implementation="net.cakebuild.templates.CakeTemplateProjectCustomizer$CakeModule" />
+    <rider.projectView.actions.projectTemplating.backend.reSharperProjectTemplateCustomizer
+            implementation="net.cakebuild.templates.CakeTemplateProjectCustomizer$CakeFrostingBuild" />
+    <rider.projectView.actions.projectTemplating.backend.reSharperProjectTemplateCustomizer
+            implementation="net.cakebuild.templates.CakeTemplateTestProjectCustomizer$CakeAddinTest" />
   </extensions>
 
   <actions>

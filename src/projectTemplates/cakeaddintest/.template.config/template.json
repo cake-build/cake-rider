@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Cake",
+  "name": "Cake Addin testproject",
+  "description": "Create a test project for a Cake addin",
+  "identity": "Cake.Addin.Test.Project.CSharp",
+  "groupIdentity": "Cake.Addin.Test.Project",
+  "shortName": "cakeaddintest",
+  "sourceName": "CakeAddinTest",
+  "defaultName": "Cake.MyAddin.Tests",
+  "tags": {
+    "language": "C#",
+    "type": "project",
+    "platform": "Cake"
+  },
+  "classifications": [
+    "Cake",
+    "Windows",
+    "Linux",
+    "macOs"
+  ],
+  "preferNameDirectory": true,
+  "symbols": {
+    "Framework": {
+      "type": "parameter",
+      "description": "The target framework for the project.",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "netcoreapp3.1",
+          "description": "Target netcoreapp3.1"
+        },
+        {
+          "choice": "net5.0",
+          "description": "Target net5.0"
+        }
+      ],
+      "defaultValue": "net5.0",
+      "replaces": "net5.0"
+    },
+    "empty": {
+      "type": "parameter",
+      "description": "create a minimal (empty) project",
+      "datatype": "bool",
+      "defaultValue": "false"
+    },
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "If specified, skips the automatic restore of the project on create.",
+      "defaultValue": "false"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "condition": "(empty)",
+          "exclude": [
+            "CakeFixture.cs",
+            "CakeTool.cs",
+            "CakeToolSettings.cs",
+            "ComplexAddinTests.cs"
+          ]
+        },
+        {
+          "condition": "(!empty)",
+          "exclude": [
+            "AddinTests.cs"
+          ]
+        }
+      ]
+    }
+  ],
+  "primaryOutputs": [
+    {
+      "path": "CakeAddinTest.csproj"
+    }
+  ],
+  "postActions": [
+    {
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [
+        {
+          "text": "Run 'dotnet restore'"
+        }
+      ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}

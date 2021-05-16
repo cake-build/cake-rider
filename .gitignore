@@ -46,5 +46,7 @@ Desktop.ini
 .history/
 /docs/wyam.config.*
 /src/rider/src/main/gen/
+/src/dotnet/cake-rider/Protocol/
 bin/
 obj/
+/src/projectTemplates/**/.idea
