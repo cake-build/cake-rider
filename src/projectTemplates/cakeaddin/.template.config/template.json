@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Cake",
+  "name": "Cake Addin",
+  "description": "Create an addin for Cake",
+  "identity": "Cake.Addin.Project.CSharp",
+  "groupIdentity": "Cake.Addin.Project",
+  "shortName": "cakeaddin",
+  "sourceName": "CakeAddin",
+  "defaultName": "Cake.MyAddin",
+  "tags": {
+    "language": "C#",
+    "type": "project",
+    "platform": "Cake"
+  },
+  "classifications": [
+    "Cake",
+    "Windows",
+    "Linux",
+    "macOs"
+  ],
+  "preferNameDirectory": true,
+  "symbols": {
+    "Framework": {
+      "type": "parameter",
+      "description": "The target framework for the project.",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "netstandard2.0",
+          "description": "Target netstandard2.0 only"
+        }
+      ],
+      "defaultValue": "netstandard2.0"
+    },
+    "addNet5": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "target net5.0 additionally.",
+      "defaultValue": "false"
+    },
+    "addNet461": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "target net461 additionally.",
+      "defaultValue": "false"
+    },
+    "TFMReplacer": {
+      "type": "generated",
+      "generator": "join",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "const",
+            "value": "netstandard2.0"
+          },
+          {
+            "type": "const",
+            "value": "net5.0",
+            "condition": "(addNet5)"
+          },
+          {
+            "type": "const",
+            "value": "net461",
+            "condition": "(addNet461)"
+          }
+        ],
+        "separator": ";"
+      },
+      "replaces": "netstandard2.0"
+    },
+    "cakeAliasCategory": {
+      "type": "parameter",
+      "datatype": "string",
+      "description": "The alias category of the addin",
+      "defaultValue": "Sample"
+    },
+    "CakeAliasCategoryReplacer": {
+      "type": "generated",
+      "generator": "join",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "const",
+            "value": "[CakeAliasCategory(\""
+          },
+          {
+            "type": "ref",
+            "value": "cakeAliasCategory"
+          },
+          {
+            "type": "const",
+            "value": "\")]"
+          }
+        ],
+        "separator": ""
+      },
+      "replaces": "[CakeAliasCategory(\"Sample\")]"
+    },
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "If specified, skips the automatic restore of the project on create.",
+      "defaultValue": "false"
+    }
+  },
+  "primaryOutputs": [
+    {
+      "path": "CakeAddin.csproj"
+    }
+  ],
+  "postActions": [
+    {
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [
+        {
+          "text": "Run 'dotnet restore'"
+        }
+      ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}

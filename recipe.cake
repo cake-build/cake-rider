@@ -1,16 +1,18 @@
-#load nuget:?package=Cake.IntelliJ.Recipe&version=0.1.3
+#load nuget:?package=Cake.IntelliJ.Recipe&version=0.1.5
 
 Environment.SetVariableNames();
 
 BuildParameters.SetParameters(
   context: Context,
   buildSystem: BuildSystem,
-  sourceDirectoryPath: "./rider",
+  sourceDirectoryPath: "./src/rider",
   title: "Cake for Rider",
   repositoryName: "Cake-Rider",
   appVeyorProjectSlug: "Cake-Rider", // https://github.com/cake-contrib/Cake.Recipe/issues/816
   repositoryOwner: "cake-build",
-  marketplaceId: "15729-cake-rider"
+  marketplaceId: "15729-cake-rider",
+  webLinkRoot: "", // do *not* create a virtual directory for wyam docs. This setting will break gh-pages. (But work for preview)
+  wyamConfigurationFile: MakeAbsolute((FilePath)"docs/wyam.config")
 );
 
 BuildParameters.PrintParameters(Context);

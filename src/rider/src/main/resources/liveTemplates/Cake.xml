@@ -1,0 +1,94 @@
+<templateSet group="Cake">
+    <template name="task-simple" value="Task(&quot;$NAME$&quot;);$END$&#10;" description="Cake Task" toReformat="false" toShortenFQNames="false">
+        <variable name="NAME" expression="" defaultValue="&quot;Task-Name&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="setup" value="Setup(ctx =&gt;&#10;{&#10;    $END$&#10;});" description="Add a Setup action" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="teardown" value="Teardown(ctx =&gt;&#10;{&#10;    $END$&#10;});" description="Add a Teardown action" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="task-action" value="Task(&quot;$NAME$&quot;)&#10;.Does(() =&gt;&#10;{&#10;$END$&#10;});" description="Cake Task With Action" toReformat="false" toShortenFQNames="true">
+        <variable name="NAME" expression="" defaultValue="&quot;Task-Name&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="cake-sample" value="///////////////////////////////////////////////////////////////////////////////&#10;// ARGUMENTS&#10;///////////////////////////////////////////////////////////////////////////////&#10;&#10;var target = Argument(&quot;target&quot;, &quot;Default&quot;);&#10;var configuration = Argument(&quot;configuration&quot;, &quot;Release&quot;);&#10;&#10;///////////////////////////////////////////////////////////////////////////////&#10;// SETUP / TEARDOWN&#10;///////////////////////////////////////////////////////////////////////////////&#10;&#10;Setup(ctx =&gt;&#10;{&#10;   // Executed BEFORE the first task.&#10;   Information(&quot;Running tasks...&quot;);&#10;});&#10;&#10;Teardown(ctx =&gt;&#10;{&#10;   // Executed AFTER the last task.&#10;   Information(&quot;Finished running tasks.&quot;);&#10;});&#10;&#10;///////////////////////////////////////////////////////////////////////////////&#10;// TASKS&#10;///////////////////////////////////////////////////////////////////////////////&#10;&#10;Task(&quot;Default&quot;)&#10;   .Does(() =&gt;&#10;{&#10;   Information(&quot;Hello Cake!&quot;);&#10;});&#10;&#10;RunTarget(target);" description="Sample Cake Script" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="cake-argument" value="var $TARGET$ = Argument(&quot;$TARGETNAME$&quot;, &quot;$DEFAULT$&quot;);&#10;$END$" description="Cake Script Argument" toReformat="false" toShortenFQNames="true">
+        <variable name="TARGETNAME" expression="" defaultValue="&quot;Argument name&quot;" alwaysStopAt="true" />
+        <variable name="TARGET" expression="camelCase(TARGETNAME)" defaultValue="&quot;argumentName&quot;" alwaysStopAt="true" />
+        <variable name="DEFAULT" expression="" defaultValue="&quot;Default value&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="cake-addin" value="#addin &quot;nuget:?package=$PACKAGE$&amp;version=$VERSION$&quot;&#10;$END$" description="Cake Addin Preprocessor Directive" toReformat="false" toShortenFQNames="true">
+        <variable name="PACKAGE" expression="" defaultValue="&quot;Cake.Foo&quot;" alwaysStopAt="true" />
+        <variable name="VERSION" expression="" defaultValue="&quot;1.2.3&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="cake-addin-full" value="#addin &quot;nuget:$SOURCE$?package=$PACKAGE$&amp;version=$VERSION$&quot;&#10;$END$" description="Cake Addin Preprocessor Directive - Full" toReformat="false" toShortenFQNames="true">
+        <variable name="SOURCE" expression="" defaultValue="&quot;https://www.nuget.org/api/v2&quot;" alwaysStopAt="true" />
+        <variable name="PACKAGE" expression="" defaultValue="&quot;Cake.Foo&quot;" alwaysStopAt="true" />
+        <variable name="VERSION" expression="" defaultValue="&quot;1.2.3&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="cake-load-nuget" value="#load &quot;nuget:?package=$PACKAGE$&amp;version=$VERSION$&quot;&#10;$END$" description="Cake Load Preprocessor Directive - NuGet" toReformat="false" toShortenFQNames="true">
+        <variable name="PACKAGE" expression="" defaultValue="&quot;Cake.Foo&quot;" alwaysStopAt="true" />
+        <variable name="VERSION" expression="" defaultValue="&quot;1.2.3&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="cake-load-nuget-full" value="#load &quot;nuget:$SOURCE$?package=$PACKAGE$&amp;version=$VERSION$&quot;&#10;$END$" description="Cake Load Preprocessor Directive - NuGet - Full" toReformat="false" toShortenFQNames="true">
+        <variable name="SOURCE" expression="" defaultValue="&quot;https://www.nuget.org/api/v2&quot;" alwaysStopAt="true" />
+        <variable name="PACKAGE" expression="" defaultValue="&quot;Cake.Foo&quot;" alwaysStopAt="true" />
+        <variable name="VERSION" expression="" defaultValue="&quot;1.2.3&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="cake-reference" value="#reference &quot;$ASSEMBLY$&quot;&#10;$END$" description="Cake Reference Preprocessor Directive" toReformat="false" toShortenFQNames="true">
+        <variable name="ASSEMBLY" expression="" defaultValue="&quot;bin/myassembly.dll&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="cake-tool" value="#tool &quot;nuget:?package=$PACKAGE$&amp;version=$VERSION$&quot;&#10;$END$" description="Cake Tool Preprocessor Directive" toReformat="false" toShortenFQNames="true">
+        <variable name="PACKAGE" expression="" defaultValue="&quot;Cake.Foo&quot;" alwaysStopAt="true" />
+        <variable name="VERSION" expression="" defaultValue="&quot;1.2.3&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="cake-tool-full" value="#tool &quot;nuget:$SOURCE$?package=$PACKAGE$&amp;version=$VERSION$&quot;&#10;$END$" description="Cake Tool Preprocessor Directive - Full" toReformat="false" toShortenFQNames="true">
+        <variable name="SOURCE" expression="" defaultValue="&quot;https://www.nuget.org/api/v2&quot;" alwaysStopAt="true" />
+        <variable name="PACKAGE" expression="" defaultValue="&quot;Cake.Foo&quot;" alwaysStopAt="true" />
+        <variable name="VERSION" expression="" defaultValue="&quot;1.2.3&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="cake-load" value="#load &quot;$FILE$&quot;&#10;$END$" description="Cake Load Preprocessor Directive" toReformat="false" toShortenFQNames="true">
+        <variable name="FILE" expression="" defaultValue="&quot;scripts/utilities.cake&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+</templateSet>
