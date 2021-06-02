@@ -174,7 +174,7 @@ tasks {
     }
 
     register("buildDotNet") {
-        dependsOn("rdgen")
+        // dependsOn("rdgen")
 
         val pluginName = properties("pluginName")
         val dotNetConfiguration = properties("dotNetConfiguration")
@@ -243,7 +243,7 @@ tasks {
         targetCompatibility = jvmVersion
     }
     withType<KotlinCompile> {
-        dependsOn("gen-lexer", "gen-parser", "rdgen")
+        dependsOn("gen-lexer", "gen-parser" /*, "rdgen"*/)
         kotlinOptions {
             jvmTarget = jvmVersion
             languageVersion = kotlinVersion
