@@ -13,9 +13,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        // todo 0.201.x should match pluginSinceBuild ?
         // https://www.myget.org/feed/rd-snapshots/package/maven/com.jetbrains.rd/rd-gen
-        classpath("com.jetbrains.rd", "rd-gen", "0.201.78")
+        // version 0.202.x should match pluginSinceBuild ?
+        classpath("com.jetbrains.rd", "rd-gen", "0.202.131")
     }
 }
 
@@ -24,7 +24,8 @@ plugins {
     id("java")
     // Kotlin support
     // do NOT update to >=1.4.0 while keeping rd-gen below 0.203.134 !! https://youtrack.jetbrains.com/issue/RIDER-57625
-    id("org.jetbrains.kotlin.jvm") version "1.3.72"
+    // do NOT update kotlin - kotlin version must match platform version, see https://plugins.jetbrains.com/docs/intellij/kotlin.html#kotlin-standard-library
+    id("org.jetbrains.kotlin.jvm") version "1.3.70"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "0.7.3"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
