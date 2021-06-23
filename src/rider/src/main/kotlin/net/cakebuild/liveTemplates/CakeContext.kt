@@ -1,13 +1,13 @@
 package net.cakebuild.liveTemplates
 
+import com.intellij.codeInsight.template.TemplateActionContext
 import com.intellij.codeInsight.template.TemplateContextType
 import com.intellij.openapi.project.ProjectLocator
-import com.intellij.psi.PsiFile
 import net.cakebuild.settings.CakeSettings
 
 class CakeContext : TemplateContextType("Cake", "Cake") {
-    override fun isInContext(file: PsiFile, offset: Int): Boolean {
-        val virtFile = file.viewProvider.virtualFile
+    override fun isInContext(templateActionContext: TemplateActionContext): Boolean {
+        val virtFile = templateActionContext.file.viewProvider.virtualFile
         val extension = virtFile.extension?.toLowerCase() ?: ""
 
         if (extension.equals("cake", true)) {

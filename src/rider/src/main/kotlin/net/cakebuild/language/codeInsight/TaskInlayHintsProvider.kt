@@ -77,8 +77,8 @@ class TaskInlayHintsProvider : InlayHintsProvider<TaskInlayHintsProvider.Setting
                     factory.container(
                         factory.smallText("Run Task")
                     ),
-                    object : (MouseEvent, Point) -> Unit {
-                        override fun invoke(event: MouseEvent, point: Point) {
+                    object : InlayPresentationFactory.ClickListener {
+                        override fun onClick(event: MouseEvent, translated: Point) {
                             if (event.clickCount == 2) {
                                 val project = element.containingFile.project
                                 CakeProject.runCakeTarget(
