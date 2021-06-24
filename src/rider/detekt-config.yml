@@ -14,3 +14,6 @@ style:
     max: 10
   LoopWithTooManyJumpStatements:
     maxJumpCount: 5
+  MaxLineLength:
+    maxLineLength: 120
+    excludes: ["**/test/**", "**/tests/**"] 
