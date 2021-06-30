@@ -1,6 +1,5 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.internal.os.OperatingSystem
-import org.jetbrains.changelog.closure
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.tasks.PrepareSandboxTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -27,7 +26,7 @@ plugins {
     // do NOT update kotlin - kotlin version must match platform version, see https://plugins.jetbrains.com/docs/intellij/kotlin.html#kotlin-standard-library
     id("org.jetbrains.kotlin.jvm") version "1.3.70"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "0.7.3"
+    id("org.jetbrains.intellij") version "1.1"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "1.1.2"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
@@ -64,14 +63,19 @@ dependencies {
 // Configure gradle-intellij-plugin plugin.
 // Read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
-    pluginName = properties("pluginName")
-    version = properties("platformVersion")
-    type = properties("platformType")
-    downloadSources = properties("platformDownloadSources").toBoolean()
-    updateSinceUntilBuild = true
+    pluginName.set(properties("pluginName"))
+    version.set(properties("platformVersion"))
+    type.set(properties("platformType"))
+    downloadSources.set(properties("platformDownloadSources").toBoolean())
+    updateSinceUntilBuild.set(true)
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    setPlugins(*properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty).toTypedArray())
+    plugins.set(
+        properties("platformPlugins")
+            .split(',')
+            .map(String::trim)
+            .filter(String::isNotEmpty)
+    )
 }
 
 // Configure detekt plugin.
@@ -109,8 +113,9 @@ configure<com.jetbrains.rd.generator.gradle.RdgenParams> {
     hashFolder = "build/rdgen"
     logger.info("Configuring rdgen params")
     classpath({
-        logger.info("Calculating classpath for rdgen, intellij.ideaDependency is ${intellij.ideaDependency}")
-        val sdkPath = intellij.ideaDependency.classes
+        val ideaDependency = intellij.getIdeaDependency(project)
+        logger.info("Calculating classpath for rdgen, intellij.ideaDependency is $ideaDependency")
+        val sdkPath = ideaDependency.classes
         val rdLibDirectory = File(sdkPath, "lib/rd").canonicalFile
         val riderModelJar = "$rdLibDirectory/rider-model.jar"
         logger.info("rider-model.jar detected at $riderModelJar")
@@ -158,9 +163,21 @@ tasks {
 
             // clean dotnet
             logger.log(LogLevel.INFO, "cleaning dotnet component.")
+            val pluginName = properties("pluginName")
+            val dotNetConfiguration = properties("dotNetConfiguration")
+            val platformVersion = properties("platformVersion")
+            val dotnetDir = File(rootDir, "../dotnet")
+
             exec {
                 executable = "dotnet"
-                args = listOf("msbuild", "/t:Clean")
+                args = listOf(
+                    "msbuild",
+                    "/t:Clean",
+                    File(dotnetDir, "$pluginName.sln").absolutePath,
+                    "/p:Configuration=$dotNetConfiguration",
+                    "/p:SdkVersion=$platformVersion",
+                    "/p:HostFullIdentifier="
+                )
                 workingDir = File(rootDir, "../dotnet")
             }
         }
@@ -279,13 +296,13 @@ tasks {
     }
 
     patchPluginXml {
-        version(properties("pluginVersion"))
-        sinceBuild(properties("pluginSinceBuild"))
-        untilBuild(properties("pluginUntilBuild"))
+        version.set(properties("pluginVersion"))
+        sinceBuild.set(properties("pluginSinceBuild"))
+        untilBuild.set(properties("pluginUntilBuild"))
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
-        pluginDescription(
-            closure {
+        pluginDescription.set(
+            provider {
                 File(projectDir, "./plugin_description.md").readText().lines().run {
                     val start = "<!-- Plugin description -->"
                     val end = "<!-- Plugin description end -->"
@@ -300,8 +317,8 @@ tasks {
             }
         )
 
-        changeNotes(
-            closure {
+        changeNotes.set(
+            provider {
                 File(projectDir, "./plugin_description.md").readText().lines().run {
                     val start = "<!-- Plugin changeNotes -->"
                     val end = "<!-- Plugin changeNotes end -->"
@@ -318,13 +335,18 @@ tasks {
     }
 
     runPluginVerifier {
-        ideVersions(properties("pluginVerifierIdeVersions"))
+        ideVersions.addAll(
+            properties("pluginVerifierIdeVersions")
+                .split(',')
+                .map(String::trim)
+                .filter(String::isNotEmpty)
+        )
         // reports are in ${project.buildDir}/reports/pluginVerifier - or set verificationReportsDirectory()
     }
 
     publishPlugin {
-        token(System.getenv("PUBLISH_TOKEN"))
-        channels(properties("marketplaceChannel"))
+        token.set(System.getenv("PUBLISH_TOKEN"))
+        channels.set(listOf(properties("marketplaceChannel")))
     }
 
     test {
