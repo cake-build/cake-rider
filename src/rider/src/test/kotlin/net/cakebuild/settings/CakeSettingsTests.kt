@@ -14,7 +14,6 @@ class CakeSettingsTests {
     companion object {
         const val defaultSettingsXml = """
 <CakeSettings>
-  <option name="cakeFileExtension" value="cake" />
   <option name="cakeRunner" value="~/.dotnet/tools/dotnet-cake" />
   <option name="cakeRunnerOverrides">
     <map>

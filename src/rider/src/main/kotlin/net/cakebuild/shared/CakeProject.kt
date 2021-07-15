@@ -6,6 +6,7 @@ import com.intellij.execution.configurations.ConfigurationTypeUtil
 import com.intellij.execution.executors.DefaultDebugExecutor
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.fileTypes.FileTypeManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -13,6 +14,7 @@ import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.jetbrains.rider.projectView.hasSolution
 import com.jetbrains.rider.projectView.solutionDirectory
+import net.cakebuild.language.CakeFileType
 import net.cakebuild.run.CakeConfiguration
 import net.cakebuild.run.CakeConfigurationType
 import net.cakebuild.settings.CakeSettings
@@ -64,7 +66,7 @@ class CakeProject(private val project: Project) {
 
     fun getCakeFiles() = sequence {
         val settings = CakeSettings.getInstance(project)
-        val extension = settings.cakeFileExtension
+        val fileTypeManager = FileTypeManager.getInstance()
         val projectDir = getProjectDir()
         if (projectDir == null) {
             log.warn("Unable to find a folder to search for cake files.")
@@ -78,7 +80,7 @@ class CakeProject(private val project: Project) {
         }
         while (!bucket.isEmpty()) {
             val folder = bucket.pop()
-            log.trace("searching for *.$extension in folder ${folder.path}")
+            log.trace("searching for cake scripts in folder ${folder.path}")
             children@ for (child in folder.children) {
                 val normalizedPath = child.path.replace("\\", "/")
                 for (exclude in excludePatterns) {
@@ -91,8 +93,9 @@ class CakeProject(private val project: Project) {
                     bucket.push(child)
                     continue
                 }
-                val ext = child.extension
-                if (ext != null && ext.equals(extension, ignoreCase = true)) {
+
+                val fileType = fileTypeManager.getFileTypeByFileName(child.name)
+                if (fileType is CakeFileType) {
                     yield(CakeFile(project, child))
                 }
             }

@@ -22,7 +22,6 @@ class CakeSettings : PersistentStateComponent<CakeSettings> {
 
     private val log = Logger.getInstance(CakeSettings::class.java)
 
-    var cakeFileExtension = "cake"
     var cakeTaskParsingRegex = "Task\\s*?\\(\\s*?\"(.*?)\"\\s*?\\)"
     var cakeVerbosity = "normal"
     var cakeRunner = "~/.dotnet/tools/dotnet-cake"

@@ -24,7 +24,6 @@ class CakeGeneralSettingsConfigurable(private val project: Project) : Configurab
 
         // real apply
         val settings = CakeSettings.getInstance(project)
-        settings.cakeFileExtension = editor.fileExtensionField.text
         settings.cakeTaskParsingRegex = editor.taskRegexField.text
         settings.cakeVerbosity = editor.verbosity
     }
@@ -33,10 +32,10 @@ class CakeGeneralSettingsConfigurable(private val project: Project) : Configurab
         return editor.content
     }
 
+    @Suppress("DuplicatedCode")
     override fun isModified(): Boolean {
         val settings = CakeSettings.getInstance(project)
         val pairs = arrayOf(
-            Pair({ settings.cakeFileExtension }, { editor.fileExtensionField }),
             Pair({ settings.cakeTaskParsingRegex }, { editor.taskRegexField })
         )
         val modified = pairs.any {
@@ -52,7 +51,6 @@ class CakeGeneralSettingsConfigurable(private val project: Project) : Configurab
     // reset ui from settings
     override fun reset() {
         val settings = CakeSettings.getInstance(project)
-        editor.fileExtensionField.text = settings.cakeFileExtension
         editor.taskRegexField.text = settings.cakeTaskParsingRegex
         editor.verbosity = settings.cakeVerbosity
     }

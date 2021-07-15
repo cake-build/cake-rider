@@ -22,9 +22,8 @@ environment:
 
 
 build_script:
-  - ps: .\build.ps1 --target=CI --verbosity=Diagnostic
+  - ps: .\build.ps1 --target=CI
 
 cache:
   - "tools -> recipe.cake"
-#  - '%USERPROFILE%\.gradle\caches -> **\*.gradle, **\*.gradle.kts, gradle.properties' too big to cache.
   - '%USERPROFILE%\.gradle\wrapper -> **\gradle\wrapper\gradle-wrapper.properties'
