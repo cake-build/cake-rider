@@ -335,6 +335,7 @@ tasks {
     }
 
     runPluginVerifier {
+        verifierVersion.set("1.256") // starting from 1.260 java 11 is needed.
         ideVersions.addAll(
             properties("pluginVerifierIdeVersions")
                 .split(',')
