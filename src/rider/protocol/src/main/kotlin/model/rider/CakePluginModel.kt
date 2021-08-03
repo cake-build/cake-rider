@@ -4,6 +4,13 @@ import com.jetbrains.rider.model.nova.ide.SolutionModel
 import com.jetbrains.rd.generator.nova.*
 import com.jetbrains.rd.generator.nova.PredefinedType.*
 
+/*
+This is only the demo code and currently unused!
+Change this to something useful, if needed
+and let `kotlinCompile` and `buildDotNet`
+dependon("rdgen") again...
+ */
+
 @Suppress("unused")
 object CakePluginModel : Ext(SolutionModel.Solution) {
 

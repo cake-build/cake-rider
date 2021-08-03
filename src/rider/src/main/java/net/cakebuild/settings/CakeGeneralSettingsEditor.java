@@ -12,7 +12,6 @@ import javax.swing.JTextField;
 public class CakeGeneralSettingsEditor {
 
     private JPanel myPanel;
-    private JTextField fileExtensionField;
     private JTextField taskRegexField;
     private JLabel validationErrors;
     private JComboBox<String> verbosityBox;
@@ -26,8 +25,6 @@ public class CakeGeneralSettingsEditor {
     }
 
     public JPanel getContent() { return myPanel; }
-
-    public JTextField getFileExtensionField() { return fileExtensionField; }
 
     public JTextField getTaskRegexField() { return taskRegexField; }
 

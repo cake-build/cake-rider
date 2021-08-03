@@ -91,4 +91,19 @@
             <option name="Cake" value="true" />
         </context>
     </template>
+    <template name="cake-module-nuget" value="#module &quot;nuget:?package=$PACKAGE$&amp;version=$VERSION$&quot;&#10;$END$" description="Cake Module Preprocessor Directive - NuGet" toReformat="false" toShortenFQNames="true">
+        <variable name="PACKAGE" expression="" defaultValue="&quot;Cake.Foo.Module&quot;" alwaysStopAt="true" />
+        <variable name="VERSION" expression="" defaultValue="&quot;1.2.3&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
+    <template name="cake-module-nuget-full" value="#module &quot;nuget:$SOURCE$?package=$PACKAGE$&amp;version=$VERSION$&quot;&#10;$END$" description="Cake Module Preprocessor Directive - NuGet - Full" toReformat="false" toShortenFQNames="true">
+        <variable name="SOURCE" expression="" defaultValue="&quot;https://www.nuget.org/api/v2&quot;" alwaysStopAt="true" />
+        <variable name="PACKAGE" expression="" defaultValue="&quot;Cake.Foo.Module&quot;" alwaysStopAt="true" />
+        <variable name="VERSION" expression="" defaultValue="&quot;1.2.3&quot;" alwaysStopAt="true" />
+        <context>
+            <option name="Cake" value="true" />
+        </context>
+    </template>
 </templateSet>

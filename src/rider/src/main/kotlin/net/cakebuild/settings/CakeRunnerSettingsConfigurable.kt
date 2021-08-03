@@ -18,6 +18,7 @@ class CakeRunnerSettingsConfigurable(private val project: Project) : Configurabl
         return editor.content
     }
 
+    @Suppress("DuplicatedCode")
     override fun isModified(): Boolean {
         val settings = CakeSettings.getInstance(project)
         val pairs = arrayOf(

@@ -1,24 +1,13 @@
 package net.cakebuild.liveTemplates
 
+import com.intellij.codeInsight.template.TemplateActionContext
 import com.intellij.codeInsight.template.TemplateContextType
-import com.intellij.openapi.project.ProjectLocator
-import com.intellij.psi.PsiFile
-import net.cakebuild.settings.CakeSettings
+import com.intellij.psi.util.PsiUtilCore
+import net.cakebuild.language.CakeLanguage
 
 class CakeContext : TemplateContextType("Cake", "Cake") {
-    override fun isInContext(file: PsiFile, offset: Int): Boolean {
-        val virtFile = file.viewProvider.virtualFile
-        val extension = virtFile.extension?.toLowerCase() ?: ""
-
-        if (extension.equals("cake", true)) {
-            return true
-        }
-
-        val projects = ProjectLocator.getInstance().getProjectsForFile(virtFile)
-        val extensions = projects.map {
-            CakeSettings.getInstance(it).cakeFileExtension.toLowerCase()
-        }.distinct()
-
-        return extensions.contains(extension.toLowerCase())
+    override fun isInContext(templateActionContext: TemplateActionContext): Boolean {
+        val lang = PsiUtilCore.getLanguageAtOffset(templateActionContext.file, templateActionContext.startOffset)
+        return CakeLanguage.`is`(lang)
     }
 }
