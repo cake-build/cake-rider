@@ -30,7 +30,7 @@ plugins {
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "1.2.1"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
-    id("io.gitlab.arturbosch.detekt") version "1.17.1"
+    id("io.gitlab.arturbosch.detekt") version "1.18.0"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
@@ -53,7 +53,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.17.1")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.18.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
