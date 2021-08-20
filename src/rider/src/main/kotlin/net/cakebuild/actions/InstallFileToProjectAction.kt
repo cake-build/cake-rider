@@ -2,6 +2,7 @@ package net.cakebuild.actions
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.fileTypes.FileTypes
@@ -36,8 +37,11 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
                 return
             }
 
-            log.trace("deleting $fileName, before downloading it new.")
-            existing.delete(this)
+            val app = ApplicationManager.getApplication()
+            app.runWriteAction {
+                log.trace("deleting $fileName, before downloading it new.")
+                existing.delete(this)
+            }
         }
         val settings = CakeSettings.getInstance(e.project!!)
         val service = DownloadableFileService.getInstance()
