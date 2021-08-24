@@ -1,7 +1,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.intellij.tasks.PrepareSandboxTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
@@ -233,22 +232,25 @@ tasks {
     }
 
     // add the dotnet component to the sandbox that will be used to create the final plugin-zip
-    getByName<PrepareSandboxTask>("prepareSandbox") {
+    prepareSandbox {
         dependsOn.add("buildDotNet")
+        val pluginName = intellij.pluginName.get()
 
         // copy projectTemplates
+        logger.info("Adding projectTemplates to sandbox")
         val projectTemplates = File(rootDir, "../projectTemplates")
         into(
-            "${intellij.pluginName}/projectTemplates"
+            "$pluginName/projectTemplates"
         ) {
             from(projectTemplates)
         }
 
         // copy dotnet component
+        logger.info("Adding .NET component to sandbox")
         val dotNetConfiguration = properties("dotNetConfiguration")
         val dotNetOutput = File(rootDir, "../dotnet/$pluginName/bin/$dotNetConfiguration")
         into(
-            "${intellij.pluginName}/dotnet"
+            "$pluginName/dotnet"
         ) {
             from(dotNetOutput) {
                 include("$pluginName.*")
