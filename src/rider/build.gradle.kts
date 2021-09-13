@@ -54,7 +54,7 @@ repositories {
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.18.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.2")
 }
