@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net461</TargetFramework>
+        <TargetFramework>net472</TargetFramework>
         <AssemblyName>cake-rider</AssemblyName>
         <RootNamespace>net.cakebuild</RootNamespace>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -11,7 +11,7 @@
     
     <PropertyGroup>
         <!-- will be injected by gradle at build -->
-        <SdkVersion Condition="'$(SdkVersion)' == ''">2020.1.1</SdkVersion>
+        <SdkVersion Condition="'$(SdkVersion)' == ''">2021.2.1</SdkVersion>
     </PropertyGroup>
 
     <ItemGroup>

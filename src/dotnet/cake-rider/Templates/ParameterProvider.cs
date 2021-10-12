@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Application;
-using JetBrains.ReSharper.Host.Features.ProjectModel.ProjectTemplates.DotNetExtensions;
+using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetExtensions;
 
 namespace net.cakebuild.Templates
 {
