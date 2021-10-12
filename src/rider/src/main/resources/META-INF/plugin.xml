@@ -40,6 +40,7 @@
             implementation="net.cakebuild.templates.CakeTemplateProjectCustomizer$CakeFrostingBuild" />
     <rider.projectView.actions.projectTemplating.backend.reSharperProjectTemplateCustomizer
             implementation="net.cakebuild.templates.CakeTemplateTestProjectCustomizer$CakeAddinTest" />
+    <notificationGroup id="Cake" displayType="BALLOON"/>
   </extensions>
 
   <actions>
