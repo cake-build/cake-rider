@@ -19,6 +19,10 @@ class CakeConfigurationFactory(cakeConfigurationType: CakeConfigurationType) :
     }
 
     override fun getName(): String {
+        return id
+    }
+
+    override fun getId(): String {
         return "Cake configuration factory"
     }
 
