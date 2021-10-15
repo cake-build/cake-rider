@@ -29,6 +29,14 @@ class CakeConfiguration(project: Project, factory: CakeConfigurationFactory) :
         options.verbosity = verbosity
     }
 
+    fun getWorkingDirectory(): String {
+        val fileSystems = FileSystems.getDefault()
+        val scriptPath = fileSystems
+            .getPath(project.basePath!!)
+            .resolve(fileSystems.getPath(options.scriptPath!!))
+        return scriptPath.parent.toString()
+    }
+
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
         return object : CommandLineState(environment) {
             override fun startProcess(): ProcessHandler {
@@ -40,6 +48,7 @@ class CakeConfiguration(project: Project, factory: CakeConfigurationFactory) :
                     .getPath(project.basePath!!)
                     .resolve(fileSystems.getPath(options.scriptPath!!))
                 val arguments = mutableListOf<String>()
+                arguments.addAll(runner.drop(1))
                 arguments.add(scriptPath.toString())
                 arguments.add("--target=${options.taskName}")
                 arguments.add("--verbosity=${options.verbosity}")
@@ -49,7 +58,7 @@ class CakeConfiguration(project: Project, factory: CakeConfigurationFactory) :
                 val commandLine = GeneralCommandLine()
                     .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.CONSOLE)
                     .withWorkDirectory(scriptPath.parent.toString())
-                    .withExePath(runner)
+                    .withExePath(runner[0])
                     .withParameters(arguments)
                 log.trace("calling cake: ${commandLine.commandLineString}")
                 val processHandler = ProcessHandlerFactory.getInstance().createColoredProcessHandler(commandLine)

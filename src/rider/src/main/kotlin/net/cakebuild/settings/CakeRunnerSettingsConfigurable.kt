@@ -12,6 +12,7 @@ class CakeRunnerSettingsConfigurable(private val project: Project) : Configurabl
         val settings = CakeSettings.getInstance(project)
         settings.cakeRunner = editor.cakeRunnerField.text
         settings.cakeRunnerOverrides = editor.cakeRunnerOverrides
+        settings.cakeUseNetTool = editor.useNetTool.isSelected
     }
 
     override fun createComponent(): JComponent? {
@@ -35,6 +36,10 @@ class CakeRunnerSettingsConfigurable(private val project: Project) : Configurabl
         if (isModified(settings.cakeRunnerOverrides, editor.cakeRunnerOverrides)) {
             return true
         }
+
+        if (isModified(editor.useNetTool, settings.cakeUseNetTool)) {
+            return true
+        }
         return false
     }
 
@@ -43,6 +48,8 @@ class CakeRunnerSettingsConfigurable(private val project: Project) : Configurabl
         val settings = CakeSettings.getInstance(project)
         editor.cakeRunnerField.text = settings.cakeRunner
         editor.cakeRunnerOverrides = settings.cakeRunnerOverrides
+        editor.useNetTool.isSelected = settings.cakeUseNetTool
+        editor.updateEnabledState()
     }
 
     override fun getDisplayName(): String {
