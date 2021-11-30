@@ -31,7 +31,7 @@ plugins {
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
-    id("org.jetbrains.grammarkit") version "2021.1.3"
+    id("org.jetbrains.grammarkit") version "2021.2.1"
 }
 
 apply {
@@ -134,12 +134,13 @@ configure<com.jetbrains.rd.generator.gradle.RdgenParams> {
 sourceSets["main"].java.srcDirs("src/main/gen")
 
 tasks {
+
     // generate the lexer (uses grammarkit)
-    register<org.jetbrains.grammarkit.tasks.GenerateLexer>("gen-lexer") {
-        dependsOn("gen-parser")
-        this.source = "src/main/kotlin/net/cakebuild/language/psi/Cake.flex"
-        this.targetDir = "src/main/gen/net/cakebuild/language/psi"
-        this.targetClass = "CakeLexer"
+    generateLexer {
+        source.set("src/main/kotlin/net/cakebuild/language/psi/Cake.flex")
+        targetDir.set("src/main/gen/net/cakebuild/language/psi")
+        targetClass.set("CakeLexer")
+        purgeOldFiles.set(true)
     }
 
     clean {
@@ -171,11 +172,11 @@ tasks {
     }
 
     // generate the parser (uses grammarkit)
-    register<org.jetbrains.grammarkit.tasks.GenerateParser>("gen-parser") {
-        this.source = "src/main/kotlin/net/cakebuild/language/psi/Cake.bnf"
-        this.targetRoot = "src/main/gen"
-        this.pathToParser = "/net/cakebuild/language/psi/CakeParser.java"
-        this.pathToPsiRoot = "/net/cakebuild/language/psi/parse"
+    generateParser {
+        source.set("src/main/kotlin/net/cakebuild/language/psi/Cake.bnf")
+        targetRoot.set("src/main/gen")
+        pathToParser.set("/net/cakebuild/language/psi/CakeParser.java")
+        pathToPsiRoot.set("/net/cakebuild/language/psi")
     }
 
     register("buildDotNet") {
@@ -251,7 +252,7 @@ tasks {
         targetCompatibility = jvmVersion
     }
     withType<KotlinCompile> {
-        dependsOn("gen-lexer", "gen-parser" /*, "rdgen"*/)
+        dependsOn(generateLexer, generateParser /*, "rdgen"*/)
         kotlinOptions {
             jvmTarget = jvmVersion
             languageVersion = kotlinVersion
