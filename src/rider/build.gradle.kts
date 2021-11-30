@@ -53,7 +53,7 @@ dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.19.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.8.2")
 }
 
