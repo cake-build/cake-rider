@@ -2,10 +2,16 @@ package net.cakebuild.settings;
 
 import net.cakebuild.shared.ui.RegexCellEditor;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
-import java.awt.*;
+import java.awt.Component;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -17,10 +23,11 @@ public class CakeRunnerSettingsEditor {
     private JButton removeButton;
     private JLabel errorText;
     private JLabel tableLabel;
+    private JCheckBox useNetTool;
     private final DefaultTableModel model;
 
     public CakeRunnerSettingsEditor() {
-        model = (DefaultTableModel) overrides.getModel();
+        model = new MyTableModel(useNetTool);
         model.addColumn("OS Regex");
         model.addColumn("Override");
         overrides.setModel(model);
@@ -32,7 +39,7 @@ public class CakeRunnerSettingsEditor {
         overrides.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         overrides.getSelectionModel().addListSelectionListener(e -> {
             int row = overrides.getSelectedRow();
-            removeButton.setEnabled(row >= 0);
+            removeButton.setEnabled(!useNetTool.isSelected() && row >= 0);
         });
         RegexCellEditor regexCellEditor = new RegexCellEditor();
         regexCellEditor.setOnValidationError(s -> { setValidationError(s); return null; });
@@ -57,7 +64,10 @@ public class CakeRunnerSettingsEditor {
             model.removeRow(row);
         });
         tableLabel.setToolTipText("Current os.name: "+System.getProperty("os.name"));
+        useNetTool.addActionListener(e -> updateEnabledState());
     }
+
+    public JCheckBox getUseNetTool() { return useNetTool; }
 
     public JPanel getContent() { return content; }
 
@@ -83,6 +93,13 @@ public class CakeRunnerSettingsEditor {
         overrides.forEach((regex, override) -> model.addRow(new Object[]{regex, override}));
     }
 
+    public void updateEnabledState() {
+        boolean enableExeSetting = !useNetTool.isSelected();
+        cakeRunnerField.setEnabled(enableExeSetting);
+        addButton.setEnabled(enableExeSetting);
+        removeButton.setEnabled(enableExeSetting);
+    }
+
     private void setValidationError(String error) {
         if(error == null) {
             errorText.setText("");
@@ -90,5 +107,20 @@ public class CakeRunnerSettingsEditor {
         }
 
         errorText.setText(error);
+    }
+
+    static class MyTableModel extends DefaultTableModel {
+
+        private final JCheckBox checkBox;
+
+        public MyTableModel(JCheckBox checkBox){
+
+            this.checkBox = checkBox;
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return !checkBox.isSelected();
+        }
     }
 }

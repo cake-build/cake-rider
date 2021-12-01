@@ -31,6 +31,7 @@ class CakeSettingsTests {
     </list>
   </option>
   <option name="cakeTaskParsingRegex" value="Task\s*?\(\s*?&quot;(.*?)&quot;\s*?\)" />
+  <option name="cakeUseNetTool" value="false" />
   <option name="cakeVerbosity" value="normal" />
   <option name="downloadContentUrlBootstrapperNetCorePs" value="https://cakebuild.net/download/bootstrapper/dotnet-core/powershell" />
   <option name="downloadContentUrlBootstrapperNetCoreSh" value="https://cakebuild.net/download/bootstrapper/dotnet-core/bash" />

@@ -1,5 +1,4 @@
 import io.gitlab.arturbosch.detekt.Detekt
-import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -12,8 +11,8 @@ buildscript {
     }
     dependencies {
         // https://www.myget.org/feed/rd-snapshots/package/maven/com.jetbrains.rd/rd-gen
-        // version 0.202.x should match pluginSinceBuild ?
-        classpath("com.jetbrains.rd", "rd-gen", "0.202.131")
+        // version 0.203.x should match pluginSinceBuild ?
+        classpath("com.jetbrains.rd", "rd-gen", "0.203.190")
     }
 }
 
@@ -21,27 +20,26 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    // do NOT update to >=1.4.0 while keeping rd-gen below 0.203.134 !! https://youtrack.jetbrains.com/issue/RIDER-57625
     // do NOT update kotlin - kotlin version must match platform version, see https://plugins.jetbrains.com/docs/intellij/kotlin.html#kotlin-standard-library
-    id("org.jetbrains.kotlin.jvm") version "1.3.70"
+    id("org.jetbrains.kotlin.jvm") version "1.4.32"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "1.1.2"
+    id("org.jetbrains.intellij") version "1.3.0"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-    id("org.jetbrains.changelog") version "1.2.1"
+    id("org.jetbrains.changelog") version "1.3.1"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
-    id("io.gitlab.arturbosch.detekt") version "1.18.0"
+    id("io.gitlab.arturbosch.detekt") version "1.19.0"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
-    id("org.jetbrains.grammarkit") version "2021.1.3"
+    id("org.jetbrains.grammarkit") version "2021.2.1"
 }
 
 apply {
     plugin("com.jetbrains.rdgen")
 }
 
-val jvmVersion = "1.8"
-val kotlinVersion = "1.3" // should match org.jetbrains.kotlin.jvm (major.minor)
+val jvmVersion = "11"
+val kotlinVersion = "1.4" // should match org.jetbrains.kotlin.jvm (major.minor)
 
 group = properties("pluginGroup")
 version = properties("pluginVersion")
@@ -52,11 +50,11 @@ repositories {
     jcenter()
 }
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.18.0")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.19.0")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.8.2")
 }
 
 // Configure gradle-intellij-plugin plugin.
@@ -88,16 +86,6 @@ detekt {
         xml.enabled = false
         txt.enabled = false
     }
-}
-
-// configure grammarkit
-grammarKit {
-    // version of IntelliJ patched JFlex (see bintray link below), Default is 1.7.0-1
-    // jflexRelease = "1.7.0-1"
-
-    // tag or short commit hash of Grammar-Kit to use (see link below). Default is 2020.3.1
-    // use 2020.1 to have java-compatibility to rider 2020.1
-    grammarKitRelease = "2020.1"
 }
 
 // configure rdgen
@@ -146,12 +134,13 @@ configure<com.jetbrains.rd.generator.gradle.RdgenParams> {
 sourceSets["main"].java.srcDirs("src/main/gen")
 
 tasks {
+
     // generate the lexer (uses grammarkit)
-    register<org.jetbrains.grammarkit.tasks.GenerateLexer>("gen-lexer") {
-        dependsOn("gen-parser")
-        this.source = "src/main/kotlin/net/cakebuild/language/psi/Cake.flex"
-        this.targetDir = "src/main/gen/net/cakebuild/language/psi"
-        this.targetClass = "CakeLexer"
+    generateLexer {
+        source.set("src/main/kotlin/net/cakebuild/language/psi/Cake.flex")
+        targetDir.set("src/main/gen/net/cakebuild/language/psi")
+        targetClass.set("CakeLexer")
+        purgeOldFiles.set(true)
     }
 
     clean {
@@ -183,11 +172,11 @@ tasks {
     }
 
     // generate the parser (uses grammarkit)
-    register<org.jetbrains.grammarkit.tasks.GenerateParser>("gen-parser") {
-        this.source = "src/main/kotlin/net/cakebuild/language/psi/Cake.bnf"
-        this.targetRoot = "src/main/gen"
-        this.pathToParser = "/net/cakebuild/language/psi/CakeParser.java"
-        this.pathToPsiRoot = "/net/cakebuild/language/psi/parse"
+    generateParser {
+        source.set("src/main/kotlin/net/cakebuild/language/psi/Cake.bnf")
+        targetRoot.set("src/main/gen")
+        pathToParser.set("/net/cakebuild/language/psi/CakeParser.java")
+        pathToPsiRoot.set("/net/cakebuild/language/psi")
     }
 
     register("buildDotNet") {
@@ -263,7 +252,7 @@ tasks {
         targetCompatibility = jvmVersion
     }
     withType<KotlinCompile> {
-        dependsOn("gen-lexer", "gen-parser" /*, "rdgen"*/)
+        dependsOn(generateLexer, generateParser /*, "rdgen"*/)
         kotlinOptions {
             jvmTarget = jvmVersion
             languageVersion = kotlinVersion
@@ -277,21 +266,10 @@ tasks {
     // workaround for https://youtrack.jetbrains.com/issue/IDEA-210683
     getByName<JavaExec>("buildSearchableOptions") {
         jvmArgs(
-            "--illegal-access=deny",
-            "--add-opens=java.base/java.lang=ALL-UNNAMED",
-            "--add-opens=java.base/java.util=ALL-UNNAMED",
-            "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
-            "--add-opens=java.desktop/java.awt.event=ALL-UNNAMED",
-            "--add-opens=java.desktop/javax.swing=ALL-UNNAMED",
-            "--add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED",
-            "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
-            "--add-opens=java.desktop/sun.font=ALL-UNNAMED",
-            "--add-opens=java.desktop/sun.swing=ALL-UNNAMED"
+            // I gave up on tracking individual illegal access violations. 
+            // This seems to be an integral and unfixable part of IntelliJ.
+            "--illegal-access=permit"
         )
-
-        if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
-            jvmArgs("--add-opens=java.desktop/com.apple.eawt.event=ALL-UNNAMED")
-        }
     }
     withType<org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask> {
         exclude("**/gen/**", "**/*.Generated.kt")
@@ -337,7 +315,7 @@ tasks {
     }
 
     runPluginVerifier {
-        verifierVersion.set("1.256") // starting from 1.260 java 11 is needed.
+        // verifierVersion.set("1.256") // default ist "latest".
         ideVersions.addAll(
             properties("pluginVerifierIdeVersions")
                 .split(',')

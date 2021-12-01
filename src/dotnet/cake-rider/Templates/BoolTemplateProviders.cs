@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using JetBrains.ReSharper.Host.Features.ProjectModel.ProjectTemplates.DotNetExtensions;
-using JetBrains.ReSharper.Host.Features.ProjectModel.ProjectTemplates.DotNetTemplates;
+using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetExtensions;
+using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetTemplates;
 using JetBrains.Rider.Model;
 
 namespace net.cakebuild.Templates

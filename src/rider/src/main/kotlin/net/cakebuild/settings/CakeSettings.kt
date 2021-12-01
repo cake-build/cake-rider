@@ -1,7 +1,6 @@
 package net.cakebuild.settings
 
 import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.diagnostic.Logger
@@ -16,7 +15,7 @@ import net.cakebuild.shared.Constants
 class CakeSettings : PersistentStateComponent<CakeSettings> {
     companion object {
         fun getInstance(project: Project): CakeSettings {
-            return ServiceManager.getService(project, CakeSettings::class.java)
+            return project.getService(CakeSettings::class.java)
         }
     }
 
@@ -24,6 +23,7 @@ class CakeSettings : PersistentStateComponent<CakeSettings> {
 
     var cakeTaskParsingRegex = "Task\\s*?\\(\\s*?\"(.*?)\"\\s*?\\)"
     var cakeVerbosity = "normal"
+    var cakeUseNetTool = false
     var cakeRunner = "~/.dotnet/tools/dotnet-cake"
     var cakeRunnerOverrides = mutableMapOf(Pair("^.*windows.*$", "\${USERPROFILE}\\.dotnet\\tools\\dotnet-cake.exe"))
     var cakeScriptSearchPaths: Collection<String> = mutableListOf(".")
@@ -44,7 +44,11 @@ class CakeSettings : PersistentStateComponent<CakeSettings> {
     var downloadContentUrlBootstrapperNetToolSh =
         "https://cakebuild.net/download/bootstrapper/dotnet-tool/bash"
 
-    fun getCurrentCakeRunner(): String {
+    fun getCurrentCakeRunner(): Array<String> {
+        if (cakeUseNetTool) {
+            return arrayOf("dotnet", "cake")
+        }
+
         val os = System.getProperty("os.name")
         var runner = cakeRunner
         cakeRunnerOverrides.forEach forEach@{
@@ -73,7 +77,7 @@ class CakeSettings : PersistentStateComponent<CakeSettings> {
         }
 
         log.trace("resolved Cake runner to $runner")
-        return runner
+        return arrayOf(runner)
     }
 
     override fun getState(): CakeSettings {

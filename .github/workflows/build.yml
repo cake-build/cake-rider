@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout the requested branch
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
 
       - name: Fetch all tags and branches
         run: git fetch --prune --unshallow
@@ -37,24 +37,24 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
-          java-version: '8'
+          java-version: '11'
 
       # Cache Gradle Wrapper
       - name: Setup Gradle Wrapper Cache
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v2.1.7
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
 
       # Cache Cake tools
       - name: Cache Tools
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v2.1.7
         with:
           path: tools
           key: ${{ runner.os }}-tools-${{ hashFiles('recipe.cake') }}
 
       - name: Build project
-        uses: cake-build/cake-action@v1.3.0
+        uses: cake-build/cake-action@v1.4.0
         with:
           script-path: recipe.cake
           target: CI

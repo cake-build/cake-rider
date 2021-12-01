@@ -21,6 +21,7 @@
     <projectService serviceImplementation="net.cakebuild.settings.CakeSettings" />
     <errorHandler implementation="net.cakebuild.shared.GitHubErrorReporter" />
     <stepsBeforeRunProvider implementation="net.cakebuild.beforeRunner.EnsureNetToolBeforeRunTaskProvider"/>
+    <stepsBeforeRunProvider implementation="net.cakebuild.beforeRunner.RestoreNetToolsBeforeRunTaskProvider"/>
     <createFromTemplateHandler implementation="net.cakebuild.actions.CakeCreateFromTemplateHandler"/>
     <defaultLiveTemplates file="/liveTemplates/Cake.xml"/>
     <liveTemplateContext implementation="net.cakebuild.liveTemplates.CakeContext"/>
@@ -40,6 +41,7 @@
             implementation="net.cakebuild.templates.CakeTemplateProjectCustomizer$CakeFrostingBuild" />
     <rider.projectView.actions.projectTemplating.backend.reSharperProjectTemplateCustomizer
             implementation="net.cakebuild.templates.CakeTemplateTestProjectCustomizer$CakeAddinTest" />
+    <notificationGroup id="Cake" displayType="BALLOON"/>
   </extensions>
 
   <actions>
@@ -99,26 +101,6 @@
                   class="net.cakebuild.actions.InstallFileToProjectAction$NetToolSh"
                   text="Shell"
                   description="Add or update the Shell bootstrapper for .NET Tool" />
-          <separator text=".NET Framework" />
-          <action
-                  id="CakeMainMenu.Install.Bootstapper.NETFramework.Ps"
-                  class="net.cakebuild.actions.InstallFileToProjectAction$NetFrameworkPs"
-                  text="PowerShell"
-                  description="Add or update the PowerShell bootstrapper for .NET Framework" />
-          <action
-                  id="CakeMainMenu.Install.Bootstapper.NETFramework.Sh"
-                  class="net.cakebuild.actions.InstallFileToProjectAction$NetFrameworkSh"
-                  text="Shell"
-                  description="Add or update the Shell bootstrapper for .NET Framework" />
-          <separator text=".NET Core" />
-          <action id="CakeMainMenu.Install.Bootstapper.NETCore.Ps"
-                  class="net.cakebuild.actions.InstallFileToProjectAction$NetCorePs"
-                  text="PowerShell"
-                  description="Add or update the PowerShell bootstrapper for .NET Core" />
-          <action id="CakeMainMenu.Install.Bootstapper.NETCore.Sh"
-                  class="net.cakebuild.actions.InstallFileToProjectAction$NetCoreSh"
-                  text="Shell"
-                  description="Add or update the Shell bootstrapper for .NET Core" />
         </group>
         <action id="CakeMainMenu.Install.ConfigurationFile"
                 class="net.cakebuild.actions.InstallFileToProjectAction$ConfigurationFile"
