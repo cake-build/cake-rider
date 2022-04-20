@@ -12,6 +12,7 @@ import com.intellij.openapi.project.Project
 import net.cakebuild.installers.CakeNetToolInstaller
 import net.cakebuild.shared.CakeBalloonNotifications
 
+@Suppress("UnnecessaryAbstractClass")
 abstract class CakeToolInstallAction : AnAction(), DumbAware {
     class DotNetToolInstallAction : CakeToolInstallAction() {
         companion object {
