@@ -29,7 +29,7 @@ class CakeVersion internal constructor(private val parts: List<Int>) : Comparabl
             }
 
             val txtParts = text.split("-")[0].split(".")
-            val parts = txtParts.map { it ->
+            val parts = txtParts.map {
                 parseInt(it)
             }
 
