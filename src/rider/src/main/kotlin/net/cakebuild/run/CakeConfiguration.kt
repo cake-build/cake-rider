@@ -69,7 +69,7 @@ class CakeConfiguration(project: Project, factory: CakeConfigurationFactory) :
     }
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> {
-        return CakeConfigurationEditor()
+        return CakeConfigurationEditor(project)
     }
 
     override fun getOptions(): CakeConfigurationOptions {

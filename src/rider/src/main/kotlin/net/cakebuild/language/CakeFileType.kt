@@ -12,6 +12,8 @@ class CakeFileType : LanguageFileType(CakeLanguage) {
 
     companion object {
         const val EXTENSION = "cake"
+
+        @JvmField
         val INSTANCE = CakeFileType()
     }
 }
