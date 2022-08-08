@@ -14,7 +14,7 @@ BuildParameters.SetParameters(
   webLinkRoot: "", // do *not* create a virtual directory for wyam docs. This setting will break gh-pages. (But work for preview)
   wyamConfigurationFile: MakeAbsolute((FilePath)"docs/wyam.config"),
   preferredBuildProviderType: BuildProviderType.GitHubActions,
-  preferredBuildAgentOperatingSystem: PlatformFamily.Linux)
+  preferredBuildAgentOperatingSystem: PlatformFamily.Linux
 );
 
 BuildParameters.PrintParameters(Context);
