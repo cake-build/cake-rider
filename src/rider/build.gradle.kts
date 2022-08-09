@@ -4,18 +4,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
 
-buildscript {
-    repositories {
-        maven { setUrl("https://cache-redirector.jetbrains.com/www.myget.org/F/rd-snapshots/maven") }
-        mavenCentral()
-    }
-    dependencies {
-        // https://www.myget.org/feed/rd-snapshots/package/maven/com.jetbrains.rd/rd-gen
-        // version 0.203.x should match pluginSinceBuild ?
-        classpath("com.jetbrains.rd", "rd-gen", "0.203.190")
-    }
-}
-
 plugins {
     // Java support
     id("java")
@@ -24,6 +12,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.4.32"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "1.8.0"
+    id("com.jetbrains.rdgen") version "2022.2.5"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "1.3.1"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
@@ -32,10 +21,6 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
     id("org.jetbrains.grammarkit") version "2021.2.2"
-}
-
-apply {
-    plugin("com.jetbrains.rdgen")
 }
 
 val jvmVersion = "11"
@@ -89,35 +74,24 @@ detekt {
 }
 
 // configure rdgen
-configure<com.jetbrains.rd.generator.gradle.RdgenParams> {
+configure<com.jetbrains.rd.generator.gradle.RdGenExtension> {
+    val modelDir = File(rootDir, "protocol/src/main/kotlin/model")
     val csOutput = File(rootDir, "../dotnet/cake-rider/Protocol")
     val ktOutput = File(rootDir, "src/main/gen/net/cakebuild/protocol")
 
-    mkdir(csOutput.absolutePath)
-    mkdir(ktOutput.absolutePath)
-
     verbose = true
-    hashFolder = "build/rdgen"
-    logger.info("Configuring rdgen params")
     classpath({
-        val ideaDependency = intellij.getIdeaDependency(project)
-        logger.info("Calculating classpath for rdgen, intellij.ideaDependency is $ideaDependency")
-        val sdkPath = ideaDependency.classes
-        val rdLibDirectory = File(sdkPath, "lib/rd").canonicalFile
-        val riderModelJar = "$rdLibDirectory/rider-model.jar"
-        logger.info("rider-model.jar detected at $riderModelJar")
-
-        riderModelJar
+        "${tasks.setupDependencies.get().idea.get().classes}/lib/rd/rider-model.jar"
     })
-    sources(File(rootDir, "protocol/src/main/kotlin/model"))
-    packages = "model"
-    clearOutput = true
+    sources("${modelDir}/rider")
+    hashFolder = "$buildDir"
+    packages = "model.rider"
 
     generator {
         language = "kotlin"
         transform = "asis"
         root = "com.jetbrains.rider.model.nova.ide.IdeRoot"
-        namespace = "com.jetbrains.rider.model"
+        namespace = "net.cakebuild.protocol"
         directory = "$ktOutput"
     }
 
@@ -125,7 +99,7 @@ configure<com.jetbrains.rd.generator.gradle.RdgenParams> {
         language = "csharp"
         transform = "reversed"
         root = "com.jetbrains.rider.model.nova.ide.IdeRoot"
-        namespace = "JetBrains.Rider.Model"
+        namespace = "net.cakebuild.Protocol"
         directory = "$csOutput"
     }
 }
@@ -180,7 +154,7 @@ tasks {
     }
 
     register("buildDotNet") {
-        // dependsOn("rdgen")
+        dependsOn("rdgen")
 
         val pluginName = properties("pluginName")
         val dotNetConfiguration = properties("dotNetConfiguration")
@@ -252,7 +226,7 @@ tasks {
         targetCompatibility = jvmVersion
     }
     withType<KotlinCompile> {
-        dependsOn(generateLexer, generateParser /*, "rdgen"*/)
+        dependsOn(generateLexer, generateParser, "rdgen")
         kotlinOptions {
             jvmTarget = jvmVersion
             languageVersion = kotlinVersion
