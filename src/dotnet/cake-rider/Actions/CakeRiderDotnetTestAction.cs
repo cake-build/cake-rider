@@ -1,8 +1,6 @@
 ﻿using JetBrains.Application.DataContext;
 using JetBrains.Application.UI.Actions;
 using JetBrains.Application.UI.ActionsRevised.Menu;
-using JetBrains.Application.UI.ActionSystem.ActionsRevised.Menu;
-using JetBrains.ReSharper.Psi.Files;
 using JetBrains.Util;
 
 namespace net.cakebuild.Actions

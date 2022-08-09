@@ -1,4 +1,4 @@
-package net.cakebuild.run
+package net.cakebuild.run.script
 
 import com.intellij.execution.Executor
 import com.intellij.execution.configurations.CommandLineState
@@ -17,10 +17,10 @@ import com.intellij.util.execution.ParametersListUtil
 import net.cakebuild.settings.CakeSettings
 import java.nio.file.FileSystems
 
-class CakeConfiguration(project: Project, factory: CakeConfigurationFactory) :
-    RunConfigurationBase<CakeConfigurationOptions>(project, factory, "Cake") {
+class CakeScriptConfiguration(project: Project, factory: CakeScriptConfigurationFactory) :
+    RunConfigurationBase<CakeScriptConfigurationOptions>(project, factory, "Cake") {
 
-    private val log = Logger.getInstance(CakeConfiguration::class.java)
+    private val log = Logger.getInstance(CakeScriptConfiguration::class.java)
 
     fun setOptions(filePath: String, taskName: String, verbosity: String) {
         val options = options
@@ -69,10 +69,10 @@ class CakeConfiguration(project: Project, factory: CakeConfigurationFactory) :
     }
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> {
-        return CakeConfigurationEditor()
+        return CakeScriptConfigurationEditor(project)
     }
 
-    override fun getOptions(): CakeConfigurationOptions {
-        return super.getOptions() as CakeConfigurationOptions
+    override fun getOptions(): CakeScriptConfigurationOptions {
+        return super.getOptions() as CakeScriptConfigurationOptions
     }
 }

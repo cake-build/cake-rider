@@ -1,5 +1,6 @@
 package net.cakebuild.toolwindow
 
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.diagnostic.Logger
@@ -7,8 +8,20 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.ScrollPaneFactory
 import com.intellij.ui.treeStructure.Tree
+import com.jetbrains.rd.platform.util.lifetime
+import com.jetbrains.rd.util.lifetime.SequentialLifetimes
+import com.jetbrains.rd.util.reactive.IViewableList
+import com.jetbrains.rd.util.reactive.valueOrThrow
+import com.jetbrains.rider.projectView.solution
+import icons.CakeIcons
+import icons.RiderIcons
+import net.cakebuild.protocol.CakeFrostingProject
+import net.cakebuild.protocol.cakeFrostingProjectsModel
 import net.cakebuild.shared.CakeDataKeys
-import net.cakebuild.shared.CakeProject
+import net.cakebuild.shared.CakeFrostingTask
+import net.cakebuild.shared.CakeScriptProject
+import net.cakebuild.shared.CakeTask
+import net.cakebuild.shared.CakeTaskRunMode
 import java.awt.Component
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -26,6 +39,7 @@ import javax.swing.tree.TreeSelectionModel
 class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true, true) {
 
     private val tree: Tree = Tree()
+    private val sequentialLifetimes: SequentialLifetimes = SequentialLifetimes(project.lifetime)
 
     init {
         val scrollPane = ScrollPaneFactory.createScrollPane(tree)
@@ -90,11 +104,11 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
         }
     }
 
-    private fun getSelectedTask(): CakeProject.CakeTask? {
+    private fun getSelectedTask(): CakeTask? {
         val selected = tree.getSelectedNodes(DefaultMutableTreeNode::class.java) { it.isLeaf }.firstOrNull()
             ?: return null
         return when (selected.userObject) {
-            is CakeProject.CakeTask -> selected.userObject as CakeProject.CakeTask
+            is CakeTask -> selected.userObject as CakeTask
             else -> null
         }
     }
@@ -103,20 +117,62 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
         return getSelectedTask() != null
     }
 
-    fun runTask() {
+    private fun runTask(mode: CakeTaskRunMode) {
         val task = getSelectedTask() ?: return
-        task.run(CakeProject.CakeTaskRunMode.Run)
+        task.run(mode)
+    }
+
+    fun runTask() {
+        runTask(CakeTaskRunMode.Run)
     }
 
     fun createRunConfig() {
-        val task = getSelectedTask() ?: return
-        task.run(CakeProject.CakeTaskRunMode.SaveConfigOnly)
+        runTask(CakeTaskRunMode.SaveConfigOnly)
     }
 
     fun refreshTree() {
+        val lifetime = sequentialLifetimes.next()
         val rootNode = DefaultMutableTreeNode(project.name)
-        val cakeProject = CakeProject(project)
 
+        val cakeFrostingProjectsModel = project.solution.cakeFrostingProjectsModel
+        val frostingNodes = mutableListOf<DefaultMutableTreeNode>()
+        val projectLifetimes = SequentialLifetimes(lifetime)
+
+        val updateFrostingNodes = { _: IViewableList.Event<CakeFrostingProject> ->
+            frostingNodes.forEach(rootNode::remove)
+            frostingNodes.clear()
+
+            val projectLifetime = projectLifetimes.next()
+            for (project in cakeFrostingProjectsModel.projects) {
+                val projectNode = DefaultMutableTreeNode(project)
+
+                val taskNodes = mutableListOf<DefaultMutableTreeNode>()
+
+                val updateTaskNodes = { _: IViewableList.Event<String> ->
+                    taskNodes.forEach(projectNode::remove)
+                    taskNodes.clear()
+
+                    for (task in project.tasks) {
+                        val taskNode = DefaultMutableTreeNode(CakeFrostingTask(this.project, project, task))
+                        projectNode.add(taskNode)
+                        taskNodes.add(taskNode)
+                    }
+
+                    (tree.model as DefaultTreeModel).reload()
+                }
+
+                project.tasks.advise(projectLifetime, updateTaskNodes)
+
+                rootNode.add(projectNode)
+                frostingNodes.add(projectNode)
+            }
+
+            (tree.model as DefaultTreeModel).reload()
+        }
+
+        cakeFrostingProjectsModel.projects.advise(lifetime, updateFrostingNodes)
+
+        val cakeProject = CakeScriptProject(project)
         for (cakeFile in cakeProject.getCakeFiles()) {
             val fileNode = DefaultMutableTreeNode(cakeFile)
             rootNode.add(fileNode)
@@ -159,13 +215,22 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
                 val label = cell as JLabel
                 cell.toolTipText = null
                 when (val data = (value as DefaultMutableTreeNode).userObject) {
-                    is CakeProject.CakeTask -> {
-                        label.text = data.taskName
+                    is CakeTask -> {
+                        label.text = data.name
+                        label.icon = AllIcons.Nodes.Editorconfig
                     }
-                    is CakeProject.CakeFile -> {
+
+                    is CakeScriptProject.CakeFile -> {
                         cell.toolTipText = data.file.path
                         label.text = data.file.nameWithoutExtension
+                        label.icon = CakeIcons.CakeFileType
                     }
+
+                    is CakeFrostingProject -> {
+                        label.text = data.name.valueOrThrow
+                        label.icon = RiderIcons.RunConfigurations.DotNetProject
+                    }
+
                     else -> {
                         // do not modify the label - it's probably fine the way it is.
                         log.trace(
