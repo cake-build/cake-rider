@@ -42,12 +42,19 @@ jobs:
       - name: Gradle Wrapper Validation
         uses: gradle/wrapper-validation-action@v1.0.4
 
-      # Setup Java 1.8 environment which is needed to build
+      # Setup Java 11 environment which is needed to build
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '11'
+      
+      # Setup dotnet 6
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2.1.0
+        with:
+          dotnet-version: |
+            6.0.x
 
       # Cache Gradle Wrapper
       - name: Setup Gradle Wrapper Cache
