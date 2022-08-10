@@ -8,7 +8,7 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.util.Key
 import icons.CakeIcons
 import net.cakebuild.installers.CakeNetToolInstaller
-import net.cakebuild.run.CakeConfiguration
+import net.cakebuild.run.script.CakeScriptConfiguration
 import net.cakebuild.shared.CakeBalloonNotifications
 
 @Suppress("DialogTitleCapitalization")
@@ -27,7 +27,7 @@ class EnsureNetToolBeforeRunTaskProvider :
     override fun getDescription(task: EnsureNetToolBeforeRunTask?) = "Ensure Cake .NET Tool (Global) is installed"
 
     override fun createTask(runConfiguration: RunConfiguration): EnsureNetToolBeforeRunTask? {
-        if (runConfiguration is CakeConfiguration) {
+        if (runConfiguration is CakeScriptConfiguration) {
             return EnsureNetToolBeforeRunTask()
         }
 

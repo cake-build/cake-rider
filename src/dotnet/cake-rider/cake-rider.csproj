@@ -7,14 +7,33 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <IsPackable>false</IsPackable>
         <DefineConstants>$(DefineConstants);RIDER</DefineConstants>
+        <LangVersion>latest</LangVersion>
+        <DebugType Condition="$(Configuration) == 'Debug'">embedded</DebugType>
     </PropertyGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="$(SolutionDir)/stylecop.json" Link="stylecop.json" />
+        <None Include="$(SolutionDir)/.editorconfig" Link=".editorconfig" />
+    </ItemGroup>
     
     <PropertyGroup>
         <!-- will be injected by gradle at build -->
-        <SdkVersion Condition="'$(SdkVersion)' == ''">2021.2.1</SdkVersion>
+        <SdkVersion Condition="'$(SdkVersion)' == ''">2022.2.0</SdkVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="JetBrains.Rider.SDK" Version="$(SdkVersion)" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="IDisposableAnalyzers" Version="4.0.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 </Project>

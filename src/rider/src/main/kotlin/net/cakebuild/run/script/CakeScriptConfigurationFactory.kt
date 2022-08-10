@@ -1,4 +1,4 @@
-package net.cakebuild.run
+package net.cakebuild.run.script
 
 import com.intellij.execution.BeforeRunTask
 import com.intellij.execution.configurations.ConfigurationFactory
@@ -9,13 +9,13 @@ import com.intellij.openapi.util.Key
 import com.jetbrains.rider.build.tasks.BuildProjectBeforeRunTask
 import com.jetbrains.rider.build.tasks.BuildProjectBeforeRunTaskProvider
 
-class CakeConfigurationFactory(cakeConfigurationType: CakeConfigurationType) :
+class CakeScriptConfigurationFactory(cakeConfigurationType: CakeScriptConfigurationType) :
     ConfigurationFactory(cakeConfigurationType) {
 
     override fun getSingletonPolicy() = RunConfigurationSingletonPolicy.SINGLE_INSTANCE
 
-    override fun createTemplateConfiguration(project: Project): CakeConfiguration {
-        return CakeConfiguration(project, this)
+    override fun createTemplateConfiguration(project: Project): CakeScriptConfiguration {
+        return CakeScriptConfiguration(project, this)
     }
 
     override fun getName(): String {
@@ -27,7 +27,7 @@ class CakeConfigurationFactory(cakeConfigurationType: CakeConfigurationType) :
     }
 
     override fun getOptionsClass(): Class<out BaseState> {
-        return CakeConfigurationOptions::class.java
+        return CakeScriptConfigurationOptions::class.java
     }
 
     override fun configureBeforeRunTaskDefaults(

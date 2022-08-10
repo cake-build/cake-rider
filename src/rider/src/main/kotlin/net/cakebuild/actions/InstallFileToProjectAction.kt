@@ -12,7 +12,7 @@ import com.intellij.openapi.vcs.VcsShowConfirmationOption
 import com.intellij.util.download.DownloadableFileService
 import com.intellij.util.ui.ConfirmationDialog
 import net.cakebuild.settings.CakeSettings
-import net.cakebuild.shared.CakeProject
+import net.cakebuild.shared.CakeScriptProject
 
 abstract class InstallFileToProjectAction : AnAction(), DumbAware {
 
@@ -23,7 +23,7 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
     protected abstract fun getUrl(settings: CakeSettings): String
 
     override fun actionPerformed(e: AnActionEvent) {
-        val projectDir = CakeProject(e.project!!).getProjectDir()!!
+        val projectDir = CakeScriptProject(e.project!!).getProjectDir()!!
         val existing = projectDir.findChild(fileName)
         if (null != existing && existing.exists()) {
             val dlg = ConfirmationDialog.requestForConfirmation(

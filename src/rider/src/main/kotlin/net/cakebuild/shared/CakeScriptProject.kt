@@ -15,15 +15,15 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.jetbrains.rider.projectView.hasSolution
 import com.jetbrains.rider.projectView.solutionDirectory
 import net.cakebuild.language.CakeFileType
-import net.cakebuild.run.CakeConfiguration
-import net.cakebuild.run.CakeConfigurationType
+import net.cakebuild.run.script.CakeScriptConfiguration
+import net.cakebuild.run.script.CakeScriptConfigurationType
 import net.cakebuild.settings.CakeSettings
 import java.nio.file.FileSystems
 import java.util.Stack
 
-class CakeProject(private val project: Project) {
+class CakeScriptProject(private val project: Project) {
 
-    private val log = Logger.getInstance(CakeProject::class.java)
+    private val log = Logger.getInstance(CakeScriptProject::class.java)
 
     fun getProjectDir(): VirtualFile? {
         var projectDir = project.guessProjectDir()
@@ -105,13 +105,13 @@ class CakeProject(private val project: Project) {
     companion object {
         fun runCakeTarget(project: Project, file: VirtualFile, taskName: String, mode: CakeTaskRunMode) {
             val runManager = project.getService(RunManager::class.java)
-            val configurationType = ConfigurationTypeUtil.findConfigurationType(CakeConfigurationType::class.java)
+            val configurationType = ConfigurationTypeUtil.findConfigurationType(CakeScriptConfigurationType::class.java)
             val fileSystems = FileSystems.getDefault()
             val projectPath = fileSystems.getPath(project.basePath!!)
             val path = projectPath.relativize(fileSystems.getPath(file.path))
             val cfgName = runManager.suggestUniqueName("${path.fileName}: $taskName", configurationType)
-            val runConfiguration = runManager.createConfiguration(cfgName, configurationType.cakeFactory)
-            val cakeConfiguration = runConfiguration.configuration as CakeConfiguration
+            val runConfiguration = runManager.createConfiguration(cfgName, configurationType.factory)
+            val cakeConfiguration = runConfiguration.configuration as CakeScriptConfiguration
             val settings = CakeSettings.getInstance(project)
             cakeConfiguration.setOptions(path.toString(), taskName, settings.cakeVerbosity)
 
@@ -139,22 +139,9 @@ class CakeProject(private val project: Project) {
         fun getTasks() = sequence {
             val regex = Regex(CakeSettings.getInstance(project).cakeTaskParsingRegex)
             val tasks = regex.findAll(content).map {
-                CakeTask(project, file, it.groups[1]!!.value)
+                CakeScriptTask(project, file, it.groups[1]!!.value)
             }
             yieldAll(tasks)
         }
-    }
-
-    data class CakeTask(private val project: Project, val file: VirtualFile, val taskName: String) {
-
-        fun run(mode: CakeTaskRunMode) {
-            runCakeTarget(project, file, taskName, mode)
-        }
-    }
-
-    enum class CakeTaskRunMode {
-        Run,
-        Debug,
-        SaveConfigOnly
     }
 }
