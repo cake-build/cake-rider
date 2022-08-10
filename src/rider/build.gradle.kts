@@ -128,11 +128,12 @@ tasks {
                 executable = "dotnet"
                 args = listOf(
                     "msbuild",
-                    "/t:Clean",
+                    "-restore",
+                    "-target:Clean",
                     File(dotnetDir, "$pluginName.sln").absolutePath,
-                    "/p:Configuration=$dotNetConfiguration",
-                    "/p:SdkVersion=$platformVersion",
-                    "/p:HostFullIdentifier="
+                    "-property:Configuration=$dotNetConfiguration",
+                    "-property:SdkVersion=$platformVersion",
+                    "-property:HostFullIdentifier="
                 )
                 workingDir = File(rootDir, "../dotnet")
             }
@@ -177,11 +178,12 @@ tasks {
                 executable = "dotnet"
                 args = listOf(
                     "msbuild",
-                    "/t:Restore;Build",
+                    "-restore",
+                    "-target:Build",
                     File(dotnetDir, "$pluginName.sln").absolutePath,
-                    "/p:Configuration=$dotNetConfiguration",
-                    "/p:SdkVersion=$platformVersion",
-                    "/p:HostFullIdentifier="
+                    "-property:Configuration=$dotNetConfiguration",
+                    "-property:SdkVersion=$platformVersion",
+                    "-property:HostFullIdentifier="
                 )
                 workingDir = dotnetDir
             }
