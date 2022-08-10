@@ -10,10 +10,22 @@ import com.jetbrains.rider.run.configurations.IProjectBasedRunConfiguration
 import com.jetbrains.rider.run.configurations.RiderAsyncRunConfiguration
 import org.jdom.Element
 
-
-class CakeFrostingConfiguration(project: Project, private val factory: CakeFrostingConfigurationFactory, val parameters: CakeFrostingConfigurationParameters) :
-    RiderAsyncRunConfiguration("Cake Frosting", project, factory, ::CakeFrostingConfigurationEditor, CakeFrostingExecutorFactory(project, parameters)),
-    IRiderDebuggable, ICanRunFromBackend, IProjectBasedRunConfiguration, IDotNetRunConfigurationWithPostStartupActivitiesSupport {
+class CakeFrostingConfiguration(
+    project: Project,
+    private val factory: CakeFrostingConfigurationFactory,
+    val parameters: CakeFrostingConfigurationParameters
+) :
+    RiderAsyncRunConfiguration(
+        "Cake Frosting",
+        project,
+        factory,
+        ::CakeFrostingConfigurationEditor,
+        CakeFrostingExecutorFactory(project, parameters)
+    ),
+    IRiderDebuggable,
+    ICanRunFromBackend,
+    IProjectBasedRunConfiguration,
+    IDotNetRunConfigurationWithPostStartupActivitiesSupport {
 
     override fun getProjectFilePath(): String {
         return parameters.projectFilePath

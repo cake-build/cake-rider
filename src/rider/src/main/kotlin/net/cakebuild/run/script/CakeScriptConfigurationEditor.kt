@@ -17,16 +17,23 @@ import net.cakebuild.run.customBuild
 import javax.swing.JComponent
 
 class CakeScriptConfigurationViewModel(lifetime: Lifetime, project: Project) : RunConfigurationViewModelBase() {
-    private val scriptPathSelector: PathSelector = PathSelector("Script path:", "Script_path", FileChooserDescriptorFactory.createSingleFileDescriptor(CakeFileType.INSTANCE), lifetime)
+    private val scriptPathSelector: PathSelector = PathSelector(
+        "Script path:",
+        "Script_path",
+        FileChooserDescriptorFactory.createSingleFileDescriptor(CakeFileType.INSTANCE),
+        lifetime
+    )
     private val taskEditor: TextEditor = TextEditor("Task:", "Task", lifetime)
     private val verbositySelector: VerbositySelector = VerbositySelector(lifetime, "Verbosity:", "Verbosity")
-    private val programParametersEditor: ProgramParametersEditor = ProgramParametersEditor("Arguments:", "Program_arguments", lifetime)
+    private val programParametersEditor: ProgramParametersEditor =
+        ProgramParametersEditor("Arguments:", "Program_arguments", lifetime)
 
     init {
         scriptPathSelector.rootDirectory.set(project.basePath)
     }
 
-    override val controls: List<ControlBase> = mutableListOf(scriptPathSelector, taskEditor, verbositySelector, programParametersEditor)
+    override val controls: List<ControlBase> =
+        mutableListOf(scriptPathSelector, taskEditor, verbositySelector, programParametersEditor)
 
     fun reset(parameters: CakeScriptConfigurationOptions) {
         scriptPathSelector.path.set(parameters.scriptPath.orEmpty())

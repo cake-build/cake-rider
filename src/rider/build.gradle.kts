@@ -24,7 +24,7 @@ plugins {
 }
 
 val jvmVersion = "11"
-val kotlinVersion = "1.4" // should match org.jetbrains.kotlin.jvm (major.minor)
+val kotlinVersion = "1.6" // should match org.jetbrains.kotlin.jvm (major.minor)
 
 group = properties("pluginGroup")
 version = properties("pluginVersion")
@@ -65,12 +65,6 @@ intellij {
 detekt {
     config = files("./detekt-config.yml")
     buildUponDefaultConfig = true
-
-    reports {
-        html.enabled = false
-        xml.enabled = false
-        txt.enabled = false
-    }
 }
 
 // configure rdgen
@@ -236,6 +230,12 @@ tasks {
     }
     withType<Detekt> {
         jvmTarget = jvmVersion
+        excludes.add("**/gen/**")
+        reports {
+            html.required.set(false)
+            xml.required.set(false)
+            txt.required.set(false)
+        }
     }
     // workaround for https://youtrack.jetbrains.com/issue/IDEA-210683
     getByName<JavaExec>("buildSearchableOptions") {

@@ -28,7 +28,8 @@ class CakeScriptTask(project: Project, val file: VirtualFile, taskName: String) 
     }
 }
 
-class CakeFrostingTask(project: Project, val cakeProject: CakeFrostingProject, taskName: String) : CakeTask(project, taskName) {
+class CakeFrostingTask(project: Project, val cakeProject: CakeFrostingProject, taskName: String) :
+    CakeTask(project, taskName) {
     override fun run(mode: CakeTaskRunMode) {
         val runManager = project.getService(RunManager::class.java)
         val configurationType = ConfigurationTypeUtil.findConfigurationType(CakeFrostingConfigurationType::class.java)

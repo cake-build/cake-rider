@@ -69,7 +69,7 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
                 actionManager.getAction("CakeTasksWindow") as ActionGroup,
                 true
             )
-        actionToolbar.setTargetComponent(this)
+        actionToolbar.targetComponent = this
         toolbar = actionToolbar.component
     }
 

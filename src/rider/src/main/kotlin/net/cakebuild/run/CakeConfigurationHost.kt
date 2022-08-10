@@ -20,8 +20,9 @@ class CakeConfigurationHost(project: Project) : ProtocolSubscribedProjectCompone
 
             for (runConfiguration in runConfigurations) {
                 if (runConfiguration.typeId != CakeFrostingConfigurationType.id) continue
-                val configurationSettings = runManager.findConfigurationByTypeAndName(runConfiguration.typeId, runConfiguration.name)
-                    ?: continue
+                val configurationSettings =
+                    runManager.findConfigurationByTypeAndName(runConfiguration.typeId, runConfiguration.name)
+                        ?: continue
                 val configuration = configurationSettings.configuration as CakeFrostingConfiguration
 
                 model.runConfigurationTaskNames[runConfiguration] = configuration.parameters.taskName

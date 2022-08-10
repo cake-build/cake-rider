@@ -10,25 +10,30 @@ import com.jetbrains.rider.run.configurations.project.DotNetProjectConfiguration
 import com.jetbrains.rider.run.configurations.project.DotNetProjectExecutorFactory
 import com.jetbrains.rider.run.configurations.project.DotNetStartBrowserParameters
 
-class CakeFrostingExecutorFactory(val project: Project, val parameters: CakeFrostingConfigurationParameters) : AsyncExecutorFactory {
-    override suspend fun create(executorId: String, environment: ExecutionEnvironment, lifetime: Lifetime): RunProfileState {
-        return DotNetProjectExecutorFactory(project, DotNetProjectConfigurationParameters(
+class CakeFrostingExecutorFactory(val project: Project, val parameters: CakeFrostingConfigurationParameters) :
+    AsyncExecutorFactory {
+    override suspend fun create(executorId: String, environment: ExecutionEnvironment, lifetime: Lifetime):
+        RunProfileState {
+        return DotNetProjectExecutorFactory(
             project,
-            exePath = "",
-            programParameters = parameters.programArguments,
-            workingDirectory = "",
-            envs = parameters.envs,
-            isPassParentEnvs = true,
-            useExternalConsole = false,
-            runtimeArguments = "",
-            projectFilePath = parameters.projectFilePath,
-            trackProjectExePath = true,
-            trackProjectArguments = true,
-            trackProjectWorkingDirectory = true,
-            projectKind = RunnableProjectKinds.DotNetCore,
-            projectTfm = "",
-            startBrowserParameters = DotNetStartBrowserParameters(),
-            runtimeType = null
-        )).create(executorId, environment, lifetime)
+            DotNetProjectConfigurationParameters(
+                project,
+                exePath = "",
+                programParameters = parameters.programArguments,
+                workingDirectory = "",
+                envs = parameters.envs,
+                isPassParentEnvs = true,
+                useExternalConsole = false,
+                runtimeArguments = "",
+                projectFilePath = parameters.projectFilePath,
+                trackProjectExePath = true,
+                trackProjectArguments = true,
+                trackProjectWorkingDirectory = true,
+                projectKind = RunnableProjectKinds.DotNetCore,
+                projectTfm = "",
+                startBrowserParameters = DotNetStartBrowserParameters(),
+                runtimeType = null
+            )
+        ).create(executorId, environment, lifetime)
     }
 }

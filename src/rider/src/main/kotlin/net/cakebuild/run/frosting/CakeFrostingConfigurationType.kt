@@ -12,7 +12,9 @@ import com.jetbrains.rider.run.configurations.RunnableProjectKinds
 import icons.CakeIcons
 
 class CakeFrostingConfigurationType :
-    ConfigurationTypeBase(id, "Cake Frosting", "Cake Frosting", CakeIcons.CakeAction), IRunnableProjectConfigurationType, ICanCreateFromBackend {
+    ConfigurationTypeBase(id, "Cake Frosting", "Cake Frosting", CakeIcons.CakeAction),
+    IRunnableProjectConfigurationType,
+    ICanCreateFromBackend {
 
     val factory = CakeFrostingConfigurationFactory(this)
 
@@ -24,10 +26,13 @@ class CakeFrostingConfigurationType :
         return kind == RunnableProjectKinds.DotNetCore
     }
 
-    override fun createFromTemplate(runConfigurationTemplate: RunConfigurationTemplate, runManager: RunManager): RunConfiguration {
+    override fun createFromTemplate(runConfigurationTemplate: RunConfigurationTemplate, runManager: RunManager):
+        RunConfiguration {
         val name = runConfigurationTemplate.entries.single { it.key == RunConfigurationTemplateKey.Name }.value
-        val projectFilePath = runConfigurationTemplate.entries.single { it.key == RunConfigurationTemplateKey.ProjectFilePath }.value
-        val taskName = runConfigurationTemplate.entries.single { it.key == RunConfigurationTemplateKey.StaticMethodName }.value
+        val projectFilePath =
+            runConfigurationTemplate.entries.single { it.key == RunConfigurationTemplateKey.ProjectFilePath }.value
+        val taskName =
+            runConfigurationTemplate.entries.single { it.key == RunConfigurationTemplateKey.StaticMethodName }.value
 
         val configurationSettings = runManager.createConfiguration(name, factory)
         configurationSettings.isTemporary = true
@@ -40,13 +45,14 @@ class CakeFrostingConfigurationType :
 
         runManager.addConfiguration(configurationSettings)
 
-        return RunConfiguration(runConfigurationTemplate.typeId, name, projectFilePath, runConfigurationTemplate.executor)
+        return RunConfiguration(
+            runConfigurationTemplate.typeId, name, projectFilePath, runConfigurationTemplate.executor
+        )
     }
 
     override fun getCompatibleRunnableProjectKinds(): List<String> {
         return listOf(id, RunnableProjectKinds.DotNetCore.name)
     }
-
 
     companion object {
         const val id = "CakeFrosting"

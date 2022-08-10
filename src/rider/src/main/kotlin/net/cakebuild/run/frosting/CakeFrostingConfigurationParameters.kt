@@ -21,7 +21,14 @@ class CakeFrostingConfigurationParameters(val project: Project) {
     val programArguments: String
         get() = "--target=\"${taskName.ifEmpty { "Default" }}\" --verbosity=\"$verbosity\" $additionalArguments"
 
-    constructor(project: Project, taskName: String, projectFilePath: String, verbosity: String, programParameters: String, envs: Map<String, String>) : this(project) {
+    constructor(
+        project: Project,
+        taskName: String,
+        projectFilePath: String,
+        verbosity: String,
+        programParameters: String,
+        envs: Map<String, String>
+    ) : this(project) {
         this.projectFilePath = projectFilePath
         this.taskName = taskName
         this.verbosity = verbosity
@@ -46,12 +53,20 @@ class CakeFrostingConfigurationParameters(val project: Project) {
     }
 
     fun copy(): CakeFrostingConfigurationParameters {
-        return CakeFrostingConfigurationParameters(project, taskName, projectFilePath, verbosity, additionalArguments, copyEnvs(envs))
+        return CakeFrostingConfigurationParameters(
+            project, taskName, projectFilePath, verbosity, additionalArguments, copyEnvs(envs)
+        )
     }
 
     fun validate() {
-        if (projectFilePath.isEmpty() || this.project.solution.cakeFrostingProjectsModel.projects.all { it.projectFilePath.valueOrNull != projectFilePath }) {
-            throw RuntimeConfigurationError(RiderRunBundle.message("DotNetProjectConfigurationParameters.not.specified.project"))
+        if (projectFilePath.isEmpty() ||
+            this.project.solution.cakeFrostingProjectsModel.projects.all {
+                it.projectFilePath.valueOrNull != projectFilePath
+            }
+        ) {
+            throw RuntimeConfigurationError(
+                RiderRunBundle.message("DotNetProjectConfigurationParameters.not.specified.project")
+            )
         }
     }
 }

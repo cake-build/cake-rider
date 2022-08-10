@@ -8,12 +8,14 @@ import net.cakebuild.run.script.CakeScriptConfigurationType
 
 class CakeRiderNewRunConfigurationTreeGroupingProvider : RiderNewRunConfigurationTreeGroupingProvider {
     override fun getGroups(project: Project): List<RiderNewRunConfigurationTreeGroupingProvider.Group> {
-        return listOf(RiderNewRunConfigurationTreeGroupingProvider.Group(
-            CakeIcons.CakeAction, "Cake",
-            listOf(
-                CakeFrostingConfigurationType.id,
-                CakeScriptConfigurationType.id
+        return listOf(
+            RiderNewRunConfigurationTreeGroupingProvider.Group(
+                CakeIcons.CakeAction, "Cake",
+                listOf(
+                    CakeFrostingConfigurationType.id,
+                    CakeScriptConfigurationType.id
+                )
             )
-        ))
+        )
     }
 }

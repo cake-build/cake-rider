@@ -14,27 +14,29 @@ import com.jetbrains.rider.run.configurations.controls.RunConfigurationViewModel
 import com.jetbrains.rider.run.configurations.controls.VisibilityMode
 import javax.swing.JComponent
 
-
-abstract class CustomControlBase(override val lifetime: Lifetime, name: String, id: String) : ControlBase(name, id), IRevertableControl {
+abstract class CustomControlBase(override val lifetime: Lifetime, name: String, id: String) :
+    ControlBase(name, id), IRevertableControl {
     abstract fun build(project: Project): JComponent
 
     protected fun <T : JComponent> makeLabeledComponent(component: T): RevertableLabeledComponent<T> {
         return RevertableLabeledComponent(LabeledComponent.create(component, name), this).also { labeledComponent ->
             labeledComponent.setLabelLocation("West")
 
-            this.isEnabled.compose(this.visibilityMode) { a, b -> Pair(a, b) }.advise(lifetime) { (isEnabled, visibilityMode) ->
-                when (visibilityMode) {
-                    VisibilityMode.InvisibleHidden -> {
-                        labeledComponent.isVisible = isEnabled
-                        component.isVisible = isEnabled
-                    }
+            this.isEnabled
+                .compose(this.visibilityMode) { a, b -> Pair(a, b) }
+                .advise(lifetime) { (isEnabled, visibilityMode) ->
+                    when (visibilityMode) {
+                        VisibilityMode.InvisibleHidden -> {
+                            labeledComponent.isVisible = isEnabled
+                            component.isVisible = isEnabled
+                        }
 
-                    VisibilityMode.InvisibleCollapsed -> {
-                        labeledComponent.isVisible = true
-                        component.isVisible = isEnabled
+                        VisibilityMode.InvisibleCollapsed -> {
+                            labeledComponent.isVisible = true
+                            component.isVisible = isEnabled
+                        }
                     }
                 }
-            }
 
             this.isEnabled.advise(lifetime) {
                 labeledComponent.isEnabled = it

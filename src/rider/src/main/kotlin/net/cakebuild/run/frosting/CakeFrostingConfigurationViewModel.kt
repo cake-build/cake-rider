@@ -74,18 +74,29 @@ class TaskEditor(lifetime: Lifetime, name: String, id: String) : CustomControlBa
     }
 }
 
-class CakeFrostingConfigurationViewModel(private val lifetime: Lifetime, private val project: Project) : RunConfigurationViewModelBase() {
+class CakeFrostingConfigurationViewModel(private val lifetime: Lifetime, private val project: Project) :
+    RunConfigurationViewModelBase() {
     private var loaded = false
 
     private val projectSelector = ProjectSelector(RiderRunBundle.message("label.project.with.colon"), "Project")
 
-    // private val tfmSelector: StringSelector = StringSelector(RiderRunBundle.message("label.target.framework.with.colon"), "Target_framework")
+    // private val tfmSelector: StringSelector =
+    //     StringSelector(RiderRunBundle.message("label.target.framework.with.colon"), "Target_framework")
     private val taskEditor: TaskEditor = TaskEditor(lifetime, "Task:", "Task")
     private val verbositySelector: VerbositySelector = VerbositySelector(lifetime, "Verbosity:", "Verbosity")
-    private val programParametersEditor: ProgramParametersEditor = ProgramParametersEditor("Arguments:", "Program_arguments", lifetime)
-    private val environmentVariablesEditor: EnvironmentVariablesEditor = EnvironmentVariablesEditor(RiderRunBundle.message("label.environment.variables.with.colon"), "Environment_variables")
+    private val programParametersEditor: ProgramParametersEditor =
+        ProgramParametersEditor("Arguments:", "Program_arguments", lifetime)
+    private val environmentVariablesEditor: EnvironmentVariablesEditor = EnvironmentVariablesEditor(
+        RiderRunBundle.message("label.environment.variables.with.colon"), "Environment_variables"
+    )
 
-    override val controls: List<ControlBase> = mutableListOf(projectSelector, taskEditor, verbositySelector, programParametersEditor, environmentVariablesEditor)
+    override val controls: List<ControlBase> = mutableListOf(
+        projectSelector,
+        taskEditor,
+        verbositySelector,
+        programParametersEditor,
+        environmentVariablesEditor
+    )
 
     private fun onProjectChange(project: RunnableProject) {
         val cakeFrostingProjectsModel = this.project.solution.cakeFrostingProjectsModel
@@ -97,7 +108,9 @@ class CakeFrostingConfigurationViewModel(private val lifetime: Lifetime, private
             val runnableProjectsModel = project.runnableProjectsModelIfAvailable!!
             val cakeFrostingProjectsModel = project.solution.cakeFrostingProjectsModel
 
-            projectSelector.bindTo(runnableProjectsModel, lifetime,
+            projectSelector.bindTo(
+                runnableProjectsModel,
+                lifetime,
                 { it.kind == RunnableProjectKinds.DotNetCore && cakeFrostingProjectsModel.getProjectFor(it) != null },
                 { },
                 this::onProjectChange
@@ -112,7 +125,16 @@ class CakeFrostingConfigurationViewModel(private val lifetime: Lifetime, private
 
             if (project == null) {
                 val name = File(projectFilePath).name
-                project = RunnableProject(name, name, projectFilePath, RunnableProjectKinds.DotNetCore, listOf(), listOf(), null, listOf())
+                project = RunnableProject(
+                    name,
+                    name,
+                    projectFilePath,
+                    RunnableProjectKinds.DotNetCore,
+                    listOf(),
+                    listOf(),
+                    null,
+                    listOf()
+                )
                 projectSelector.projectList.add(project)
             }
 
