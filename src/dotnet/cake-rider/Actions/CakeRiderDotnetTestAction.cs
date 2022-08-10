@@ -3,22 +3,21 @@ using JetBrains.Application.UI.Actions;
 using JetBrains.Application.UI.ActionsRevised.Menu;
 using JetBrains.Util;
 
-namespace net.cakebuild.Actions
-{
-    [Action("CakeRiderDotnetTestAction", "")]
-    public class CakeRiderDotnetTestAction : IExecutableAction
-    {
-        public bool Update(
-            IDataContext context,
-            ActionPresentation presentation,
-            DelegateUpdate nextUpdate)
-        {
-            return true;
-        }
+namespace net.cakebuild.Actions;
 
-        public void Execute(IDataContext context, DelegateExecute nextExecute)
-        {
-            MessageBox.ShowInfo("Hello world from the dotnet Component!");
-        }
+[Action("CakeRiderDotnetTestAction", "")]
+public class CakeRiderDotnetTestAction : IExecutableAction
+{
+    public bool Update(
+        IDataContext context,
+        ActionPresentation presentation,
+        DelegateUpdate nextUpdate)
+    {
+        return true;
+    }
+
+    public void Execute(IDataContext context, DelegateExecute nextExecute)
+    {
+        MessageBox.ShowInfo("Hello world from the dotnet Component!");
     }
 }

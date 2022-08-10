@@ -1,23 +1,24 @@
 ﻿using System.Collections.Generic;
+
 using JetBrains.Application;
 using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetExtensions;
 
-namespace net.cakebuild.Templates
-{
-    [ShellComponent]
-    public class ParameterProvider : IDotNetTemplateParameterProvider
-    {
-        public int Priority => 50;
+namespace net.cakebuild.Templates;
 
-        public IReadOnlyCollection<DotNetTemplateParameter> Get()
+[ShellComponent]
+public class ParameterProvider : IDotNetTemplateParameterProvider
+{
+    public int Priority => 50;
+
+    public IReadOnlyCollection<DotNetTemplateParameter> Get()
+    {
+        return new DotNetTemplateParameter[]
         {
-            return new DotNetTemplateParameter[]
-            {
-                new BoolTemplateProviders.EmptyTemplate(),
-                new BoolTemplateProviders.AddNet5(),
-                new BoolTemplateProviders.AddNet461(),
-                //new TextTemplateProviders.CakeAliasCategory()
-            };
-        }
+            new BoolTemplateProviders.EmptyTemplate(),
+            new BoolTemplateProviders.AddNet5(),
+            new BoolTemplateProviders.AddNet461(),
+
+            // new TextTemplateProviders.CakeAliasCategory()
+        };
     }
 }

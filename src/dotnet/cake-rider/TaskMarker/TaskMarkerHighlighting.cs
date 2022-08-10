@@ -4,26 +4,29 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace net.cakebuild.TaskMarker
+namespace net.cakebuild.TaskMarker;
+
+[StaticSeverityHighlighting(Severity.INFO, typeof(HighlightingGroupIds.GutterMarks), OverlapResolve = OverlapResolveKind.NONE, AttributeId = TaskMarkerAttributeIds.TASK_MARKER_ID)]
+public class TaskMarkerHighlighting : IHighlighting
 {
-    [StaticSeverityHighlighting(Severity.INFO, typeof(HighlightingGroupIds.GutterMarks), OverlapResolve = OverlapResolveKind.NONE, AttributeId = TaskMarkerAttributeIds.TASK_MARKER_ID)]
-    public class TaskMarkerHighlighting : IHighlighting
+    private readonly DocumentRange _documentRange;
+
+    public TaskMarkerHighlighting(IClassDeclaration classDeclaration, DocumentRange documentRange, string taskName)
     {
-        private readonly DocumentRange _documentRange;
-
-        public TaskMarkerHighlighting(IClassDeclaration classDeclaration, DocumentRange documentRange, string taskName)
-        {
-            _documentRange = documentRange;
-            TaskName = taskName;
-            Project = classDeclaration.GetSourceFile()?.GetProject();
-        }
-
-        public string TaskName { get; }
-        public IProject Project { get; }
-
-        public string ToolTip => $"Task '{TaskName}'";
-        public string ErrorStripeToolTip => null;
-        public bool IsValid() => true;
-        public DocumentRange CalculateRange() => _documentRange;
+        _documentRange = documentRange;
+        TaskName = taskName;
+        Project = classDeclaration.GetSourceFile()?.GetProject();
     }
+
+    public string TaskName { get; }
+
+    public IProject Project { get; }
+
+    public string ToolTip => $"Task '{TaskName}'";
+
+    public string ErrorStripeToolTip => null;
+
+    public bool IsValid() => true;
+
+    public DocumentRange CalculateRange() => _documentRange;
 }

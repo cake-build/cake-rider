@@ -1,4 +1,5 @@
 using System;
+
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.Caches.SymbolCache;
@@ -10,14 +11,15 @@ namespace net.cakebuild.TaskMarker;
 
 public class TaskMarkerDaemonStageProcess : IDaemonStageProcess
 {
-    public IDaemonProcess DaemonProcess { get; }
-    public IContextBoundSettingsStore Settings { get; }
-
     public TaskMarkerDaemonStageProcess(IDaemonProcess daemonProcess, IContextBoundSettingsStore settings)
     {
         DaemonProcess = daemonProcess;
         Settings = settings;
     }
+
+    public IDaemonProcess DaemonProcess { get; }
+
+    public IContextBoundSettingsStore Settings { get; }
 
     public void Execute(Action<DaemonStageResult> committer)
     {
@@ -38,7 +40,9 @@ public class TaskMarkerDaemonStageProcess : IDaemonStageProcess
     private static void CollectTaskMarkers(IFile file, IHighlightingConsumer consumer)
     {
         if (file is not ICSharpFile context)
+        {
             return;
+        }
 
         foreach (var declaration in CachedDeclarationsCollector.Run<IClassDeclaration>(context))
         {
@@ -46,7 +50,9 @@ public class TaskMarkerDaemonStageProcess : IDaemonStageProcess
             if (declaredElement != null)
             {
                 if (!declaredElement.IsCakeFrostingTask())
+                {
                     continue;
+                }
 
                 var name = declaredElement.GetCakeFrostingTaskName();
 

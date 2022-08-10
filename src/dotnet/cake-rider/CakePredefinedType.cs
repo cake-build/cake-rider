@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+
 using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
@@ -12,12 +13,14 @@ namespace net.cakebuild;
 public class CakePredefinedType
 {
     public static readonly IClrTypeName IFrostingTaskFqn = new ClrTypeName("Cake.Frosting.IFrostingTask");
-    public IDeclaredType IFrostingTask => CreateType(IFrostingTaskFqn);
-    
-    public static readonly IClrTypeName TaskNameAttributeFqn = new ClrTypeName("Cake.Frosting.TaskNameAttribute");
-    public IDeclaredType TaskNameAttribute => CreateType(TaskNameAttributeFqn);
 
-    private static readonly Dictionary<IClrTypeName, int> _predefinedTypeNamesIndex = new();
+    public static readonly IClrTypeName TaskNameAttributeFqn = new ClrTypeName("Cake.Frosting.TaskNameAttribute");
+
+    private static readonly Dictionary<IClrTypeName, int> PredefinedTypeNamesIndex = new Dictionary<IClrTypeName, int>();
+
+    private readonly IPsiModule _module;
+
+    private readonly IDeclaredType[] _types = new IDeclaredType[PredefinedTypeNamesIndex.Count];
 
     static CakePredefinedType()
     {
@@ -26,22 +29,28 @@ public class CakePredefinedType
             if (fieldInfo.IsStatic && typeof(IClrTypeName).IsAssignableFrom(fieldInfo.FieldType))
             {
                 var clrTypeName = (IClrTypeName)fieldInfo.GetValue(null);
-                _predefinedTypeNamesIndex.Add(clrTypeName, _predefinedTypeNamesIndex.Count);
+                PredefinedTypeNamesIndex.Add(clrTypeName, PredefinedTypeNamesIndex.Count);
             }
         }
     }
-
-    private readonly IPsiModule _module;
-    private readonly IDeclaredType[] _types = new IDeclaredType[_predefinedTypeNamesIndex.Count];
 
     internal CakePredefinedType(IPsiModule module)
     {
         _module = module;
     }
 
+    public IDeclaredType IFrostingTask => CreateType(IFrostingTaskFqn);
+
+    public IDeclaredType TaskNameAttribute => CreateType(TaskNameAttributeFqn);
+
+    public IDeclaredType TryGetType([NotNull] IClrTypeName clrTypeName)
+    {
+        return PredefinedTypeNamesIndex.TryGetValue(clrTypeName, out var index) ? CreateType(index, clrTypeName) : null;
+    }
+
     private IDeclaredType CreateType(IClrTypeName clrName)
     {
-        return CreateType(_predefinedTypeNamesIndex[clrName], clrName);
+        return CreateType(PredefinedTypeNamesIndex[clrName], clrName);
     }
 
     private IDeclaredType CreateType(int index, IClrTypeName clrName)
@@ -57,14 +66,10 @@ public class CakePredefinedType
         return _types[index];
     }
 
-    public IDeclaredType TryGetType([NotNull] IClrTypeName clrTypeName)
-    {
-        return _predefinedTypeNamesIndex.TryGetValue(clrTypeName, out var index) ? CreateType(index, clrTypeName) : null;
-    }
-
     private class PredefinedDeclaredTypeFromClrName : DeclaredTypeFromCLRName
     {
-        public PredefinedDeclaredTypeFromClrName(IClrTypeName clrName, NullableAnnotation annotation, IPsiModule module) : base(clrName, annotation, module)
+        public PredefinedDeclaredTypeFromClrName(IClrTypeName clrName, NullableAnnotation annotation, IPsiModule module)
+            : base(clrName, annotation, module)
         {
         }
 
