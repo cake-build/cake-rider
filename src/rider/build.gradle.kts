@@ -77,7 +77,7 @@ configure<com.jetbrains.rd.generator.gradle.RdGenExtension> {
     classpath({
         "${tasks.setupDependencies.get().idea.get().classes}/lib/rd/rider-model.jar"
     })
-    sources("${modelDir}/rider")
+    sources("$modelDir/rider")
     hashFolder = "$buildDir"
     packages = "model.rider"
 
