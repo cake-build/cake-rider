@@ -13,4 +13,9 @@ class CakeTasksWindowFactory : ToolWindowFactory, DumbAware {
         val content = contentFactory.createContent(view, "", false)
         toolWindow.contentManager.addContent(content)
     }
+
+    override fun init(toolWindow: ToolWindow) {
+        super.init(toolWindow)
+        toolWindow.stripeTitle = "Cake Tasks"
+    }
 }
