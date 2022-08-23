@@ -14,7 +14,7 @@
     <configurationType implementation="net.cakebuild.run.frosting.CakeFrostingConfigurationType" id="CakeFrosting" />
     <rider.newRunConfigurationTreeGroupingProvider implementation="net.cakebuild.run.CakeRiderNewRunConfigurationTreeGroupingProvider" />
     <programRunner implementation="net.cakebuild.run.frosting.CakeFrostingProgramRunner"/>
-    <toolWindow anchor="right" id="Cake Tasks" icon="CakeIcons.CakeAction" factoryClass="net.cakebuild.toolwindow.CakeTasksWindowFactory" />
+    <toolWindow anchor="right" id="CakeBuildTasks"  icon="CakeIcons.CakeAction" factoryClass="net.cakebuild.toolwindow.CakeTasksWindowFactory" />
     <projectConfigurable parentId="build" instance="net.cakebuild.settings.CakeGeneralSettingsConfigurable"
                          id="net.cakebuild.settings.cake" displayName="Cake" nonDefaultProject="false" />
     <projectConfigurable parentId="net.cakebuild.settings.cake" instance="net.cakebuild.settings.CakeSearchPathSettingsConfigurable"
