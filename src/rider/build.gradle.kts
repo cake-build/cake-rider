@@ -242,7 +242,7 @@ tasks {
     // workaround for https://youtrack.jetbrains.com/issue/IDEA-210683
     getByName<JavaExec>("buildSearchableOptions") {
         jvmArgs(
-            // I gave up on tracking individual illegal access violations. 
+            // I gave up on tracking individual illegal access violations.
             // This seems to be an integral and unfixable part of IntelliJ.
             "--illegal-access=permit"
         )
