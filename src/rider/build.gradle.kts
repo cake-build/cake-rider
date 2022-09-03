@@ -18,7 +18,7 @@ plugins {
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
     id("io.gitlab.arturbosch.detekt") version "1.21.0"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
     id("org.jetbrains.grammarkit") version "2021.2.2"
 }
@@ -242,7 +242,7 @@ tasks {
     // workaround for https://youtrack.jetbrains.com/issue/IDEA-210683
     getByName<JavaExec>("buildSearchableOptions") {
         jvmArgs(
-            // I gave up on tracking individual illegal access violations. 
+            // I gave up on tracking individual illegal access violations.
             // This seems to be an integral and unfixable part of IntelliJ.
             "--illegal-access=permit"
         )
