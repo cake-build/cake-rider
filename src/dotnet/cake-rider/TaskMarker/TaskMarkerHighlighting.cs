@@ -20,7 +20,10 @@ public class TaskMarkerHighlighting : IHighlighting
 
     public string TaskName { get; }
 
+    // Do not dispose IProject.
+#pragma warning disable IDISP006
     public IProject Project { get; }
+#pragma warning restore IDISP006
 
     public string ToolTip => $"Task '{TaskName}'";
 

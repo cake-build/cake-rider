@@ -148,16 +148,26 @@ tasks {
         pathToPsiRoot.set("/net/cakebuild/language/psi")
     }
 
-    register("buildDotNet") {
-        dependsOn("rdgen")
+    val buildDotNet = register("buildDotNet") {
+        dependsOn(rdgen)
 
         val pluginName = properties("pluginName")
         val dotNetConfiguration = properties("dotNetConfiguration")
+        val platformVersion = properties("platformVersion")
+        val dotnetDir = File(rootDir, "../dotnet")
+        val dotnetOutDir = File(dotnetDir, "$pluginName/bin/$dotNetConfiguration")
 
         // define input & output, so gradle
         // can determine whether building is needed
-        outputs.dir(File(rootDir, "../dotnet/$pluginName/bin/$dotNetConfiguration"))
+        outputs.files(
+            File(dotnetOutDir, "$pluginName.dll"),
+            File(dotnetOutDir, "$pluginName.pdb")
+        )
             .withPropertyName("outputDir")
+
+        inputs.property("dotNetConfiguration", dotNetConfiguration)
+        inputs.property("pluginName", pluginName)
+        inputs.property("platformVersion", platformVersion)
         inputs.files(
             fileTree(File(rootDir, "../dotnet/$pluginName")) {
                 include("**/*.cs", "**/*.csproj")
@@ -171,9 +181,6 @@ tasks {
         // build the dotNet part
         // https://blog.jetbrains.com/dotnet/2019/02/14/writing-plugins-resharper-rider/
         doLast {
-            val platformVersion = properties("platformVersion")
-            val dotnetDir = File(rootDir, "../dotnet")
-
             exec {
                 executable = "dotnet"
                 args = listOf(
@@ -187,17 +194,43 @@ tasks {
                 )
                 workingDir = dotnetDir
             }
+
+            logger.info("outputs: ${outputs.files.joinToString { it.absolutePath }}")
         }
     }
 
     // add the dotnet component to the sandbox that will be used to create the final plugin-zip
     prepareSandbox {
-        dependsOn.add("buildDotNet")
-        val pluginName = intellij.pluginName.get()
+        dependsOn.add(buildDotNet)
+
+        val pluginName = properties("pluginName")
+        val dotNetConfiguration = properties("dotNetConfiguration")
+        val platformVersion = properties("platformVersion")
+
+        inputs.property("dotNetConfiguration", dotNetConfiguration)
+        inputs.property("pluginName", pluginName)
+        inputs.property("platformVersion", platformVersion)
+
+        val projectTemplates = File(rootDir, "../projectTemplates")
+        val sandbox = intellij.sandboxDir.get()
+
+        val forcePrepareSandbox = properties("forcePrepareSandbox").toBoolean()
+        if (forcePrepareSandbox) {
+            outputs.upToDateWhen { false }
+        }
+
+        doFirst {
+            if (forcePrepareSandbox) {
+                logger.warn("prepareSandbox was forced!")
+            }
+            logger.info("Sandbox is at $sandbox")
+            logger.info("Adding projectTemplates from $projectTemplates")
+            logger.info(
+                "Adding .NET components:\n - ${buildDotNet.get().outputs.files.joinToString(separator = "\n - ")}"
+            )
+        }
 
         // copy projectTemplates
-        logger.info("Adding projectTemplates to sandbox")
-        val projectTemplates = File(rootDir, "../projectTemplates")
         into(
             "$pluginName/projectTemplates"
         ) {
@@ -205,15 +238,10 @@ tasks {
         }
 
         // copy dotnet component
-        logger.info("Adding .NET component to sandbox")
-        val dotNetConfiguration = properties("dotNetConfiguration")
-        val dotNetOutput = File(rootDir, "../dotnet/$pluginName/bin/$dotNetConfiguration")
         into(
             "$pluginName/dotnet"
         ) {
-            from(dotNetOutput) {
-                include("$pluginName.*")
-            }
+            from(buildDotNet.get().outputs)
         }
     }
 
@@ -222,7 +250,7 @@ tasks {
         targetCompatibility = jvmVersion
     }
     withType<KotlinCompile> {
-        dependsOn(generateLexer, generateParser, "rdgen")
+        dependsOn(generateLexer, generateParser, rdgen)
         kotlinOptions {
             jvmTarget = jvmVersion
             languageVersion = kotlinVersion

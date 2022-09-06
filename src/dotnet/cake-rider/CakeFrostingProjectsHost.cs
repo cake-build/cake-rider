@@ -62,7 +62,11 @@ public class CakeFrostingProjectsHost
         using (_solution.Locks.UsingReadLock())
         {
             _logger.Trace("Handle change for project: {0}", projectMark.Location);
-            using var projectByMark = _solution.GetProjectByMark(projectMark);
+
+            // Do not dispose IProject!
+#pragma warning disable IDISP001
+            var projectByMark = _solution.GetProjectByMark(projectMark);
+#pragma warning restore IDISP001
             if (projectByMark == null)
             {
                 _logger.Trace("project == null");
@@ -81,7 +85,10 @@ public class CakeFrostingProjectsHost
 
     public void ProcessTasks(ICSharpFile file, IDocument document)
     {
-        using var project = file.GetProject();
+        // Do not dispose IProject!
+#pragma warning disable IDISP001
+        var project = file.GetProject();
+#pragma warning restore IDISP001
         var projectMark = project?.GetProjectMark();
         if (projectMark == null)
         {

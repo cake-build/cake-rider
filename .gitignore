@@ -52,3 +52,4 @@ obj/
 /src/projectTemplates/**/.idea
 !/src/projectTemplates/**/build
 .vs/
+*.user
