@@ -8,9 +8,16 @@
         <IsPackable>false</IsPackable>
         <DefineConstants>$(DefineConstants);RIDER</DefineConstants>
         <LangVersion>latest</LangVersion>
-        <DebugType Condition="$(Configuration) == 'Debug'">embedded</DebugType>
+        <DebugType>pdbonly</DebugType>
+        <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+        <NoWarn>MSB3277</NoWarn> <!-- Is this a good idea?? -->
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <DefineConstants>$(DefineConstants);TRACE;JET_MODE_ASSERT</DefineConstants>
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+    
     <ItemGroup>
         <AdditionalFiles Include="$(SolutionDir)/stylecop.json" Link="stylecop.json" />
         <None Include="$(SolutionDir)/.editorconfig" Link=".editorconfig" />
@@ -23,6 +30,7 @@
 
     <ItemGroup>
         <PackageReference Include="JetBrains.Rider.SDK" Version="$(SdkVersion)" />
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
