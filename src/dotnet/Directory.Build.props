@@ -1,0 +1,22 @@
+<Project>
+    <PropertyGroup>
+        <DefineConstants>$(DefineConstants);RIDER</DefineConstants>
+        <IsPackable>false</IsPackable>
+        <NoWarn>MSB3277</NoWarn> <!-- Is this a good idea?? -->
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <DebugType>pdbonly</DebugType>
+        <!-- will be injected by gradle at build -->
+        <SdkVersion Condition="'$(SdkVersion)' == ''">2022.2.0</SdkVersion>
+        <WaveVersion>$(SdkVersion.Substring(2,2))$(SdkVersion.Substring(5,1)).0.0</WaveVersion>
+        <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <DebugType>full</DebugType>
+        <DefineConstants>$(DefineConstants);TRACE;DEBUG;JET_MODE_ASSERT</DefineConstants>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
+    </ItemGroup>
+</Project>
