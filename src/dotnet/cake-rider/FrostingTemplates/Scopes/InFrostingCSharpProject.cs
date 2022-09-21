@@ -12,8 +12,8 @@ namespace net.cakebuild.FrostingTemplates.Scopes;
 // point based on the current context (e.g. the project is a Frosting project)
 public class InFrostingCSharpProject : InLanguageSpecificProject
 {
-    private static readonly Guid DefaultGuid = new Guid("B37325A3-4F0A-405B-8A5C-00ECA4ED3B30");
-    private static readonly Guid QuickGuid = new Guid("D32F297F-E422-4612-839A-FE76D9914B34");
+    private static readonly Guid DefaultGuid = new Guid("D21A853C-0CCE-42D7-9581-0902075C1A46");
+    private static readonly Guid QuickGuid = new Guid("46A26830-D90A-4762-9C72-7031EC31FA4E");
 
     public InFrostingCSharpProject()
         : base(JetBrains.ProjectModel.Properties.ProjectLanguage.CSHARP)

@@ -39,7 +39,7 @@ public class FrostingProjectScopeProvider : ScopeProvider
         }
 
         var solution = context.Solution;
-        var host = solution.GetComponent<CakeFrostingProjectsHost>();
+        var host = solution.GetComponent<IListFrostingModules>();
         var frostingModuleIds = host.GetFrostingModules()
             .Select(m => m.GetPersistentID())
             .ToList();
@@ -60,7 +60,7 @@ public class FrostingProjectScopeProvider : ScopeProvider
             .Select(s => s.GetType().Name)
             .ToArray();
 
-        if (csScopes.Any(s => s == "InCSharpTypeMember"))
+        if (csScopes.Any(s => s is "InCSharpTypeMember" or "InCSharpTypeAndNamespace"))
         {
             yield return new InFrostingCSharpFile();
         }
