@@ -17,7 +17,7 @@ public class TaskMarkerDaemonStage : IDaemonStage
             return Enumerable.Empty<IDaemonStageProcess>();
         }
 
-        return new TaskMarkerDaemonStageProcess[]
+        return new[]
         {
             new TaskMarkerDaemonStageProcess(process, settings),
         };

@@ -28,12 +28,15 @@ namespace net.cakebuild;
 [SolutionComponent]
 public class CakeFrostingProjectsHost
 {
-    private static readonly AssemblyNameInfo CakeFrostingAssemblyName = AssemblyNameInfoFactory.Create2("Cake.Frosting", null);
+    private static readonly AssemblyNameInfo CakeFrostingAssemblyName =
+        AssemblyNameInfoFactory.Create2("Cake.Frosting", null);
+
     private readonly ILogger _logger;
     private readonly ISolution _solution;
     private readonly CakeFrostingProjectsModel _model;
     private readonly ISymbolCache _symbolCache;
     private readonly ShellRdDispatcher _shellRdDispatcher;
+
     private readonly Dictionary<IProjectMark, CakeFrostingProject> _cakeFrostingProjects =
         new Dictionary<IProjectMark, CakeFrostingProject>();
 
@@ -42,7 +45,12 @@ public class CakeFrostingProjectsHost
 
     private bool _isSolutionLoaded;
 
-    public CakeFrostingProjectsHost(ILogger logger, ISolution solution, ISymbolCache symbolCache, ShellRdDispatcher shellRdDispatcher, ISolutionLoadTasksScheduler solutionLoadTasksScheduler)
+    public CakeFrostingProjectsHost(
+        ILogger logger,
+        ISolution solution,
+        ISymbolCache symbolCache,
+        ShellRdDispatcher shellRdDispatcher,
+        ISolutionLoadTasksScheduler solutionLoadTasksScheduler)
     {
         _logger = logger;
         _solution = solution;
@@ -50,11 +58,14 @@ public class CakeFrostingProjectsHost
         _shellRdDispatcher = shellRdDispatcher;
         _model = solution.GetProtocolSolution().GetCakeFrostingProjectsModel();
 
-        solutionLoadTasksScheduler.EnqueueTask(new SolutionLoadTask("Initialize cake projects", SolutionLoadTaskKinds.AfterDone, () =>
-        {
-            LoadAllTasks();
-            _isSolutionLoaded = true;
-        }));
+        solutionLoadTasksScheduler.EnqueueTask(new SolutionLoadTask(
+            "Initialize cake projects",
+            SolutionLoadTaskKinds.AfterDone,
+            () =>
+            {
+                LoadAllTasks();
+                _isSolutionLoaded = true;
+            }));
     }
 
     public void Refresh(IProjectMark projectMark)
@@ -148,11 +159,24 @@ public class CakeFrostingProjectsHost
         });
     }
 
+    public IEnumerable<IPsiModule> GetFrostingModules()
+    {
+        return _cakeFrostingProjects.Keys
+            .Select(_solution.GetProjectByMark)
+            .Where(p => p != null)
+            .SelectMany(p => p.GetPsiModules())
+            .ToList();
+    }
+
     private static bool IsCakeFrostingProject(IProject project)
     {
         return !project.IsSharedProject()
                && project.ProjectProperties.ProjectKind == ProjectKind.REGULAR_PROJECT
-               && ReferencedAssembliesService.IsProjectReferencingAssemblyByName(project, project.GetCurrentTargetFrameworkId(), CakeFrostingAssemblyName, out _);
+               && ReferencedAssembliesService.IsProjectReferencingAssemblyByName(
+                   project,
+                   project.GetCurrentTargetFrameworkId(),
+                   CakeFrostingAssemblyName,
+                   out _);
     }
 
     private void ProjectRemoved(IProjectMark projectMark)
@@ -178,7 +202,8 @@ public class CakeFrostingProjectsHost
 
         var cakeFrostingProject = new CakeFrostingProject();
         cakeFrostingProject.Name.Set(project.Name);
-        cakeFrostingProject.ProjectFilePath.Set(project.ProjectFileLocation.NormalizeSeparators(FileSystemPathEx.SeparatorStyle.Unix));
+        cakeFrostingProject.ProjectFilePath.Set(
+            project.ProjectFileLocation.NormalizeSeparators(FileSystemPathEx.SeparatorStyle.Unix));
         _model.Projects.Add(cakeFrostingProject);
         _cakeFrostingProjects.Add(projectMark, cakeFrostingProject);
         _cakeFrostingTasks.Add(projectMark, new Dictionary<IPsiSourceFile, HashSet<string>>());
