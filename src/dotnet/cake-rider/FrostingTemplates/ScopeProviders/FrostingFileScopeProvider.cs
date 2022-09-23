@@ -39,11 +39,8 @@ public class FrostingProjectScopeProvider : ScopeProvider
         }
 
         var solution = context.Solution;
-        var host = solution.GetComponent<IListFrostingModules>();
-        var frostingModuleIds = host.GetFrostingModules()
-            .Select(m => m.GetPersistentID())
-            .ToList();
-        var isFrostingModule = frostingModuleIds.Contains(sourceFile.PsiModule.GetPersistentID());
+        var host = solution.GetComponent<IDetectFrostingModules>();
+        var isFrostingModule = host.IsFrostingModule(sourceFile.PsiModule);
         if (!isFrostingModule)
         {
             // Cake.Frosting is not referenced -> no Frosting project.

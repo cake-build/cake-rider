@@ -15,6 +15,7 @@ public class FrostingScopeCategoryUiProvider : ScopeCategoryUIProvider
     private const int Priority = -200;
 
     public FrostingScopeCategoryUiProvider()
+    : base(CakeIcons.CakeFile)
     {
         MainPoint = new InFrostingCSharpProject();
     }

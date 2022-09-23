@@ -4,7 +4,7 @@ type: Live
 image: Cake
 reformat: True
 shortenReferences: True
-scopes: InFrostingCSharpFile(minimumLanguageVersion=2.0)
+scopes: InFrostingCSharpFile
 parameterOrder: Name#1, NameType
 xxNameType-expression: spacestounderstrokes(Name)
 ---

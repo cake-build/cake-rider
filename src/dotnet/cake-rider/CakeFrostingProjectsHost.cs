@@ -26,7 +26,7 @@ using net.cakebuild.Protocol;
 namespace net.cakebuild;
 
 [SolutionComponent]
-public class CakeFrostingProjectsHost : IListFrostingModules
+public class CakeFrostingProjectsHost : IDetectFrostingModules
 {
     private static readonly AssemblyNameInfo CakeFrostingAssemblyName =
         AssemblyNameInfoFactory.Create2("Cake.Frosting", null);
@@ -159,13 +159,13 @@ public class CakeFrostingProjectsHost : IListFrostingModules
         });
     }
 
-    public IEnumerable<IPsiModule> GetFrostingModules()
+    public bool IsFrostingModule(IPsiModule module)
     {
         return _cakeFrostingProjects.Keys
             .Select(_solution.GetProjectByMark)
             .Where(p => p != null)
             .SelectMany(p => p.GetPsiModules())
-            .ToList();
+            .Any(m => m.GetPersistentID() == module.GetPersistentID());
     }
 
     private static bool IsCakeFrostingProject(IProject project)
@@ -241,7 +241,7 @@ public class CakeFrostingProjectsHost : IListFrostingModules
     }
 }
 
-public interface IListFrostingModules
+public interface IDetectFrostingModules
 {
-    public IEnumerable<IPsiModule> GetFrostingModules();
+    bool IsFrostingModule(IPsiModule module);
 }
