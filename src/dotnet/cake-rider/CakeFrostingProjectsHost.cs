@@ -26,7 +26,7 @@ using net.cakebuild.Protocol;
 namespace net.cakebuild;
 
 [SolutionComponent]
-public class CakeFrostingProjectsHost : IDetectFrostingModules
+public class CakeFrostingProjectsHost : IDetectFrostingModules, ICakeFrostingProjectsHost
 {
     private static readonly AssemblyNameInfo CakeFrostingAssemblyName =
         AssemblyNameInfoFactory.Create2("Cake.Frosting", null);
@@ -244,4 +244,11 @@ public class CakeFrostingProjectsHost : IDetectFrostingModules
 public interface IDetectFrostingModules
 {
     bool IsFrostingModule(IPsiModule module);
+}
+
+public interface ICakeFrostingProjectsHost
+{
+    void ProcessTasks(ICSharpFile file, IDocument document);
+
+    void Refresh(IProjectMark changeProjectMark);
 }
