@@ -17,7 +17,7 @@ public class FrostingScopeCategoryUiProvider : ScopeCategoryUIProvider
     public FrostingScopeCategoryUiProvider()
     : base(CakeIcons.CakeFile)
     {
-        MainPoint = new InFrostingCSharpProject();
+        MainPoint = new InFrostingProject();
     }
 
     public override string CategoryCaption => "Frosting";
@@ -26,16 +26,14 @@ public class FrostingScopeCategoryUiProvider : ScopeCategoryUIProvider
 
     public override IEnumerable<ITemplateScopePoint> BuildAllPoints()
     {
-        yield return new InFrostingCSharpProject();
-        yield return new InFrostingCSharpFile();
+        yield return new InFrostingProject();
     }
 
     public override string Present(ITemplateScopePoint point)
     {
         return point switch
         {
-            InFrostingCSharpFile => "In a Frosting C# File",
-            InFrostingCSharpProject => "In a Frosting C# project",
+            InFrostingProject => "In a Frosting project",
             _ => base.Present(point),
         };
     }

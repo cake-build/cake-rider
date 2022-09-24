@@ -19,7 +19,7 @@ public class FrostingProjectScopeCategoryUiProvider : ScopeCategoryUIProvider
     {
         // The main scope point is used to the UID of the QuickList for this category.
         // It does nothing unless there is also a QuickList stored in settings.
-        MainPoint = new InFrostingCSharpProject();
+        MainPoint = new InFrostingProject();
     }
 
     public override string CategoryCaption => "Frosting";
@@ -29,6 +29,6 @@ public class FrostingProjectScopeCategoryUiProvider : ScopeCategoryUIProvider
     public override IEnumerable<ITemplateScopePoint> BuildAllPoints()
     {
         // Only Project-related scopes. (i.e. scopes used in File-Templates)
-        yield return new InFrostingCSharpProject();
+        yield return new InFrostingProject();
     }
 }

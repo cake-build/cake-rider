@@ -3,7 +3,7 @@ guid: 63616b65-5a78-4ba7-ae59-e1065ee624f8
 type: Live
 reformat: True
 shortenReferences: True
-scopes: InCSharpTypeAndNamespace(minimumLanguageVersion=2.0);InFrostingCSharpFile
+scopes: InCSharpTypeAndNamespace(minimumLanguageVersion=2.0);InCSharpTypeMember(minimumLanguageVersion=2.0);InFrostingProject
 parameterOrder: Task_Name#1, NameType, BuildContext#1
 NameType-expression: spacestounderstrokes(Task_Name)
 ---
