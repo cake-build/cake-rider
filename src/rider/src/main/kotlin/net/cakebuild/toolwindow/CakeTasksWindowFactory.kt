@@ -8,7 +8,7 @@ import com.intellij.ui.content.ContentFactory
 
 class CakeTasksWindowFactory : ToolWindowFactory, DumbAware {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val contentFactory = ContentFactory.SERVICE.getInstance()
+        val contentFactory = ContentFactory.getInstance()
         val view = CakeTasksWindow(project)
         val content = contentFactory.createContent(view, "", false)
         toolWindow.contentManager.addContent(content)
