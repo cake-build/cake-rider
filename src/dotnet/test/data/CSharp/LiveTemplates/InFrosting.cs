@@ -2,5 +2,5 @@ using Cake.Frosting;
 
 namespace MyFrostingProject
 {
-    {caret}
+    cake-{caret}
 }

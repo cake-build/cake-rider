@@ -4,6 +4,7 @@ using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Context;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Scope;
+using JetBrains.ReSharper.Psi;
 
 using net.cakebuild.FrostingTemplates.Scopes;
 
@@ -22,15 +23,21 @@ public class FrostingProjectScopeProvider : ScopeProvider
     public override IEnumerable<ITemplateScopePoint> ProvideScopePoints(TemplateAcceptanceContext context)
     {
         var sourceFile = context.SourceFile;
-        if (sourceFile == null)
+
+        // Do not dispose IProject!
+#pragma warning disable IDISP001
+        var project = sourceFile?.GetProject();
+#pragma warning restore IDISP001
+        if (project == null)
         {
+            // not a "real" SourceFile or not in a project.
             yield break;
         }
 
         var solution = context.Solution;
         var host = solution.GetComponent<IDetectFrostingModules>();
-        var isFrostingModule = host.IsFrostingModule(sourceFile.PsiModule);
-        if (!isFrostingModule)
+        var isFrostingProject = host.IsCakeFrostingProject(project);
+        if (!isFrostingProject)
         {
             // Cake.Frosting is not referenced -> no Frosting project.
             yield break;

@@ -159,16 +159,7 @@ public class CakeFrostingProjectsHost : IDetectFrostingModules, ICakeFrostingPro
         });
     }
 
-    public bool IsFrostingModule(IPsiModule module)
-    {
-        return _cakeFrostingProjects.Keys
-            .Select(_solution.GetProjectByMark)
-            .Where(p => p != null)
-            .SelectMany(p => p.GetPsiModules())
-            .Any(m => m.GetPersistentID() == module.GetPersistentID());
-    }
-
-    private static bool IsCakeFrostingProject(IProject project)
+    public bool IsCakeFrostingProject(IProject project)
     {
         return !project.IsSharedProject()
                && project.ProjectProperties.ProjectKind == ProjectKind.REGULAR_PROJECT
@@ -243,7 +234,7 @@ public class CakeFrostingProjectsHost : IDetectFrostingModules, ICakeFrostingPro
 
 public interface IDetectFrostingModules
 {
-    bool IsFrostingModule(IPsiModule module);
+    bool IsCakeFrostingProject(IProject project);
 }
 
 public interface ICakeFrostingProjectsHost

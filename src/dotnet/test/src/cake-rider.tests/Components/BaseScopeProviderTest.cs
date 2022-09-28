@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Feature.Services.LiveTemplates.Scope;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.TextControl;
 
-namespace net.cakebuild.tests;
+namespace net.cakebuild.tests.Components;
 
 // Not provided by the default test framework
 public abstract class BaseScopeProviderTest : BaseTestWithTextControl
