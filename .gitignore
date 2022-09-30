@@ -53,3 +53,5 @@ obj/
 !/src/projectTemplates/**/build
 .vs/
 *.user
+/src/dotnet/packages/
+/src/dotnet/test/packages/

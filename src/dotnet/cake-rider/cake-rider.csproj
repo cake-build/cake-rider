@@ -1,36 +1,37 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>net472</TargetFramework>
         <AssemblyName>cake-rider</AssemblyName>
         <RootNamespace>net.cakebuild</RootNamespace>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <IsPackable>false</IsPackable>
-        <DefineConstants>$(DefineConstants);RIDER</DefineConstants>
         <LangVersion>latest</LangVersion>
-        <DebugType>pdbonly</DebugType>
-        <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
-        <NoWarn>MSB3277</NoWarn> <!-- Is this a good idea?? -->
     </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-        <DefineConstants>$(DefineConstants);TRACE;JET_MODE_ASSERT</DefineConstants>
-        <DebugType>full</DebugType>
+    
+    <PropertyGroup>
+        <LanguageTargets>$(MSBuildToolsPath)\Microsoft.CSharp.targets</LanguageTargets>
     </PropertyGroup>
+    
+    <ItemGroup Label="Frosting templates">
+        <LiveTemplate Include="FrostingTemplates/Templates/**/*.md">
+            <OutputFile>FrostingTemplates/templates.generated.dotSettings</OutputFile>
+            <ReadmeFile>FrostingTemplates/README.md</ReadmeFile>
+        </LiveTemplate>
+        <EmbeddedResource Include="FrostingTemplates/templates.generated.dotSettings">
+            <LogicalName>net.cakebuild.FrostingTemplates.templates.dotSettings</LogicalName>
+        </EmbeddedResource>
+        <None Include="FrostingTemplates/.gitignore" />
+    </ItemGroup>
     
     <ItemGroup>
         <AdditionalFiles Include="$(SolutionDir)/stylecop.json" Link="stylecop.json" />
         <None Include="$(SolutionDir)/.editorconfig" Link=".editorconfig" />
     </ItemGroup>
-    
-    <PropertyGroup>
-        <!-- will be injected by gradle at build -->
-        <SdkVersion Condition="'$(SdkVersion)' == ''">2022.2.0</SdkVersion>
-    </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="CitizenMatt.ReSharper.LiveTemplateCompiler" Version="3.2.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="JetBrains.Rider.SDK" Version="$(SdkVersion)" />
-        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -44,4 +45,5 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
+
 </Project>

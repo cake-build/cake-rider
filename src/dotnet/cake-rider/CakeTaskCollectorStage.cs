@@ -15,9 +15,9 @@ namespace net.cakebuild;
 [DaemonStage(StagesAfter = new[] { typeof(FilteringHighlightingDaemonStage) })]
 public sealed class CakeTaskCollectorStage : CSharpDaemonStageBase
 {
-    private readonly CakeFrostingProjectsHost _host;
+    private readonly ICakeFrostingProjectsHost _host;
 
-    public CakeTaskCollectorStage(CakeFrostingProjectsHost host)
+    public CakeTaskCollectorStage(ICakeFrostingProjectsHost host)
     {
         _host = host;
     }
@@ -35,9 +35,9 @@ public sealed class CakeTaskCollectorStage : CSharpDaemonStageBase
 
 public sealed class CakeTaskCollectorProcess : CSharpDaemonStageProcessBase
 {
-    private readonly CakeFrostingProjectsHost _host;
+    private readonly ICakeFrostingProjectsHost _host;
 
-    public CakeTaskCollectorProcess([NotNull] IDaemonProcess process, [NotNull] ICSharpFile file, CakeFrostingProjectsHost host)
+    public CakeTaskCollectorProcess([NotNull] IDaemonProcess process, [NotNull] ICSharpFile file, ICakeFrostingProjectsHost host)
         : base(process, file)
     {
         _host = host;

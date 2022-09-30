@@ -12,11 +12,15 @@ namespace net.cakebuild;
 
 public class CakePredefinedType
 {
-    public static readonly IClrTypeName IFrostingTaskFqn = new ClrTypeName("Cake.Frosting.IFrostingTask");
-
+    // ReSharper disable MemberCanBePrivate.Global
     public static readonly IClrTypeName TaskNameAttributeFqn = new ClrTypeName("Cake.Frosting.TaskNameAttribute");
 
-    private static readonly Dictionary<IClrTypeName, int> PredefinedTypeNamesIndex = new Dictionary<IClrTypeName, int>();
+    // ReSharper disable once InconsistentNaming
+    public static readonly IClrTypeName IFrostingTaskFqn = new ClrTypeName("Cake.Frosting.IFrostingTask");
+
+    // ReSharper restore MemberCanBePrivate.Global
+    private static readonly Dictionary<IClrTypeName, int>
+        PredefinedTypeNamesIndex = new Dictionary<IClrTypeName, int>();
 
     private readonly IPsiModule _module;
 
@@ -39,6 +43,7 @@ public class CakePredefinedType
         _module = module;
     }
 
+    // ReSharper disable once InconsistentNaming
     public IDeclaredType IFrostingTask => CreateType(IFrostingTaskFqn);
 
     public IDeclaredType TaskNameAttribute => CreateType(TaskNameAttributeFqn);

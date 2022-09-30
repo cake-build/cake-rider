@@ -14,7 +14,7 @@ public class CakeSolutionHostSyncListener : SolutionHostSyncListener
         _solution = solution;
     }
 
-    private CakeFrostingProjectsHost Host => _solution.TryGetComponent<CakeFrostingProjectsHost>();
+    private ICakeFrostingProjectsHost Host => _solution.TryGetComponent<ICakeFrostingProjectsHost>();
 
     public override void AfterUpdateProject(ProjectHostChange change) => Host?.Refresh(change.ProjectMark);
 
