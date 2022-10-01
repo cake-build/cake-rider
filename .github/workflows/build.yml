@@ -49,11 +49,12 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
       
-      # Setup dotnet 6
+      # Setup dotnet 6 (and 2.1 for Wyam)
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3.0.0
         with:
           dotnet-version: |
+            2.1.x
             6.0.x
 
       # Cache Gradle Wrapper
