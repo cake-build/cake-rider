@@ -1,0 +1,48 @@
+{
+  "profiles": {
+    "Generate protocol (Windows)": {
+      "commandName": "Executable",
+      "executablePath": "cmd.exe",
+      "commandLineArgs": "/c gradlew.bat :rdgen -PdotNetConfiguration=$(Configuration) --console=verbose",
+      "workingDirectory": "$(ProjectDir)/../../rider"
+    },
+    "Generate protocol (Unix)": {
+      "commandName": "Executable",
+      "executablePath": "./gradlew",
+      "commandLineArgs": ":rdgen -PdotNetConfiguration=$(Configuration) --console=verbose",
+      "workingDirectory": "$(ProjectDir)/../../rider"
+    },
+    "Rider - Frontend (Windows)": {
+      "commandName": "Executable",
+      "executablePath": "cmd.exe",
+      "commandLineArgs": "/c gradlew.bat :buildPlugin -x buildDotNet -x buildSearchableOptions -PdotNetConfiguration=$(Configuration) --console=verbose --info",
+      "workingDirectory": "$(ProjectDir)/../../rider"
+    },
+    "Rider - Frontend (Unix)": {
+      "commandName": "Executable",
+      "executablePath": "./gradlew",
+      "commandLineArgs": ":buildPlugin -x buildDotNet  -x buildSearchableOptions -PdotNetConfiguration=$(Configuration) --console=verbose",
+      "workingDirectory": "$(ProjectDir)/../../rider"
+    },
+    "Rider (Windows)": {
+      "commandName": "Executable",
+      "executablePath": "cmd.exe",
+      "commandLineArgs": "/c gradlew.bat :runIde -x buildDotNet -PdotNetConfiguration=$(Configuration) -PforcePrepareSandbox=true --console=verbose --info",
+      "workingDirectory": "$(ProjectDir)/../../rider",
+      "environmentVariables": {
+        "RESHARPER_HOST_DEBUG_SELF": "1",
+        "RUNNING_FROM_RIDER": "1"
+      }
+    },
+    "Rider (Unix)": {
+      "commandName": "Executable",
+      "executablePath": "./gradlew",
+      "commandLineArgs": ":runIde -x buildDotNet -PdotNetConfiguration=$(Configuration) -PforcePrepareSandbox=true --console=verbose --info",
+      "workingDirectory": "$(ProjectDir)/../../rider",
+      "environmentVariables": {
+        "RESHARPER_HOST_DEBUG_SELF": "1",
+        "RUNNING_FROM_RIDER": "1"
+      }
+    }
+  }
+}

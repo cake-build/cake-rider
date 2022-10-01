@@ -10,7 +10,7 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.Key
 import icons.CakeIcons
-import net.cakebuild.run.CakeConfiguration
+import net.cakebuild.run.script.CakeScriptConfiguration
 import net.cakebuild.shared.CakeBalloonNotifications
 
 @Suppress("DialogTitleCapitalization")
@@ -29,7 +29,7 @@ class RestoreNetToolsBeforeRunTaskProvider :
     override fun getIcon() = CakeIcons.CakeAction
 
     override fun createTask(runConfiguration: RunConfiguration): RestoreNetToolsBeforeRunTask? {
-        if (runConfiguration is CakeConfiguration) {
+        if (runConfiguration is CakeScriptConfiguration) {
             return RestoreNetToolsBeforeRunTask()
         }
 
@@ -46,7 +46,7 @@ class RestoreNetToolsBeforeRunTaskProvider :
             .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.CONSOLE)
             .withExePath("dotnet")
             .withParameters("tool", "restore")
-            .withWorkDirectory((configuration as CakeConfiguration).getWorkingDirectory())
+            .withWorkDirectory((configuration as CakeScriptConfiguration).getWorkingDirectory())
         val output = ExecUtil.execAndGetOutput(commandLine)
         if (output.exitCode != 0) {
             val err = "'${commandLine.commandLineString}' exited with unexpected Exitcode. Exitcode: ${output.exitCode}"

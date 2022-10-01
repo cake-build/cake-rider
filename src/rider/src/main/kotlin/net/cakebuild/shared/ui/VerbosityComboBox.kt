@@ -4,24 +4,25 @@ import com.intellij.ide.ui.laf.darcula.DarculaUIUtil
 import javax.swing.JComboBox
 
 class VerbosityComboBox : JComboBox<String>() {
-
-    private val normalValue = "Normal"
+    companion object {
+        const val DEFAULT: String = "Normal"
+    }
 
     init {
         putClientProperty(DarculaUIUtil.COMPACT_PROPERTY, true)
         addItem("Quiet")
         addItem("Minimal")
-        addItem(normalValue)
+        addItem(DEFAULT)
         addItem("Verbose")
         addItem("Diagnostic")
     }
 
     fun getVerbosity(): String {
-        return ((selectedItem ?: normalValue) as String).toLowerCase()
+        return ((selectedItem ?: DEFAULT) as String).toLowerCase()
     }
 
     fun setVerbosity(verbosity: String?) {
-        val value = verbosity ?: normalValue
+        val value = if (verbosity.isNullOrEmpty()) DEFAULT else verbosity
         var item: Any? = null
         val count: Int = itemCount
         for (i in 0 until count) {

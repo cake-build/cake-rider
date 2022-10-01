@@ -16,7 +16,8 @@ import com.intellij.psi.util.elementType
 import com.intellij.refactoring.suggested.startOffset
 import com.intellij.ui.layout.panel
 import net.cakebuild.language.psi.CakeTypes
-import net.cakebuild.shared.CakeProject
+import net.cakebuild.shared.CakeScriptProject
+import net.cakebuild.shared.CakeTaskRunMode
 import java.awt.Cursor
 import java.awt.Point
 import java.awt.event.MouseEvent
@@ -81,11 +82,11 @@ class TaskInlayHintsProvider : InlayHintsProvider<TaskInlayHintsProvider.Setting
                         override fun onClick(event: MouseEvent, translated: Point) {
                             if (event.clickCount == 2) {
                                 val project = element.containingFile.project
-                                CakeProject.runCakeTarget(
+                                CakeScriptProject.runCakeTarget(
                                     project,
                                     element.containingFile.virtualFile,
                                     taskName,
-                                    CakeProject.CakeTaskRunMode.Run
+                                    CakeTaskRunMode.Run
                                 )
                             }
                         }

@@ -51,3 +51,7 @@ bin/
 obj/
 /src/projectTemplates/**/.idea
 !/src/projectTemplates/**/build
+.vs/
+*.user
+/src/dotnet/packages/
+/src/dotnet/test/packages/

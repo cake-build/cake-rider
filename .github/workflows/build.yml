@@ -15,7 +15,7 @@ on:
   pull_request:
 
 env:
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
   NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
   NUGET_SOURCE: "https://api.nuget.org/v3/index.json"
   TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
@@ -42,12 +42,20 @@ jobs:
       - name: Gradle Wrapper Validation
         uses: gradle/wrapper-validation-action@v1.0.4
 
-      # Setup Java 1.8 environment which is needed to build
+      # Setup Java 11 environment which is needed to build
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '11'
+      
+      # Setup dotnet 6 (and 2.1 for Wyam)
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3.0.0
+        with:
+          dotnet-version: |
+            2.1.x
+            6.0.x
 
       # Cache Gradle Wrapper
       - name: Setup Gradle Wrapper Cache
@@ -64,7 +72,7 @@ jobs:
           key: ${{ runner.os }}-tools-${{ hashFiles('recipe.cake') }}
 
       - name: Build project
-        uses: cake-build/cake-action@v1.4.0
+        uses: cake-build/cake-action@v1.4.1
         with:
           script-path: recipe.cake
           target: CI

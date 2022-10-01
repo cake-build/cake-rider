@@ -4,42 +4,27 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
 
-buildscript {
-    repositories {
-        maven { setUrl("https://cache-redirector.jetbrains.com/www.myget.org/F/rd-snapshots/maven") }
-        mavenCentral()
-    }
-    dependencies {
-        // https://www.myget.org/feed/rd-snapshots/package/maven/com.jetbrains.rd/rd-gen
-        // version 0.203.x should match pluginSinceBuild ?
-        classpath("com.jetbrains.rd", "rd-gen", "0.203.190")
-    }
-}
-
 plugins {
     // Java support
     id("java")
     // Kotlin support
     // do NOT update kotlin - kotlin version must match platform version, see https://plugins.jetbrains.com/docs/intellij/kotlin.html#kotlin-standard-library
-    id("org.jetbrains.kotlin.jvm") version "1.4.32"
+    id("org.jetbrains.kotlin.jvm") version "1.6.21"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "1.8.0"
+    id("org.jetbrains.intellij") version "1.9.0"
+    id("com.jetbrains.rdgen") version "2022.2.5"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "1.3.1"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
     id("io.gitlab.arturbosch.detekt") version "1.21.0"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
     id("org.jetbrains.grammarkit") version "2021.2.2"
 }
 
-apply {
-    plugin("com.jetbrains.rdgen")
-}
-
 val jvmVersion = "11"
-val kotlinVersion = "1.4" // should match org.jetbrains.kotlin.jvm (major.minor)
+val kotlinVersion = "1.6" // should match org.jetbrains.kotlin.jvm (major.minor)
 
 group = properties("pluginGroup")
 version = properties("pluginVersion")
@@ -52,9 +37,9 @@ repositories {
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.21.0")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.1")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.9.1")
 }
 
 // Configure gradle-intellij-plugin plugin.
@@ -80,44 +65,27 @@ intellij {
 detekt {
     config = files("./detekt-config.yml")
     buildUponDefaultConfig = true
-
-    reports {
-        html.enabled = false
-        xml.enabled = false
-        txt.enabled = false
-    }
 }
 
 // configure rdgen
-configure<com.jetbrains.rd.generator.gradle.RdgenParams> {
+configure<com.jetbrains.rd.generator.gradle.RdGenExtension> {
+    val modelDir = File(rootDir, "protocol/src/main/kotlin/model")
     val csOutput = File(rootDir, "../dotnet/cake-rider/Protocol")
     val ktOutput = File(rootDir, "src/main/gen/net/cakebuild/protocol")
 
-    mkdir(csOutput.absolutePath)
-    mkdir(ktOutput.absolutePath)
-
     verbose = true
-    hashFolder = "build/rdgen"
-    logger.info("Configuring rdgen params")
     classpath({
-        val ideaDependency = intellij.getIdeaDependency(project)
-        logger.info("Calculating classpath for rdgen, intellij.ideaDependency is $ideaDependency")
-        val sdkPath = ideaDependency.classes
-        val rdLibDirectory = File(sdkPath, "lib/rd").canonicalFile
-        val riderModelJar = "$rdLibDirectory/rider-model.jar"
-        logger.info("rider-model.jar detected at $riderModelJar")
-
-        riderModelJar
+        "${tasks.setupDependencies.get().idea.get().classes}/lib/rd/rider-model.jar"
     })
-    sources(File(rootDir, "protocol/src/main/kotlin/model"))
-    packages = "model"
-    clearOutput = true
+    sources("$modelDir/rider")
+    hashFolder = "$buildDir"
+    packages = "model.rider"
 
     generator {
         language = "kotlin"
         transform = "asis"
         root = "com.jetbrains.rider.model.nova.ide.IdeRoot"
-        namespace = "com.jetbrains.rider.model"
+        namespace = "net.cakebuild.protocol"
         directory = "$ktOutput"
     }
 
@@ -125,7 +93,7 @@ configure<com.jetbrains.rd.generator.gradle.RdgenParams> {
         language = "csharp"
         transform = "reversed"
         root = "com.jetbrains.rider.model.nova.ide.IdeRoot"
-        namespace = "JetBrains.Rider.Model"
+        namespace = "net.cakebuild.Protocol"
         directory = "$csOutput"
     }
 }
@@ -160,11 +128,12 @@ tasks {
                 executable = "dotnet"
                 args = listOf(
                     "msbuild",
-                    "/t:Clean",
+                    "-restore",
+                    "-target:Clean",
                     File(dotnetDir, "$pluginName.sln").absolutePath,
-                    "/p:Configuration=$dotNetConfiguration",
-                    "/p:SdkVersion=$platformVersion",
-                    "/p:HostFullIdentifier="
+                    "-property:Configuration=$dotNetConfiguration",
+                    "-property:SdkVersion=$platformVersion",
+                    "-property:HostFullIdentifier="
                 )
                 workingDir = File(rootDir, "../dotnet")
             }
@@ -179,16 +148,26 @@ tasks {
         pathToPsiRoot.set("/net/cakebuild/language/psi")
     }
 
-    register("buildDotNet") {
-        // dependsOn("rdgen")
+    val buildDotNet = register("buildDotNet") {
+        dependsOn(rdgen)
 
         val pluginName = properties("pluginName")
         val dotNetConfiguration = properties("dotNetConfiguration")
+        val platformVersion = properties("platformVersion")
+        val dotnetDir = File(rootDir, "../dotnet")
+        val dotnetOutDir = File(dotnetDir, "$pluginName/bin/$dotNetConfiguration")
 
         // define input & output, so gradle
         // can determine whether building is needed
-        outputs.dir(File(rootDir, "../dotnet/$pluginName/bin/$dotNetConfiguration"))
+        outputs.files(
+            File(dotnetOutDir, "$pluginName.dll"),
+            File(dotnetOutDir, "$pluginName.pdb")
+        )
             .withPropertyName("outputDir")
+
+        inputs.property("dotNetConfiguration", dotNetConfiguration)
+        inputs.property("pluginName", pluginName)
+        inputs.property("platformVersion", platformVersion)
         inputs.files(
             fileTree(File(rootDir, "../dotnet/$pluginName")) {
                 include("**/*.cs", "**/*.csproj")
@@ -202,32 +181,56 @@ tasks {
         // build the dotNet part
         // https://blog.jetbrains.com/dotnet/2019/02/14/writing-plugins-resharper-rider/
         doLast {
-            val platformVersion = properties("platformVersion")
-            val dotnetDir = File(rootDir, "../dotnet")
-
             exec {
                 executable = "dotnet"
                 args = listOf(
                     "msbuild",
-                    "/t:Restore;Build",
+                    "-restore",
+                    "-target:Build",
                     File(dotnetDir, "$pluginName.sln").absolutePath,
-                    "/p:Configuration=$dotNetConfiguration",
-                    "/p:SdkVersion=$platformVersion",
-                    "/p:HostFullIdentifier="
+                    "-property:Configuration=$dotNetConfiguration",
+                    "-property:SdkVersion=$platformVersion",
+                    "-property:HostFullIdentifier="
                 )
                 workingDir = dotnetDir
             }
+
+            logger.info("outputs: ${outputs.files.joinToString { it.absolutePath }}")
         }
     }
 
     // add the dotnet component to the sandbox that will be used to create the final plugin-zip
     prepareSandbox {
-        dependsOn.add("buildDotNet")
-        val pluginName = intellij.pluginName.get()
+        dependsOn.add(buildDotNet)
+
+        val pluginName = properties("pluginName")
+        val dotNetConfiguration = properties("dotNetConfiguration")
+        val platformVersion = properties("platformVersion")
+
+        inputs.property("dotNetConfiguration", dotNetConfiguration)
+        inputs.property("pluginName", pluginName)
+        inputs.property("platformVersion", platformVersion)
+
+        val projectTemplates = File(rootDir, "../projectTemplates")
+        val sandbox = intellij.sandboxDir.get()
+
+        val forcePrepareSandbox = properties("forcePrepareSandbox").toBoolean()
+        if (forcePrepareSandbox) {
+            outputs.upToDateWhen { false }
+        }
+
+        doFirst {
+            if (forcePrepareSandbox) {
+                logger.warn("prepareSandbox was forced!")
+            }
+            logger.info("Sandbox is at $sandbox")
+            logger.info("Adding projectTemplates from $projectTemplates")
+            logger.info(
+                "Adding .NET components:\n - ${buildDotNet.get().outputs.files.joinToString(separator = "\n - ")}"
+            )
+        }
 
         // copy projectTemplates
-        logger.info("Adding projectTemplates to sandbox")
-        val projectTemplates = File(rootDir, "../projectTemplates")
         into(
             "$pluginName/projectTemplates"
         ) {
@@ -235,15 +238,10 @@ tasks {
         }
 
         // copy dotnet component
-        logger.info("Adding .NET component to sandbox")
-        val dotNetConfiguration = properties("dotNetConfiguration")
-        val dotNetOutput = File(rootDir, "../dotnet/$pluginName/bin/$dotNetConfiguration")
         into(
             "$pluginName/dotnet"
         ) {
-            from(dotNetOutput) {
-                include("$pluginName.*")
-            }
+            from(buildDotNet.get().outputs)
         }
     }
 
@@ -252,7 +250,7 @@ tasks {
         targetCompatibility = jvmVersion
     }
     withType<KotlinCompile> {
-        dependsOn(generateLexer, generateParser /*, "rdgen"*/)
+        dependsOn(generateLexer, generateParser, rdgen)
         kotlinOptions {
             jvmTarget = jvmVersion
             languageVersion = kotlinVersion
@@ -262,11 +260,17 @@ tasks {
     }
     withType<Detekt> {
         jvmTarget = jvmVersion
+        excludes.add("**/gen/**")
+        reports {
+            html.required.set(false)
+            xml.required.set(false)
+            txt.required.set(false)
+        }
     }
     // workaround for https://youtrack.jetbrains.com/issue/IDEA-210683
     getByName<JavaExec>("buildSearchableOptions") {
         jvmArgs(
-            // I gave up on tracking individual illegal access violations. 
+            // I gave up on tracking individual illegal access violations.
             // This seems to be an integral and unfixable part of IntelliJ.
             "--illegal-access=permit"
         )

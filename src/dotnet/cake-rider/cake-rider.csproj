@@ -1,20 +1,49 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>net472</TargetFramework>
         <AssemblyName>cake-rider</AssemblyName>
         <RootNamespace>net.cakebuild</RootNamespace>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <IsPackable>false</IsPackable>
-        <DefineConstants>$(DefineConstants);RIDER</DefineConstants>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
     
     <PropertyGroup>
-        <!-- will be injected by gradle at build -->
-        <SdkVersion Condition="'$(SdkVersion)' == ''">2021.2.1</SdkVersion>
+        <LanguageTargets>$(MSBuildToolsPath)\Microsoft.CSharp.targets</LanguageTargets>
     </PropertyGroup>
+    
+    <ItemGroup Label="Frosting templates">
+        <LiveTemplate Include="FrostingTemplates/Templates/**/*.md">
+            <OutputFile>FrostingTemplates/templates.generated.dotSettings</OutputFile>
+            <ReadmeFile>FrostingTemplates/README.md</ReadmeFile>
+        </LiveTemplate>
+        <EmbeddedResource Include="FrostingTemplates/templates.generated.dotSettings">
+            <LogicalName>net.cakebuild.FrostingTemplates.templates.dotSettings</LogicalName>
+        </EmbeddedResource>
+        <None Include="FrostingTemplates/.gitignore" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <AdditionalFiles Include="$(SolutionDir)/stylecop.json" Link="stylecop.json" />
+        <None Include="$(SolutionDir)/.editorconfig" Link=".editorconfig" />
+    </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="CitizenMatt.ReSharper.LiveTemplateCompiler" Version="3.2.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="JetBrains.Rider.SDK" Version="$(SdkVersion)" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="IDisposableAnalyzers" Version="4.0.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
+
 </Project>
