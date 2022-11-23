@@ -31,6 +31,7 @@ class SearchQueryService : NuGetProvider() {
     class SearchResult {
         val data: List<NuGetPackages> = listOf()
     }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     class NuGetPackages {
         val id: String = ""

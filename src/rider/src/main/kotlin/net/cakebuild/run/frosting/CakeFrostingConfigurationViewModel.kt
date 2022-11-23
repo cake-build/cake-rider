@@ -68,7 +68,8 @@ class TaskEditor(lifetime: Lifetime, name: String, id: String) : CustomControlBa
                 override fun documentChanged(event: com.intellij.openapi.editor.event.DocumentEvent) {
                     text.set(textField.text)
                 }
-            })
+            }
+        )
 
         return makeLabeledComponent(textField)
     }
@@ -87,7 +88,8 @@ class CakeFrostingConfigurationViewModel(private val lifetime: Lifetime, private
     private val programParametersEditor: ProgramParametersEditor =
         ProgramParametersEditor("Arguments:", "Program_arguments", lifetime)
     private val environmentVariablesEditor: EnvironmentVariablesEditor = EnvironmentVariablesEditor(
-        RiderRunBundle.message("label.environment.variables.with.colon"), "Environment_variables"
+        RiderRunBundle.message("label.environment.variables.with.colon"),
+        "Environment_variables"
     )
 
     override val controls: List<ControlBase> = mutableListOf(

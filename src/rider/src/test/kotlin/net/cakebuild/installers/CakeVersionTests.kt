@@ -127,7 +127,8 @@ class CakeVersionTests {
     fun `should not be equal on null`() {
         val v = CakeVersion(listOf(1, 2, 3))
 
-        @Suppress("SENSELESS_COMPARISON") val actual = v == null
+        @Suppress("SENSELESS_COMPARISON")
+        val actual = v == null
 
         assertEquals(false, actual)
     }
@@ -224,6 +225,7 @@ class CakeVersionTests {
                 Arguments.of(CakeVersion(listOf(1, 2, 3)), CakeVersion(listOf(1, 2, 4)), true),
                 Arguments.of(CakeVersion.parse("1.0.0-alpha1"), CakeVersion.parse("1.0.0-beta1"), true)
             )
+
         @Suppress("Unused")
         @JvmStatic
         fun compareGreaterSource(): Stream<Arguments> =

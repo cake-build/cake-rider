@@ -28,6 +28,7 @@ class CakeSettings : PersistentStateComponent<CakeSettings> {
     var cakeRunnerOverrides = mutableMapOf(Pair("^.*windows.*$", "\${USERPROFILE}\\.dotnet\\tools\\dotnet-cake.exe"))
     var cakeScriptSearchPaths: Collection<String> = mutableListOf(".")
     var cakeScriptSearchIgnores: Collection<String> = mutableListOf(".*/tools/.*")
+
     // do we need a settings-UI for these?
     var downloadContentUrlConfigurationFile =
         "https://cakebuild.net/download/configuration"

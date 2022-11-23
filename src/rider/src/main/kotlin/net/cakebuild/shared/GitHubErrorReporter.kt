@@ -29,7 +29,6 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
         parentComponent: Component,
         consumer: Consumer<in SubmittedReportInfo>
     ): Boolean {
-
         try {
             if (events.isNotEmpty()) {
                 val event = events.first()

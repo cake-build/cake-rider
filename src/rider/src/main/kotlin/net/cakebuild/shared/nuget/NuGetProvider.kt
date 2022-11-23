@@ -36,10 +36,12 @@ abstract class NuGetProvider {
     class NuGetServiceIndex {
         val resources: List<NuGetServiceResource>? = null
     }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     class NuGetServiceResource {
         @get:JsonProperty("@type")
         val type: String? = null
+
         @get:JsonProperty("@id")
         val url: String? = null
         val comment: String? = null

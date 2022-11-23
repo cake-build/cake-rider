@@ -46,7 +46,10 @@ class CakeFrostingConfigurationType :
         runManager.addConfiguration(configurationSettings)
 
         return RunConfiguration(
-            runConfigurationTemplate.typeId, name, projectFilePath, runConfigurationTemplate.executor
+            runConfigurationTemplate.typeId,
+            name,
+            projectFilePath,
+            runConfigurationTemplate.executor
         )
     }
 
