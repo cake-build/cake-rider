@@ -62,14 +62,16 @@ fun ControlViewBuilder.customBuild(viewModel: RunConfigurationViewModelBase, pro
                 continue
             }
 
-            if (writeIndex != readIndex)
+            if (writeIndex != readIndex) {
                 this[writeIndex] = element
+            }
 
             writeIndex++
         }
         if (writeIndex < size) {
-            for (removeIndex in lastIndex downTo writeIndex)
+            for (removeIndex in lastIndex downTo writeIndex) {
                 removeAt(removeIndex)
+            }
         }
     }
 

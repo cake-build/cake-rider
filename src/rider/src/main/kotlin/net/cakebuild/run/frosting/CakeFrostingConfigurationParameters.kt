@@ -54,7 +54,12 @@ class CakeFrostingConfigurationParameters(val project: Project) {
 
     fun copy(): CakeFrostingConfigurationParameters {
         return CakeFrostingConfigurationParameters(
-            project, taskName, projectFilePath, verbosity, additionalArguments, copyEnvs(envs)
+            project,
+            taskName,
+            projectFilePath,
+            verbosity,
+            additionalArguments,
+            copyEnvs(envs)
         )
     }
 

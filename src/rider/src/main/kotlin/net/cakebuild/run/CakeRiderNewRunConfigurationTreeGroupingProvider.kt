@@ -10,7 +10,8 @@ class CakeRiderNewRunConfigurationTreeGroupingProvider : RiderNewRunConfiguratio
     override fun getGroups(project: Project): List<RiderNewRunConfigurationTreeGroupingProvider.Group> {
         return listOf(
             RiderNewRunConfigurationTreeGroupingProvider.Group(
-                CakeIcons.CakeAction, "Cake",
+                CakeIcons.CakeAction,
+                "Cake",
                 listOf(
                     CakeFrostingConfigurationType.id,
                     CakeScriptConfigurationType.id
