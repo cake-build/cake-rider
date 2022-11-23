@@ -17,9 +17,7 @@ class CakeVersion internal constructor(private val parts: List<Int>) : Comparabl
          */
         @Suppress("CHANGING_ARGUMENTS_EXECUTION_ORDER_FOR_NAMED_VARARGS")
         fun parse(text: String): CakeVersion {
-            if (text.isEmpty()) {
-                throw IllegalArgumentException("text can not be empty.")
-            }
+            require(!text.isEmpty()) { "text can not be empty." }
             var suffixText: String? = null
             var suffix: Int? = null
             val suffixMatch = this.suffixMatcher.find(text)
