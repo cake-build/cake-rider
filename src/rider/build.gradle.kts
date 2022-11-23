@@ -20,7 +20,7 @@ plugins {
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
-    id("org.jetbrains.grammarkit") version "2021.2.2"
+    id("org.jetbrains.grammarkit") version "2022.3"
 }
 
 val jvmVersion = "11"
