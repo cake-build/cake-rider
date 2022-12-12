@@ -24,7 +24,7 @@ class EnsureNetToolBeforeRunTaskProvider :
 
     override fun getIcon() = CakeIcons.CakeAction
 
-    override fun getDescription(task: EnsureNetToolBeforeRunTask?) = "Ensure Cake .NET Tool (Global) is installed"
+    override fun getDescription(task: EnsureNetToolBeforeRunTask) = "Ensure Cake .NET Tool (Global) is installed"
 
     override fun createTask(runConfiguration: RunConfiguration): EnsureNetToolBeforeRunTask? {
         if (runConfiguration is CakeScriptConfiguration) {
