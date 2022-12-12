@@ -47,7 +47,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
       
       # Setup dotnet 6 (and 2.1 for Wyam)
       - name: Setup dotnet

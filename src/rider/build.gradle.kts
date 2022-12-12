@@ -23,7 +23,7 @@ plugins {
     id("org.jetbrains.grammarkit") version "2021.2.2"
 }
 
-val jvmVersion = "11"
+val jvmVersion = "17"
 val kotlinVersion = "1.6" // should match org.jetbrains.kotlin.jvm (major.minor)
 
 group = properties("pluginGroup")
