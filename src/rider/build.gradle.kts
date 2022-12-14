@@ -9,10 +9,10 @@ plugins {
     id("java")
     // Kotlin support
     // do NOT update kotlin - kotlin version must match platform version, see https://plugins.jetbrains.com/docs/intellij/kotlin.html#kotlin-standard-library
-    id("org.jetbrains.kotlin.jvm") version "1.6.21"
+    id("org.jetbrains.kotlin.jvm") version "1.7.0"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "1.10.0"
-    id("com.jetbrains.rdgen") version "2022.2.5"
+    id("org.jetbrains.intellij") version "1.10.1"
+    id("com.jetbrains.rdgen") version "2022.3.0"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "2.0.0"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
@@ -20,11 +20,11 @@ plugins {
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
-    id("org.jetbrains.grammarkit") version "2021.2.2"
+    id("org.jetbrains.grammarkit") version "2022.3"
 }
 
-val jvmVersion = "11"
-val kotlinVersion = "1.6" // should match org.jetbrains.kotlin.jvm (major.minor)
+val jvmVersion = "17"
+val kotlinVersion = "1.7" // should match org.jetbrains.kotlin.jvm (major.minor)
 
 group = properties("pluginGroup")
 version = properties("pluginVersion")
@@ -32,12 +32,12 @@ version = properties("pluginVersion")
 // Configure project's dependencies
 repositories {
     mavenCentral()
-    jcenter()
 }
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.22.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.9.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.1")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.9.1")
 }
@@ -255,7 +255,7 @@ tasks {
             jvmTarget = jvmVersion
             languageVersion = kotlinVersion
             apiVersion = kotlinVersion
-            freeCompilerArgs = listOf("-Xjvm-default=compatibility")
+            freeCompilerArgs = listOf("-Xjvm-default=all-compatibility")
         }
     }
     withType<Detekt> {
@@ -266,14 +266,6 @@ tasks {
             xml.required.set(false)
             txt.required.set(false)
         }
-    }
-    // workaround for https://youtrack.jetbrains.com/issue/IDEA-210683
-    getByName<JavaExec>("buildSearchableOptions") {
-        jvmArgs(
-            // I gave up on tracking individual illegal access violations.
-            // This seems to be an integral and unfixable part of IntelliJ.
-            "--illegal-access=permit"
-        )
     }
     withType<org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask> {
         exclude("**/gen/**", "**/*.Generated.kt")
