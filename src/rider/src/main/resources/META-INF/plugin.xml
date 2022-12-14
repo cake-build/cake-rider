@@ -27,7 +27,7 @@
     <stepsBeforeRunProvider implementation="net.cakebuild.beforeRunner.RestoreNetToolsBeforeRunTaskProvider"/>
     <createFromTemplateHandler implementation="net.cakebuild.actions.CakeCreateFromTemplateHandler"/>
     <defaultLiveTemplates file="/liveTemplates/Cake.xml"/>
-    <liveTemplateContext implementation="net.cakebuild.liveTemplates.CakeContext"/>
+    <liveTemplateContext implementation="net.cakebuild.liveTemplates.CakeContext" contextId="Cake"/>
     <lang.parserDefinition language="Cake"
                            implementationClass="net.cakebuild.language.CakeParserDefinition"/>
     <lang.psiStructureViewFactory language="Cake"

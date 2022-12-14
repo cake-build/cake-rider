@@ -40,18 +40,18 @@ jobs:
 
       # Validates the gradle wrappers and saves us from getting malicious PRs
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1.0.4
+        uses: gradle/wrapper-validation-action@v1.0.5
 
       # Setup Java 11 environment which is needed to build
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
       
       # Setup dotnet 6 (and 2.1 for Wyam)
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v3.0.0
+        uses: actions/setup-dotnet@v3.0.3
         with:
           dotnet-version: |
             2.1.x
