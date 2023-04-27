@@ -20,7 +20,7 @@ plugins {
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "11.3.2"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
-    id("org.jetbrains.grammarkit") version "2022.3"
+    id("org.jetbrains.grammarkit") version "2022.3.1"
 }
 
 val jvmVersion = "17"
@@ -105,7 +105,7 @@ tasks {
 
     // generate the lexer (uses grammarkit)
     generateLexer {
-        source.set("src/main/kotlin/net/cakebuild/language/psi/Cake.flex")
+        sourceFile.set(File(rootDir, "src/main/kotlin/net/cakebuild/language/psi/Cake.flex"))
         targetDir.set("src/main/gen/net/cakebuild/language/psi")
         targetClass.set("CakeLexer")
         purgeOldFiles.set(true)
@@ -142,7 +142,7 @@ tasks {
 
     // generate the parser (uses grammarkit)
     generateParser {
-        source.set("src/main/kotlin/net/cakebuild/language/psi/Cake.bnf")
+        sourceFile.set(File(rootDir, "src/main/kotlin/net/cakebuild/language/psi/Cake.bnf"))
         targetRoot.set("src/main/gen")
         pathToParser.set("/net/cakebuild/language/psi/CakeParser.java")
         pathToPsiRoot.set("/net/cakebuild/language/psi")
