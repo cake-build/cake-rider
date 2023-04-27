@@ -40,7 +40,7 @@ jobs:
 
       # Validates the gradle wrappers and saves us from getting malicious PRs
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1.0.5
+        uses: gradle/wrapper-validation-action@v1.0.6
 
       # Setup Java 11 environment which is needed to build
       - name: Setup Java
