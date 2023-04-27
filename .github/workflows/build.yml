@@ -29,7 +29,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-2019, ubuntu-18.04, macos-10.15 ] 
+        os: [ windows-2022, ubuntu-22.04, macos-12 ]
 
     steps:
       - name: Checkout the requested branch
@@ -48,7 +48,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-      
+
       # Setup dotnet 6 (and 2.1 for Wyam)
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3.0.3
@@ -63,6 +63,11 @@ jobs:
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+
+      # install libgit2-dev on ubuntu, so libgit2sharp works
+      - name: Install libgit-dev
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y libgit2-dev
 
       # Cache Cake tools
       - name: Cache Tools
