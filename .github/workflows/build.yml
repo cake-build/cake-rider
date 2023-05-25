@@ -51,7 +51,7 @@ jobs:
 
       # Setup dotnet 6 (and 2.1 for Wyam)
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v3.0.3
+        uses: actions/setup-dotnet@v3.1.0
         with:
           dotnet-version: |
             2.1.x
