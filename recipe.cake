@@ -18,7 +18,6 @@ IntelliJBuildParameters.SetParameters(
   preferredBuildAgentOperatingSystem: PlatformFamily.Linux
 );
 
-BuildParameters.IsDotNetCoreBuild = true; // so we get all the cool dotnet tools
 IntelliJBuildParameters.PrintParameters(Context);
 
 ToolSettings.SetToolSettings(context: Context);
