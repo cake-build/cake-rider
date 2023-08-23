@@ -86,7 +86,6 @@
                   <gridbag weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
-                  <icon value="general/add.png"/>
                   <maximumSize width="30" height="30"/>
                   <minimumSize width="30" height="30"/>
                   <preferredSize width="30" height="30"/>
@@ -99,7 +98,6 @@
                   <gridbag weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
-                  <icon value="general/remove.png"/>
                   <label value=""/>
                   <maximumSize width="30" height="30"/>
                   <minimumSize width="30" height="30"/>

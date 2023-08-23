@@ -18,7 +18,7 @@
     <projectConfigurable parentId="build" instance="net.cakebuild.settings.CakeGeneralSettingsConfigurable"
                          id="net.cakebuild.settings.cake" displayName="Cake" nonDefaultProject="false" />
     <projectConfigurable parentId="net.cakebuild.settings.cake" instance="net.cakebuild.settings.CakeSearchPathSettingsConfigurable"
-                         id="net.cakebuild.settings.cake.runner.paths" displayName="Search paths" nonDefaultProject="false" />
+                         id="net.cakebuild.settings.cake.runner.paths" displayName="Search Paths" nonDefaultProject="false" />
     <projectConfigurable parentId="net.cakebuild.settings.cake" instance="net.cakebuild.settings.CakeRunnerSettingsConfigurable"
                          id="net.cakebuild.settings.cake.runner" displayName="Runner" nonDefaultProject="false" />
     <projectService serviceImplementation="net.cakebuild.settings.CakeSettings" />
