@@ -49,12 +49,14 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      # Setup dotnet 6 (and 2.1 for Wyam)
+      # Setup dotnet 6 (and 2.1 for Wyam, 3.1 for gitReleaseManager, 5.0 for gitVersion)
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3.0.3
         with:
           dotnet-version: |
             2.1.x
+            3.1.x
+            5.0.x
             6.0.x
 
       # Cache Gradle Wrapper
@@ -81,8 +83,7 @@ jobs:
         with:
           script-path: recipe.cake
           target: CI
-          cake-version: 0.38.5
-          cake-bootstrap: true
+          cake-version: tool-manifest
 
       # currently, Cake.Recipe does not upload artifacts when run on gh-actions
       - name: Upload Issues
