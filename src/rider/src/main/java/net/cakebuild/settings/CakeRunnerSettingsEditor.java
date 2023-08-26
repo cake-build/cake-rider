@@ -1,5 +1,6 @@
 package net.cakebuild.settings;
 
+import icons.CakeIcons;
 import net.cakebuild.shared.ui.RegexCellEditor;
 
 import javax.swing.JButton;
@@ -45,6 +46,7 @@ public class CakeRunnerSettingsEditor {
         regexCellEditor.setOnValidationError(s -> { setValidationError(s); return null; });
         regexCellEditor.setOnValidationSuccess(() -> { setValidationError(null); return null; });
         overrides.getColumnModel().getColumn(0).setCellEditor(regexCellEditor);
+        addButton.setIcon(CakeIcons.GeneralAdd);
         addButton.addActionListener(e -> {
             model.addRow(new Object[]{"",""});
             int row = model.getRowCount()-1;
@@ -54,6 +56,7 @@ public class CakeRunnerSettingsEditor {
             Component textEdit = overrides.prepareEditor(editor, row, 0);
             textEdit.requestFocus();
         });
+        removeButton.setIcon(CakeIcons.GeneralRemove);
         removeButton.setEnabled(false);
         removeButton.addActionListener(e -> {
             int row = overrides.getSelectedRow();
