@@ -64,7 +64,7 @@ public class CakePredefinedType
         {
             lock (_types)
             {
-                _types[index] ??= new PredefinedDeclaredTypeFromClrName(clrName, NullableAnnotation.Unknown, _module);
+                _types[index] ??= new PredefinedDeclaredTypeFromClrName(clrName, _module);
             }
         }
 
@@ -73,8 +73,8 @@ public class CakePredefinedType
 
     private class PredefinedDeclaredTypeFromClrName : DeclaredTypeFromCLRName
     {
-        public PredefinedDeclaredTypeFromClrName(IClrTypeName clrName, NullableAnnotation annotation, IPsiModule module)
-            : base(clrName, annotation, module)
+        public PredefinedDeclaredTypeFromClrName(IClrTypeName clrName, IPsiModule module)
+            : base(clrName, module)
         {
         }
 

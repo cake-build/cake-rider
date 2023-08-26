@@ -29,7 +29,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-2019, ubuntu-18.04, macos-10.15 ] 
+        os: [ windows-2022, ubuntu-22.04, macos-12 ]
 
     steps:
       - name: Checkout the requested branch
@@ -40,7 +40,7 @@ jobs:
 
       # Validates the gradle wrappers and saves us from getting malicious PRs
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1.0.5
+        uses: gradle/wrapper-validation-action@v1.0.6
 
       # Setup Java 11 environment which is needed to build
       - name: Setup Java
@@ -48,13 +48,15 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-      
-      # Setup dotnet 6 (and 2.1 for Wyam)
+
+      # Setup dotnet 6 (and 2.1 for Wyam, 3.1 for gitReleaseManager, 5.0 for gitVersion)
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3.0.3
         with:
           dotnet-version: |
             2.1.x
+            3.1.x
+            5.0.x
             6.0.x
 
       # Cache Gradle Wrapper
@@ -63,6 +65,11 @@ jobs:
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+
+      # install libgit2-dev on ubuntu, so libgit2sharp works
+      - name: Install libgit-dev
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y libgit2-dev
 
       # Cache Cake tools
       - name: Cache Tools
@@ -76,8 +83,7 @@ jobs:
         with:
           script-path: recipe.cake
           target: CI
-          cake-version: 0.38.5
-          cake-bootstrap: true
+          cake-version: tool-manifest
 
       # currently, Cake.Recipe does not upload artifacts when run on gh-actions
       - name: Upload Issues

@@ -14,4 +14,10 @@ object CakeIcons {
 
     @JvmField
     val CakeTestProjectTemplate = IconLoader.getIcon("/icons/CakeTestProject.svg", CakeIcons.javaClass)
+
+    @JvmField
+    val GeneralAdd = IconLoader.getIcon("/general/add.svg", CakeIcons.javaClass)
+
+    @JvmField
+    val GeneralRemove = IconLoader.getIcon("/general/remove.svg", CakeIcons.javaClass)
 }

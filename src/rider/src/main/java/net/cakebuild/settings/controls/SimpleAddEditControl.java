@@ -1,5 +1,7 @@
 package net.cakebuild.settings.controls;
 
+import icons.CakeIcons;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
@@ -34,6 +36,7 @@ public class SimpleAddEditControl {
             int row = table.getSelectedRow();
             removeItem.setEnabled(row >= 0);
         });
+        addItem.setIcon(CakeIcons.GeneralAdd);
         addItem.addActionListener(e -> {
             model.addRow(newItemGenerator.get());
             int row = model.getRowCount()-1;
@@ -43,6 +46,7 @@ public class SimpleAddEditControl {
             Component textEdit = table.prepareEditor(editor, row, 0);
             textEdit.requestFocus();
         });
+        removeItem.setIcon(CakeIcons.GeneralRemove);
         removeItem.setEnabled(false);
         removeItem.addActionListener(e -> {
             int row = table.getSelectedRow();
