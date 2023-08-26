@@ -1,10 +1,10 @@
-#load nuget:?package=Cake.IntelliJ.Recipe&version=0.1.5
+#load nuget:?package=Cake.IntelliJ.Recipe&version=0.2.2
 
 Environment.SetVariableNames(
   githubTokenVariable: "GITHUB_PAT"
 );
 
-BuildParameters.SetParameters(
+IntelliJBuildParameters.SetParameters(
   context: Context,
   buildSystem: BuildSystem,
   sourceDirectoryPath: "./src/rider",
@@ -18,8 +18,9 @@ BuildParameters.SetParameters(
   preferredBuildAgentOperatingSystem: PlatformFamily.Linux
 );
 
-BuildParameters.PrintParameters(Context);
+BuildParameters.IsDotNetCoreBuild = true; // so we get all the cool dotnet tools
+IntelliJBuildParameters.PrintParameters(Context);
 
 ToolSettings.SetToolSettings(context: Context);
 
-Build.Run();
+IntelliJBuild.Run();
