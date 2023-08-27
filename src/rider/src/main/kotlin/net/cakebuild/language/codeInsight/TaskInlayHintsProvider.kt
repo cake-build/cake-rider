@@ -14,7 +14,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.elementType
 import com.intellij.refactoring.suggested.startOffset
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.panel
 import net.cakebuild.language.psi.CakeTypes
 import net.cakebuild.shared.CakeScriptProject
 import net.cakebuild.shared.CakeTaskRunMode
@@ -34,7 +34,7 @@ class TaskInlayHintsProvider : InlayHintsProvider<TaskInlayHintsProvider.Setting
             Task("Default");
             bar();
             Task("Some Task")
-              .Does(() => 
+              .Does(() =>
               {
               // some stuff...
               });
@@ -78,17 +78,15 @@ class TaskInlayHintsProvider : InlayHintsProvider<TaskInlayHintsProvider.Setting
                     factory.container(
                         factory.smallText("Run Task")
                     ),
-                    object : InlayPresentationFactory.ClickListener {
-                        override fun onClick(event: MouseEvent, translated: Point) {
-                            if (event.clickCount == 2) {
-                                val project = element.containingFile.project
-                                CakeScriptProject.runCakeTarget(
-                                    project,
-                                    element.containingFile.virtualFile,
-                                    taskName,
-                                    CakeTaskRunMode.Run
-                                )
-                            }
+                    { event, _ ->
+                        if (event.clickCount == 2) {
+                            val project = element.containingFile.project
+                            CakeScriptProject.runCakeTarget(
+                                project,
+                                element.containingFile.virtualFile,
+                                taskName,
+                                CakeTaskRunMode.Run
+                            )
                         }
                     },
                     object : InlayPresentationFactory.HoverListener {

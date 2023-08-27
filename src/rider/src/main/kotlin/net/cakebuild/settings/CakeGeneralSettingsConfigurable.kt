@@ -39,7 +39,7 @@ class CakeGeneralSettingsConfigurable(private val project: Project) : Configurab
             Pair({ settings.cakeTaskParsingRegex }, { editor.taskRegexField })
         )
         val modified = pairs.any {
-            isModified(it.second(), it.first())
+            Configurable.isFieldModified(it.second(), it.first())
         }
         if (modified) {
             return true
