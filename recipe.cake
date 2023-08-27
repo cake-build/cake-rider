@@ -1,4 +1,4 @@
-#load nuget:?package=Cake.IntelliJ.Recipe&version=0.2.2
+#load nuget:?package=Cake.IntelliJ.Recipe&version=0.2.4
 
 Environment.SetVariableNames(
   githubTokenVariable: "GITHUB_PAT"
