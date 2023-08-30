@@ -1,4 +1,4 @@
-#load nuget:?package=Cake.IntelliJ.Recipe&version=0.2.2
+#load nuget:?package=Cake.IntelliJ.Recipe&version=0.2.4
 
 Environment.SetVariableNames(
   githubTokenVariable: "GITHUB_PAT"
@@ -18,7 +18,6 @@ IntelliJBuildParameters.SetParameters(
   preferredBuildAgentOperatingSystem: PlatformFamily.Linux
 );
 
-BuildParameters.IsDotNetCoreBuild = true; // so we get all the cool dotnet tools
 IntelliJBuildParameters.PrintParameters(Context);
 
 ToolSettings.SetToolSettings(context: Context);

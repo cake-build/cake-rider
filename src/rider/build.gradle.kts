@@ -11,20 +11,19 @@ plugins {
     // do NOT update kotlin - kotlin version must match platform version, see https://plugins.jetbrains.com/docs/intellij/kotlin.html#kotlin-standard-library
     id("org.jetbrains.kotlin.jvm") version "1.8.0"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "1.13.3"
-    id("com.jetbrains.rdgen") version "2023.1.2"
+    id("org.jetbrains.intellij") version "1.15.0"
+    id("com.jetbrains.rdgen") version "2023.3.0"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-    id("org.jetbrains.changelog") version "2.0.0"
+    id("org.jetbrains.changelog") version "2.2.0"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
-    id("io.gitlab.arturbosch.detekt") version "1.22.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.1"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "11.3.2"
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
     id("org.jetbrains.grammarkit") version "2022.3.1"
 }
 
 val jvmVersion = "17"
-val kotlinVersion = "1.8" // should match org.jetbrains.kotlin.jvm (major.minor)
 
 group = properties("pluginGroup")
 version = properties("pluginVersion")
@@ -34,12 +33,12 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.22.0")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.9.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.9.3")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.10.0")
 }
 
 // Configure gradle-intellij-plugin plugin.
@@ -60,10 +59,14 @@ intellij {
     )
 }
 
+kotlin {
+    jvmToolchain(jvmVersion.toInt())
+}
+
 // Configure detekt plugin.
 // Read more: https://detekt.github.io/detekt/kotlindsl.html
 detekt {
-    config = files("./detekt-config.yml")
+    config.setFrom(listOf(File(rootDir, "detekt-config.yml")))
     buildUponDefaultConfig = true
 }
 
@@ -245,16 +248,9 @@ tasks {
         }
     }
 
-    withType<JavaCompile> {
-        sourceCompatibility = jvmVersion
-        targetCompatibility = jvmVersion
-    }
     withType<KotlinCompile> {
         dependsOn(generateLexer, generateParser, rdgen)
         kotlinOptions {
-            jvmTarget = jvmVersion
-            languageVersion = kotlinVersion
-            apiVersion = kotlinVersion
             freeCompilerArgs = listOf("-Xjvm-default=all-compatibility")
         }
     }

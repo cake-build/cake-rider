@@ -26,7 +26,7 @@ class CakeRunnerSettingsConfigurable(private val project: Project) : Configurabl
             Pair({ settings.cakeRunner }, { editor.cakeRunnerField })
         )
         val textFieldsModified = pairs.any {
-            isModified(it.second(), it.first())
+            Configurable.isFieldModified(it.second(), it.first())
         }
 
         if (textFieldsModified) {
@@ -37,7 +37,7 @@ class CakeRunnerSettingsConfigurable(private val project: Project) : Configurabl
             return true
         }
 
-        if (isModified(editor.useNetTool, settings.cakeUseNetTool)) {
+        if (Configurable.isCheckboxModified(editor.useNetTool, settings.cakeUseNetTool)) {
             return true
         }
         return false

@@ -40,7 +40,7 @@ jobs:
 
       # Validates the gradle wrappers and saves us from getting malicious PRs
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1.0.6
+        uses: gradle/wrapper-validation-action@v1.1.0
 
       # Setup Java 11 environment which is needed to build
       - name: Setup Java
@@ -51,7 +51,7 @@ jobs:
 
       # Setup dotnet 6 (and 2.1 for Wyam, 3.1 for gitReleaseManager, 5.0 for gitVersion)
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v3.0.3
+        uses: actions/setup-dotnet@v3.2.0
         with:
           dotnet-version: |
             2.1.x

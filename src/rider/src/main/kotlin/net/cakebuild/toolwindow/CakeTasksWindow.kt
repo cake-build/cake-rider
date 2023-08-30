@@ -234,9 +234,8 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
                     else -> {
                         // do not modify the label - it's probably fine the way it is.
                         log.trace(
-                            "found userObject of ${
-                            data?.javaClass?.name ?: "[null]"
-                            } to override the label '${label.text}'"
+                            "found userObject of ${data?.javaClass?.name ?: "[null]"} " +
+                                "to override the label '${label.text}'"
                         )
                     }
                 }
