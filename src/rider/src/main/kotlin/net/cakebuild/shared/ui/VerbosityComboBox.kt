@@ -18,7 +18,7 @@ class VerbosityComboBox : JComboBox<String>() {
     }
 
     fun getVerbosity(): String {
-        return ((selectedItem ?: DEFAULT) as String).toLowerCase()
+        return ((selectedItem ?: DEFAULT) as String).lowercase()
     }
 
     fun setVerbosity(verbosity: String?) {

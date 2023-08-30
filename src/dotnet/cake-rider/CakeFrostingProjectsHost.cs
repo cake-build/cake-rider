@@ -11,7 +11,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.ProjectsHost;
 using JetBrains.ProjectModel.Tasks;
 using JetBrains.Rd.Base;
-using JetBrains.RdBackend.Common.Features;
+using JetBrains.ReSharper.Feature.Services.Protocol;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.Caches.SymbolCache;

@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using JetBrains.Application.UI.Controls.BulbMenu.Anchors;
 using JetBrains.Application.UI.Controls.BulbMenu.Items;
 using JetBrains.ProjectModel;
-using JetBrains.RdBackend.Common.Features;
+using JetBrains.ReSharper.Feature.Services.Protocol;
 using JetBrains.ReSharper.Features.Running;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Rider.Backend.Features.RunConfiguration;

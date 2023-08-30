@@ -11,7 +11,6 @@ import net.cakebuild.installers.CakeNetToolInstaller
 import net.cakebuild.run.script.CakeScriptConfiguration
 import net.cakebuild.shared.CakeBalloonNotifications
 
-@Suppress("DialogTitleCapitalization")
 class EnsureNetToolBeforeRunTaskProvider :
     BeforeRunTaskProvider<EnsureNetToolBeforeRunTaskProvider.EnsureNetToolBeforeRunTask>() {
     companion object {

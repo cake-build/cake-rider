@@ -12,7 +12,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.8.0"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "1.15.0"
-    id("com.jetbrains.rdgen") version "2023.1.2"
+    id("com.jetbrains.rdgen") version "2023.3.0"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "2.2.0"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
@@ -24,7 +24,6 @@ plugins {
 }
 
 val jvmVersion = "17"
-val kotlinVersion = "1.8" // should match org.jetbrains.kotlin.jvm (major.minor)
 
 group = properties("pluginGroup")
 version = properties("pluginVersion")
@@ -60,10 +59,14 @@ intellij {
     )
 }
 
+kotlin {
+    jvmToolchain(jvmVersion.toInt())
+}
+
 // Configure detekt plugin.
 // Read more: https://detekt.github.io/detekt/kotlindsl.html
 detekt {
-    config = files("./detekt-config.yml")
+    config.setFrom(listOf(File(rootDir, "detekt-config.yml")))
     buildUponDefaultConfig = true
 }
 
@@ -245,16 +248,9 @@ tasks {
         }
     }
 
-    withType<JavaCompile> {
-        sourceCompatibility = jvmVersion
-        targetCompatibility = jvmVersion
-    }
     withType<KotlinCompile> {
         dependsOn(generateLexer, generateParser, rdgen)
         kotlinOptions {
-            jvmTarget = jvmVersion
-            languageVersion = kotlinVersion
-            apiVersion = kotlinVersion
             freeCompilerArgs = listOf("-Xjvm-default=all-compatibility")
         }
     }

@@ -13,7 +13,6 @@ import icons.CakeIcons
 import net.cakebuild.run.script.CakeScriptConfiguration
 import net.cakebuild.shared.CakeBalloonNotifications
 
-@Suppress("DialogTitleCapitalization")
 class RestoreNetToolsBeforeRunTaskProvider :
     BeforeRunTaskProvider<RestoreNetToolsBeforeRunTaskProvider.RestoreNetToolsBeforeRunTask>() {
     companion object {
