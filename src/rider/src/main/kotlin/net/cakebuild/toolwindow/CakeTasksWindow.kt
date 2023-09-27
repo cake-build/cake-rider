@@ -175,9 +175,17 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
         val cakeProject = CakeScriptProject(project)
         for (cakeFile in cakeProject.getCakeFiles()) {
             val fileNode = DefaultMutableTreeNode(cakeFile)
+            val children = mutableListOf<String>()
             rootNode.add(fileNode)
 
             for (task in cakeFile.getTasks()) {
+                if (children.contains(task.name)) {
+                    // this is an error and won't compile.
+                    // we simply skip it.
+                    continue
+                }
+
+                children.add(task.name)
                 val taskNode = DefaultMutableTreeNode(task)
                 fileNode.add(taskNode)
             }
