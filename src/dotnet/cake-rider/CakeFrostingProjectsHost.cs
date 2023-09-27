@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -70,10 +71,9 @@ public class CakeFrostingProjectsHost : IDetectFrostingModules, ICakeFrostingPro
 
     public void Refresh(IProjectMark projectMark)
     {
+        _logger.Trace($"Handle change for project: {projectMark.Location}");
         using (_solution.Locks.UsingReadLock())
         {
-            _logger.Trace("Handle change for project: {0}", projectMark.Location);
-
             // Do not dispose IProject!
 #pragma warning disable IDISP001
             var projectByMark = _solution.GetProjectByMark(projectMark);
@@ -124,23 +124,25 @@ public class CakeFrostingProjectsHost : IDetectFrostingModules, ICakeFrostingPro
         foreach (var classDeclaration in classDeclarations)
         {
             var declaredElement = classDeclaration.DeclaredElement;
-            if (declaredElement != null)
+            if (declaredElement == null)
             {
-                if (!declaredElement.IsCakeFrostingTask())
-                {
-                    continue;
-                }
-
-                var name = declaredElement.GetCakeFrostingTaskName();
-
-                if (!cakeFrostingProject.Tasks.Contains(name))
-                {
-                    toAdd.Add(name);
-                }
-
-                currentFileTasks.Add(name);
-                newTasks.Add(name);
+                continue;
             }
+
+            if (!declaredElement.IsCakeFrostingTask())
+            {
+                continue;
+            }
+
+            var name = declaredElement.GetCakeFrostingTaskName();
+
+            if (!cakeFrostingProject.Tasks.Contains(name))
+            {
+                toAdd.Add(name);
+            }
+
+            currentFileTasks.Add(name);
+            newTasks.Add(name);
         }
 
         foreach (var currentFileTask in currentFileTasks)
@@ -174,6 +176,7 @@ public class CakeFrostingProjectsHost : IDetectFrostingModules, ICakeFrostingPro
     {
         if (_cakeFrostingProjects.TryGetValue(projectMark, out var cakeFrostingProject) && _isSolutionLoaded)
         {
+            _logger.Trace($"removing project {projectMark.Name} from loaded tasks");
             _model.Projects.Remove(cakeFrostingProject);
             _cakeFrostingProjects.Remove(projectMark);
             _cakeFrostingTasks.Remove(projectMark);
@@ -191,6 +194,7 @@ public class CakeFrostingProjectsHost : IDetectFrostingModules, ICakeFrostingPro
             return;
         }
 
+        _logger.Trace($"Project {projectMark.Name} was added.");
         var cakeFrostingProject = new CakeFrostingProject();
         cakeFrostingProject.Name.Set(project.Name);
         cakeFrostingProject.ProjectFilePath.Set(
@@ -198,36 +202,56 @@ public class CakeFrostingProjectsHost : IDetectFrostingModules, ICakeFrostingPro
         _model.Projects.Add(cakeFrostingProject);
         _cakeFrostingProjects.Add(projectMark, cakeFrostingProject);
         _cakeFrostingTasks.Add(projectMark, new Dictionary<IPsiSourceFile, HashSet<string>>());
+        LoadTasksForProject(projectMark, cakeFrostingProject);
+    }
+
+    private void LoadTasksForProject(IProjectMark projectMark, CakeFrostingProject cakeFrostingProject)
+    {
+        _logger.Trace($"loading all tasks of project:{cakeFrostingProject.Name}");
+        foreach (var psiModule in _solution.GetProjectByMark(projectMark)!.GetPsiModules())
+        {
+            _logger.Trace($"walking psiModule:{psiModule.Name}");
+            using (CompilationContextCookie.OverrideOrCreate(psiModule.GetContextFromModule()))
+            {
+                foreach (var sourceFile in psiModule.SourceFiles)
+                {
+                    _logger.Trace($"walking file:{sourceFile.Name}");
+                    foreach (var klass in _symbolCache.GetTypesAndNamespacesInFile(sourceFile).OfType<IClass>())
+                    {
+                        _logger.Trace($"walking class:{klass.ShortName}");
+                        Interruption.Current.CheckAndThrow();
+
+                        if (!klass.IsCakeFrostingTask())
+                        {
+                            _logger.Trace($"{klass.ShortName} is not a Cake.Frosting task");
+                            continue;
+                        }
+
+                        var name = klass.GetCakeFrostingTaskName();
+                        if (cakeFrostingProject.Tasks.Any(x =>
+                                x.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            // if the task was already registered, it's either an error,
+                            // or the task was defined twice in partials (in Cake Frosting)
+                            // either way, we can ignore it.
+                            _logger.Trace($"Task '{name}' already added. skipping it here.");
+                            continue;
+                        }
+
+                        _logger.Trace($"Adding Task '{name}'.");
+                        cakeFrostingProject.Tasks.Add(name);
+                    }
+                }
+            }
+        }
     }
 
     private void LoadAllTasks()
     {
+        _logger.Trace("Intially loading all Cake.Frosting tasks");
         foreach ((IProjectMark projectMark, CakeFrostingProject cakeFrostingProject) in _cakeFrostingProjects)
         {
-            var fileTaskMap = _cakeFrostingTasks[projectMark];
-
-            foreach (var psiModule in _solution.GetProjectByMark(projectMark)!.GetPsiModules())
-            {
-                using (CompilationContextCookie.OverrideOrCreate(psiModule.GetContextFromModule()))
-                {
-                    foreach (var sourceFile in psiModule.SourceFiles)
-                    {
-                        var tasks = fileTaskMap[sourceFile] = new HashSet<string>();
-
-                        foreach (var klass in _symbolCache.GetTypesAndNamespacesInFile(sourceFile).OfType<IClass>())
-                        {
-                            Interruption.Current.CheckAndThrow();
-
-                            if (klass.IsCakeFrostingTask())
-                            {
-                                var name = klass.GetCakeFrostingTaskName();
-                                cakeFrostingProject.Tasks.Add(name);
-                                tasks.Add(name);
-                            }
-                        }
-                    }
-                }
-            }
+           LoadTasksForProject(projectMark, cakeFrostingProject);
         }
     }
 }
