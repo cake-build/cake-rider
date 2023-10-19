@@ -105,6 +105,9 @@ configure<com.jetbrains.rd.generator.gradle.RdGenExtension> {
 sourceSets["main"].java.srcDirs("src/main/gen")
 
 tasks {
+    buildSearchableOptions {
+        enabled = false
+    }
 
     // generate the lexer (uses grammarkit)
     generateLexer {
@@ -248,13 +251,14 @@ tasks {
         }
     }
 
-    withType<KotlinCompile> {
+    withType<KotlinCompile>().configureEach {
         dependsOn(generateLexer, generateParser, rdgen)
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjvm-default=all-compatibility")
         }
     }
-    withType<Detekt> {
+
+    withType<Detekt>().configureEach {
         jvmTarget = jvmVersion
         excludes.add("**/gen/**")
         reports {
@@ -263,7 +267,8 @@ tasks {
             txt.required.set(false)
         }
     }
-    withType<org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask> {
+
+    withType<org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask>().configureEach {
         exclude("**/gen/**", "**/*.Generated.kt")
     }
 
