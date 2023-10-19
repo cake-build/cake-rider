@@ -11,7 +11,7 @@ plugins {
     // do NOT update kotlin - kotlin version must match platform version, see https://plugins.jetbrains.com/docs/intellij/kotlin.html#kotlin-standard-library
     id("org.jetbrains.kotlin.jvm") version "1.8.0"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "1.15.0"
+    id("org.jetbrains.intellij") version "1.16.0"
     id("com.jetbrains.rdgen") version "2023.3.0"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "2.2.0"
@@ -105,6 +105,9 @@ configure<com.jetbrains.rd.generator.gradle.RdGenExtension> {
 sourceSets["main"].java.srcDirs("src/main/gen")
 
 tasks {
+    buildSearchableOptions {
+        enabled = false
+    }
 
     // generate the lexer (uses grammarkit)
     generateLexer {
@@ -248,13 +251,14 @@ tasks {
         }
     }
 
-    withType<KotlinCompile> {
+    withType<KotlinCompile>().configureEach {
         dependsOn(generateLexer, generateParser, rdgen)
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjvm-default=all-compatibility")
         }
     }
-    withType<Detekt> {
+
+    withType<Detekt>().configureEach {
         jvmTarget = jvmVersion
         excludes.add("**/gen/**")
         reports {
@@ -263,7 +267,8 @@ tasks {
             txt.required.set(false)
         }
     }
-    withType<org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask> {
+
+    withType<org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask>().configureEach {
         exclude("**/gen/**", "**/*.Generated.kt")
     }
 
