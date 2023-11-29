@@ -44,7 +44,7 @@ jobs:
 
       # Setup Java 11 environment which is needed to build
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
