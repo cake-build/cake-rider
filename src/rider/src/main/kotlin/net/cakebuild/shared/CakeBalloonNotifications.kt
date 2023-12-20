@@ -5,7 +5,11 @@ import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 
 object CakeBalloonNotifications {
-    private fun notify(project: Project, content: String, type: NotificationType) {
+    private fun notify(
+        project: Project,
+        content: String,
+        type: NotificationType,
+    ) {
         NotificationGroupManager
             .getInstance()
             .getNotificationGroup("Cake")
@@ -13,13 +17,24 @@ object CakeBalloonNotifications {
             .notify(project)
     }
 
-    fun notifyError(project: Project, content: String) {
+    fun notifyError(
+        project: Project,
+        content: String,
+    ) {
         notify(project, content, NotificationType.ERROR)
     }
-    fun notifyInformation(project: Project, content: String) {
+
+    fun notifyInformation(
+        project: Project,
+        content: String,
+    ) {
         notify(project, content, NotificationType.INFORMATION)
     }
-    fun notifyWarning(project: Project, content: String) {
+
+    fun notifyWarning(
+        project: Project,
+        content: String,
+    ) {
         notify(project, content, NotificationType.WARNING)
     }
 }

@@ -1,18 +1,15 @@
 package net.cakebuild.settings
 
+import com.intellij.openapi.util.JDOMUtil
 import com.intellij.util.xmlb.XmlSerializer
 import junit.framework.TestCase.assertEquals
 import org.jdom.Element
-import org.jdom.input.SAXBuilder
-import org.jdom.output.Format
-import org.jdom.output.XMLOutputter
 import org.junit.Test
-import java.io.StringWriter
 
 class CakeSettingsTests {
-
     companion object {
-        const val defaultSettingsXml = """
+        const val DEFAULT_SETTINGS_XML =
+            """
 <CakeSettings>
   <option name="cakeRunner" value="~/.dotnet/tools/dotnet-cake" />
   <option name="cakeRunnerOverrides">
@@ -41,7 +38,7 @@ class CakeSettingsTests {
   <option name="downloadContentUrlBootstrapperNetToolSh" value="https://cakebuild.net/download/bootstrapper/dotnet-tool/bash" />
   <option name="downloadContentUrlConfigurationFile" value="https://cakebuild.net/download/configuration" />
 </CakeSettings>
-            """
+"""
     }
 
     @Test
@@ -53,7 +50,7 @@ class CakeSettingsTests {
         val element = XmlSerializer.serialize(sut)
 
         // then
-        assertXmlOutputEquals(defaultSettingsXml, element)
+        assertXmlOutputEquals(DEFAULT_SETTINGS_XML, element)
     }
 
     @Test
@@ -61,26 +58,28 @@ class CakeSettingsTests {
         // this is the test for GH-112
 
         // given
-        val settingsXml = """
-<CakeSettings>
-  <option name="cakeRunnerOverrides">
-    <map>
-      <entry key="someOS" value="build.ps1" />
-      <entry key="someOtherOS" value="cake.bat" />
-    </map>
-  </option>
-</CakeSettings>
-            """.toXmlElement()
+        val settingsXml =
+            """
+            <CakeSettings>
+              <option name="cakeRunnerOverrides">
+                <map>
+                  <entry key="someOS" value="build.ps1" />
+                  <entry key="someOtherOS" value="cake.bat" />
+                </map>
+              </option>
+            </CakeSettings>
+            """.trimIndent().toXmlElement()
 
         // when
         val sut = XmlSerializer.deserialize(settingsXml, CakeSettings::class.java)
         val actual = sut.cakeRunnerOverrides
 
         // then
-        val expected = mapOf(
-            Pair("someOS", "build.ps1"),
-            Pair("someOtherOS", "cake.bat")
-        )
+        val expected =
+            mapOf(
+                Pair("someOS", "build.ps1"),
+                Pair("someOtherOS", "cake.bat"),
+            )
         assertEquals(expected.count(), actual.count())
         expected.entries.forEach {
             assertEquals(it.value, actual[it.key])
@@ -88,20 +87,15 @@ class CakeSettingsTests {
     }
 
     private fun String.toXmlElement(): Element {
-        val document = SAXBuilder().build(this.byteInputStream())
-        return document.rootElement
+        return JDOMUtil.load(this.byteInputStream())
     }
 
-    private fun assertXmlOutputEquals(expected: String, element: Element) {
-        val sw = StringWriter()
-        val format = Format.getPrettyFormat()
-        XMLOutputter(format).output(element, sw)
-        val actual = sw.toString()
-
-        sw.buffer.setLength(0)
-
-        XMLOutputter(format).output(expected.toXmlElement(), sw)
-        val sanitizedExpected = sw.toString()
+    private fun assertXmlOutputEquals(
+        expected: String,
+        element: Element,
+    ) {
+        val actual = JDOMUtil.write(element)
+        val sanitizedExpected = JDOMUtil.write(JDOMUtil.load(expected.byteInputStream()))
 
         assertEquals(sanitizedExpected, actual)
     }

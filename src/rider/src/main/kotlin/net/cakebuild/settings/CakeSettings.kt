@@ -10,7 +10,7 @@ import net.cakebuild.shared.Constants
 
 @State(
     name = "net.cakebuild.settings.CakeSettings",
-    storages = [ Storage(Constants.settingsStorageFile) ]
+    storages = [ Storage(Constants.SETTINGS_STORAGE_FILE) ],
 )
 class CakeSettings : PersistentStateComponent<CakeSettings> {
     companion object {
@@ -70,12 +70,13 @@ class CakeSettings : PersistentStateComponent<CakeSettings> {
         }
 
         val variableRegex = Regex("\\\$\\{([^}]+)}")
-        runner = runner.replace(variableRegex) {
-            val varName = it.groupValues[1]
-            val varValue = System.getenv(varName) ?: ""
-            log.trace("resolved environment variable $varName to $varValue")
-            varValue
-        }
+        runner =
+            runner.replace(variableRegex) {
+                val varName = it.groupValues[1]
+                val varValue = System.getenv(varName) ?: ""
+                log.trace("resolved environment variable $varName to $varValue")
+                varValue
+            }
 
         log.trace("resolved Cake runner to $runner")
         return arrayOf(runner)

@@ -27,7 +27,7 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
         events: Array<out IdeaLoggingEvent>,
         additionalInfo: String?,
         parentComponent: Component,
-        consumer: Consumer<in SubmittedReportInfo>
+        consumer: Consumer<in SubmittedReportInfo>,
     ): Boolean {
         try {
             if (events.isNotEmpty()) {
@@ -44,26 +44,25 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
         return true
     }
 
-    private fun collectIssueDetails(event: IdeaLoggingEvent, additionalInfo: String?) =
-        Report(
-            title = event.throwableText.lines().first(),
-            pluginVersion = discoverPluginVersion(),
-            ideVersion = discoverIdeaVersion(),
-            os = System.getProperty("os.name"),
-            additionalInfo = additionalInfo,
-            stacktrace = event.throwableText.orCopyManuallyHint(maxLengthForStackTrace)
-        )
+    private fun collectIssueDetails(
+        event: IdeaLoggingEvent,
+        additionalInfo: String?,
+    ) = Report(
+        title = event.throwableText.lines().first(),
+        pluginVersion = discoverPluginVersion(),
+        ideVersion = discoverIdeaVersion(),
+        os = System.getProperty("os.name"),
+        additionalInfo = additionalInfo,
+        stacktrace = event.throwableText.orCopyManuallyHint(MAX_LENGTH_FOR_STACK_TRACE),
+    )
 
     private fun String.orCopyManuallyHint(chars: Int): String {
-        if (this.length < chars) {
-            return this
-        }
+        if (this.length < chars) return this
 
         return "\n\nStackTrace too long. Please copy the StackTrace here manually.\n\n"
     }
 
-    private fun discoverPluginVersion() =
-        (pluginDescriptor as? IdeaPluginDescriptor)?.version
+    private fun discoverPluginVersion() = (pluginDescriptor as? IdeaPluginDescriptor)?.version
 
     private fun discoverIdeaVersion() =
         "${ApplicationInfo.getInstance().fullVersion} (${ApplicationInfo.getInstance().build})"
@@ -76,7 +75,10 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
     }
 
     private object GithubLinkGenerator {
-        fun generateUrl(title: String, body: String): String {
+        fun generateUrl(
+            title: String,
+            body: String,
+        ): String {
             val encodedTitle = encode(title)
             val encodedBody = encode(body)
             return "https://github.com/cake-build/cake-rider/issues/new" +
@@ -85,8 +87,7 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
                 "&body=$encodedBody"
         }
 
-        private fun encode(text: String) =
-            URLEncoder.encode(text, "UTF-8")
+        private fun encode(text: String) = URLEncoder.encode(text, "UTF-8")
     }
 
     private object MarkdownDescriptionBaker {
@@ -95,14 +96,15 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
             .map { bakeAttribute(it.key, it.value!!) }
             .joinToString("\n")
 
-        private fun createEntries(report: Report) = mapOf(
-            "Plugin version" to report.pluginVersion,
-            "IDE version" to report.ideVersion,
-            "Operating system" to report.os,
-            "Additional information" to report.additionalInfo,
-            "Exception" to report.title,
-            "Stacktrace" to report.stacktrace
-        )
+        private fun createEntries(report: Report) =
+            mapOf(
+                "Plugin version" to report.pluginVersion,
+                "IDE version" to report.ideVersion,
+                "Operating system" to report.os,
+                "Additional information" to report.additionalInfo,
+                "Exception" to report.title,
+                "Stacktrace" to report.stacktrace,
+            )
 
         private fun bakeAttribute(label: String, text: String) =
             if (isMultiline(text)) {
@@ -121,10 +123,10 @@ class GitHubErrorReporter : ErrorReportSubmitter() {
         val ideVersion: String?,
         val additionalInfo: String?,
         val stacktrace: String?,
-        val os: String?
+        val os: String?,
     )
 
     companion object {
-        const val maxLengthForStackTrace = 5000 // GitHub does not like very long URLs
+        const val MAX_LENGTH_FOR_STACK_TRACE = 5000 // GitHub does not like very long URLs
     }
 }

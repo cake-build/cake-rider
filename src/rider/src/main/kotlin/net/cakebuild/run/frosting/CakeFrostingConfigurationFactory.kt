@@ -6,7 +6,6 @@ import com.intellij.openapi.project.Project
 
 class CakeFrostingConfigurationFactory(cakeConfigurationType: CakeFrostingConfigurationType) :
     ConfigurationFactory(cakeConfigurationType) {
-
     override fun getSingletonPolicy() = RunConfigurationSingletonPolicy.SINGLE_INSTANCE
 
     override fun createTemplateConfiguration(project: Project): CakeFrostingConfiguration {

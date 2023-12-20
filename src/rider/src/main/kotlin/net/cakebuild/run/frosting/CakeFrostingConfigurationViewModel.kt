@@ -43,21 +43,22 @@ class TaskEditor(lifetime: Lifetime, name: String, id: String) : CustomControlBa
     }
 
     override fun build(project: Project): JComponent {
-        val provider = object : TextFieldWithAutoCompletionListProvider<String>(emptyList()) {
-            override fun getLookupString(item: String): String {
-                return item
-            }
+        val provider =
+            object : TextFieldWithAutoCompletionListProvider<String>(emptyList()) {
+                override fun getLookupString(item: String): String {
+                    return item
+                }
 
-            private val sequentialLifetime: SequentialLifetimes = SequentialLifetimes(lifetime)
+                private val sequentialLifetime: SequentialLifetimes = SequentialLifetimes(lifetime)
 
-            fun updateCompletionItems(project: CakeFrostingProject?) {
-                if (project == null) {
-                    this.sequentialLifetime.next()
-                } else {
-                    this.setItems(project.tasks)
+                fun updateCompletionItems(project: CakeFrostingProject?) {
+                    if (project == null) {
+                        this.sequentialLifetime.next()
+                    } else {
+                        this.setItems(project.tasks)
+                    }
                 }
             }
-        }
 
         refreshCompletionList.advise(lifetime, provider::updateCompletionItems)
 
@@ -68,7 +69,7 @@ class TaskEditor(lifetime: Lifetime, name: String, id: String) : CustomControlBa
                 override fun documentChanged(event: com.intellij.openapi.editor.event.DocumentEvent) {
                     text.set(textField.text)
                 }
-            }
+            },
         )
 
         return makeLabeledComponent(textField)
@@ -87,18 +88,20 @@ class CakeFrostingConfigurationViewModel(private val lifetime: Lifetime, private
     private val verbositySelector: VerbositySelector = VerbositySelector(lifetime, "Verbosity:", "Verbosity")
     private val programParametersEditor: ProgramParametersEditor =
         ProgramParametersEditor("Arguments:", "Program_arguments", lifetime)
-    private val environmentVariablesEditor: EnvironmentVariablesEditor = EnvironmentVariablesEditor(
-        RiderRunBundle.message("label.environment.variables.with.colon"),
-        "Environment_variables"
-    )
+    private val environmentVariablesEditor: EnvironmentVariablesEditor =
+        EnvironmentVariablesEditor(
+            RiderRunBundle.message("label.environment.variables.with.colon"),
+            "Environment_variables",
+        )
 
-    override val controls: List<ControlBase> = mutableListOf(
-        projectSelector,
-        taskEditor,
-        verbositySelector,
-        programParametersEditor,
-        environmentVariablesEditor
-    )
+    override val controls: List<ControlBase> =
+        mutableListOf(
+            projectSelector,
+            taskEditor,
+            verbositySelector,
+            programParametersEditor,
+            environmentVariablesEditor,
+        )
 
     private fun onProjectChange(project: RunnableProject) {
         val cakeFrostingProjectsModel = this.project.solution.cakeFrostingProjectsModel
@@ -115,7 +118,7 @@ class CakeFrostingConfigurationViewModel(private val lifetime: Lifetime, private
                 lifetime,
                 { it.kind == RunnableProjectKinds.DotNetCore && cakeFrostingProjectsModel.getProjectFor(it) != null },
                 { },
-                this::onProjectChange
+                this::onProjectChange,
             )
 
             loaded = true
@@ -127,16 +130,17 @@ class CakeFrostingConfigurationViewModel(private val lifetime: Lifetime, private
 
             if (project == null) {
                 val name = File(projectFilePath).name
-                project = RunnableProject(
-                    name,
-                    name,
-                    projectFilePath,
-                    RunnableProjectKinds.DotNetCore,
-                    listOf(),
-                    listOf(),
-                    null,
-                    listOf()
-                )
+                project =
+                    RunnableProject(
+                        name,
+                        name,
+                        projectFilePath,
+                        RunnableProjectKinds.DotNetCore,
+                        listOf(),
+                        listOf(),
+                        null,
+                        listOf(),
+                    )
                 projectSelector.projectList.add(project)
             }
 

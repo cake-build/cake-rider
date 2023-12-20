@@ -48,20 +48,22 @@ class CakeStructureViewElement(private val myElement: NavigatablePsiElement) :
         var presentation = myElement.presentation // presentation is set for CakeFile
 
         if (presentation == null && myElement is CakeTask) {
-            val taskName = PsiTreeUtil.getChildrenOfTypeAsList(myElement, PsiElement::class.java)
-                .filter {
-                    it.elementType == CakeTypes.TASK_NAME
-                }.map {
-                    it.text
-                }.firstOrNull()
+            val taskName =
+                PsiTreeUtil.getChildrenOfTypeAsList(myElement, PsiElement::class.java)
+                    .filter {
+                        it.elementType == CakeTypes.TASK_NAME
+                    }.map {
+                        it.text
+                    }.firstOrNull()
 
             if (taskName != null) {
-                presentation = PresentationData(
-                    taskName,
-                    location,
-                    icon,
-                    textAttributes
-                )
+                presentation =
+                    PresentationData(
+                        taskName,
+                        location,
+                        icon,
+                        textAttributes,
+                    )
             }
         }
 
@@ -69,7 +71,7 @@ class CakeStructureViewElement(private val myElement: NavigatablePsiElement) :
             myElement.name ?: myElement.text ?: "<unknown>",
             location,
             icon,
-            textAttributes
+            textAttributes,
         )
     }
 

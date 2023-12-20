@@ -6,7 +6,6 @@ import net.cakebuild.shared.CakeDataKeys
 import net.cakebuild.toolwindow.CakeTasksWindow
 
 abstract class CakeTasksTreeAction : AnAction() {
-
     protected fun getWindow(e: AnActionEvent): CakeTasksWindow? {
         return CakeDataKeys.TASKS_WINDOW.getData(e.dataContext)
     }
@@ -33,7 +32,6 @@ abstract class CakeTasksTreeAction : AnAction() {
     }
 
     abstract class TaskOnlyActions : CakeTasksTreeAction() {
-
         override fun update(e: AnActionEvent) {
             super.update(e)
             val win = getWindow(e) ?: return

@@ -15,7 +15,7 @@ import net.cakebuild.run.frosting.CakeFrostingConfigurationType
 enum class CakeTaskRunMode {
     Run,
     Debug,
-    SaveConfigOnly
+    SaveConfigOnly,
 }
 
 abstract class CakeTask(val project: Project, val name: String) {
@@ -40,16 +40,17 @@ class CakeFrostingTask(project: Project, val cakeProject: CakeFrostingProject, t
         cakeConfiguration.parameters.projectFilePath = cakeProject.projectFilePath.valueOrThrow
         cakeConfiguration.parameters.taskName = name
 
-        val executor = when (mode) {
-            CakeTaskRunMode.Debug -> DefaultDebugExecutor.getDebugExecutorInstance()
-            CakeTaskRunMode.Run -> DefaultRunExecutor.getRunExecutorInstance()
-            else -> {
-                runConfiguration.storeInDotIdeaFolder()
-                runManager.addConfiguration(runConfiguration)
-                runManager.selectedConfiguration = runConfiguration
-                null
+        val executor =
+            when (mode) {
+                CakeTaskRunMode.Debug -> DefaultDebugExecutor.getDebugExecutorInstance()
+                CakeTaskRunMode.Run -> DefaultRunExecutor.getRunExecutorInstance()
+                else -> {
+                    runConfiguration.storeInDotIdeaFolder()
+                    runManager.addConfiguration(runConfiguration)
+                    runManager.selectedConfiguration = runConfiguration
+                    null
+                }
             }
-        }
 
         if (executor != null) {
             ProgramRunnerUtil.executeConfiguration(runConfiguration, executor)

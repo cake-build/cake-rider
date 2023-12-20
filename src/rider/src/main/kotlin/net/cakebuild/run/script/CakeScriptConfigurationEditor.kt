@@ -17,12 +17,13 @@ import net.cakebuild.run.customBuild
 import javax.swing.JComponent
 
 class CakeScriptConfigurationViewModel(lifetime: Lifetime, project: Project) : RunConfigurationViewModelBase() {
-    private val scriptPathSelector: PathSelector = PathSelector(
-        "Script path:",
-        "Script_path",
-        FileChooserDescriptorFactory.createSingleFileDescriptor(CakeFileType.INSTANCE),
-        lifetime
-    )
+    private val scriptPathSelector: PathSelector =
+        PathSelector(
+            "Script path:",
+            "Script_path",
+            FileChooserDescriptorFactory.createSingleFileDescriptor(CakeFileType.INSTANCE),
+            lifetime,
+        )
     private val taskEditor: TextEditor = TextEditor("Task:", "Task", lifetime)
     private val verbositySelector: VerbositySelector = VerbositySelector(lifetime, "Verbosity:", "Verbosity")
     private val programParametersEditor: ProgramParametersEditor =
@@ -63,6 +64,6 @@ class CakeScriptConfigurationEditor(private val project: Project) : LifetimedSet
 
     override fun createEditor(lifetime: Lifetime): JComponent {
         viewModel = CakeScriptConfigurationViewModel(lifetime, project)
-        return ControlViewBuilder(lifetime, project, CakeScriptConfigurationType.id).customBuild(viewModel, project)
+        return ControlViewBuilder(lifetime, project, CakeScriptConfigurationType.ID).customBuild(viewModel, project)
     }
 }

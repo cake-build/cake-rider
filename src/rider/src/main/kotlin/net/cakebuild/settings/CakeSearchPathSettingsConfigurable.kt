@@ -33,7 +33,10 @@ class CakeSearchPathSettingsConfigurable(private val project: Project) : Configu
             isModified(editor.scriptSearchIgnores, settings.cakeScriptSearchIgnores)
     }
 
-    private fun isModified(left: Collection<String>, right: Collection<String>): Boolean {
+    private fun isModified(
+        left: Collection<String>,
+        right: Collection<String>,
+    ): Boolean {
         if (left.size != right.size) {
             return true
         }

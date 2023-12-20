@@ -20,6 +20,6 @@ class CakeFrostingConfigurationEditor(val project: Project) : LifetimedSettingsE
 
     override fun createEditor(lifetime: Lifetime): JComponent {
         viewModel = CakeFrostingConfigurationViewModel(lifetime, project)
-        return ControlViewBuilder(lifetime, project, CakeFrostingConfigurationType.id).customBuild(viewModel, project)
+        return ControlViewBuilder(lifetime, project, CakeFrostingConfigurationType.ID).customBuild(viewModel, project)
     }
 }

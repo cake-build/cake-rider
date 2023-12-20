@@ -12,10 +12,9 @@ import com.jetbrains.rider.run.configurations.RunnableProjectKinds
 import icons.CakeIcons
 
 class CakeFrostingConfigurationType :
-    ConfigurationTypeBase(id, "Cake Frosting", "Cake Frosting", CakeIcons.CakeAction),
+    ConfigurationTypeBase(ID, "Cake Frosting", "Cake Frosting", CakeIcons.CakeAction),
     IRunnableProjectConfigurationType,
     ICanCreateFromBackend {
-
     val factory = CakeFrostingConfigurationFactory(this)
 
     init {
@@ -26,8 +25,10 @@ class CakeFrostingConfigurationType :
         return kind == RunnableProjectKinds.DotNetCore
     }
 
-    override fun createFromTemplate(runConfigurationTemplate: RunConfigurationTemplate, runManager: RunManager):
-        RunConfiguration {
+    override fun createFromTemplate(
+        runConfigurationTemplate: RunConfigurationTemplate,
+        runManager: RunManager,
+    ): RunConfiguration {
         val name = runConfigurationTemplate.entries.single { it.key == RunConfigurationTemplateKey.Name }.value
         val projectFilePath =
             runConfigurationTemplate.entries.single { it.key == RunConfigurationTemplateKey.ProjectFilePath }.value
@@ -49,15 +50,15 @@ class CakeFrostingConfigurationType :
             runConfigurationTemplate.typeId,
             name,
             projectFilePath,
-            runConfigurationTemplate.executor
+            runConfigurationTemplate.executor,
         )
     }
 
     override fun getCompatibleRunnableProjectKinds(): List<String> {
-        return listOf(id, RunnableProjectKinds.DotNetCore.name)
+        return listOf(ID, RunnableProjectKinds.DotNetCore.name)
     }
 
     companion object {
-        const val id = "CakeFrosting"
+        const val ID = "CakeFrosting"
     }
 }

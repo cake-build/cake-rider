@@ -19,7 +19,7 @@ class CakeConfigurationHost(project: Project) : ProtocolSubscribedProjectCompone
             model.runConfigurationTaskNames.clear()
 
             for (runConfiguration in runConfigurations) {
-                if (runConfiguration.typeId != CakeFrostingConfigurationType.id) continue
+                if (runConfiguration.typeId != CakeFrostingConfigurationType.ID) continue
                 val configurationSettings =
                     runManager.findConfigurationByTypeAndName(runConfiguration.typeId, runConfiguration.name)
                         ?: continue

@@ -12,8 +12,11 @@ import com.jetbrains.rider.run.configurations.project.DotNetStartBrowserParamete
 
 class CakeFrostingExecutorFactory(val project: Project, val parameters: CakeFrostingConfigurationParameters) :
     AsyncExecutorFactory {
-    override suspend fun create(executorId: String, environment: ExecutionEnvironment, lifetime: Lifetime):
-        RunProfileState {
+    override suspend fun create(
+        executorId: String,
+        environment: ExecutionEnvironment,
+        lifetime: Lifetime,
+    ): RunProfileState {
         return DotNetProjectExecutorFactory(
             project,
             DotNetProjectConfigurationParameters(
@@ -32,8 +35,8 @@ class CakeFrostingExecutorFactory(val project: Project, val parameters: CakeFros
                 projectKind = RunnableProjectKinds.DotNetCore,
                 projectTfm = "",
                 startBrowserParameters = DotNetStartBrowserParameters(),
-                runtimeType = null
-            )
+                runtimeType = null,
+            ),
         ).create(executorId, environment, lifetime)
     }
 }
