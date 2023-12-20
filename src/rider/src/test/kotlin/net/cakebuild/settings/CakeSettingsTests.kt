@@ -1,13 +1,10 @@
 package net.cakebuild.settings
 
+import com.intellij.openapi.util.JDOMUtil
 import com.intellij.util.xmlb.XmlSerializer
 import junit.framework.TestCase.assertEquals
 import org.jdom.Element
-import org.jdom.input.SAXBuilder
-import org.jdom.output.Format
-import org.jdom.output.XMLOutputter
 import org.junit.Test
-import java.io.StringWriter
 
 class CakeSettingsTests {
     companion object {
@@ -90,20 +87,15 @@ class CakeSettingsTests {
     }
 
     private fun String.toXmlElement(): Element {
-        val document = SAXBuilder().build(this.byteInputStream())
-        return document.rootElement
+        return JDOMUtil.load(this.byteInputStream())
     }
 
-    private fun assertXmlOutputEquals(expected: String, element: Element) {
-        val sw = StringWriter()
-        val format = Format.getPrettyFormat()
-        XMLOutputter(format).output(element, sw)
-        val actual = sw.toString()
-
-        sw.buffer.setLength(0)
-
-        XMLOutputter(format).output(expected.toXmlElement(), sw)
-        val sanitizedExpected = sw.toString()
+    private fun assertXmlOutputEquals(
+        expected: String,
+        element: Element,
+    ) {
+        val actual = JDOMUtil.write(element)
+        val sanitizedExpected = JDOMUtil.write(JDOMUtil.load(expected.byteInputStream()))
 
         assertEquals(sanitizedExpected, actual)
     }
