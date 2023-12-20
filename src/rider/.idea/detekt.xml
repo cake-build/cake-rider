@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DetektPluginSettings">
+    <option name="enableDetekt" value="true" />
+    <option name="enableForProjectResult" value="Accepted" />
+  </component>
   <component name="DetektProjectConfiguration">
     <enableFormatting>true</enableFormatting>
     <treatAsError>true</treatAsError>
