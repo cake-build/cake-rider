@@ -4,16 +4,23 @@ import javax.swing.DefaultCellEditor
 import javax.swing.JTextField
 
 class RegexCellEditor : DefaultCellEditor(JTextField()) {
-
     private val verifier = RegexInputVerifier()
 
     var onValidationSuccess: (() -> Unit)?
-        get() { return verifier.onValidationSuccess }
-        set(value) { verifier.onValidationSuccess = value }
+        get() {
+            return verifier.onValidationSuccess
+        }
+        set(value) {
+            verifier.onValidationSuccess = value
+        }
 
     var onValidationError: ((String) -> Unit)?
-        get() { return verifier.onValidationError }
-        set(value) { verifier.onValidationError = value }
+        get() {
+            return verifier.onValidationError
+        }
+        set(value) {
+            verifier.onValidationError = value
+        }
 
     init {
         component.inputVerifier = verifier

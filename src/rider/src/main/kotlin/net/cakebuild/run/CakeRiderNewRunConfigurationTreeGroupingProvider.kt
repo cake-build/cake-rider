@@ -13,10 +13,10 @@ class CakeRiderNewRunConfigurationTreeGroupingProvider : RiderNewRunConfiguratio
                 CakeIcons.CakeAction,
                 "Cake",
                 listOf(
-                    CakeFrostingConfigurationType.id,
-                    CakeScriptConfigurationType.id
-                )
-            )
+                    CakeFrostingConfigurationType.ID,
+                    CakeScriptConfigurationType.ID,
+                ),
+            ),
         )
     }
 }

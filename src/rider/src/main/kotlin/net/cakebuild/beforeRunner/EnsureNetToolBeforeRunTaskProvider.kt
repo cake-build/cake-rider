@@ -37,7 +37,7 @@ class EnsureNetToolBeforeRunTaskProvider :
         context: DataContext,
         configuration: RunConfiguration,
         env: ExecutionEnvironment,
-        task: EnsureNetToolBeforeRunTask
+        task: EnsureNetToolBeforeRunTask,
     ): Boolean {
         val installer = CakeNetToolInstaller()
         val installed = installer.getInstalledCakeVersion()
@@ -49,12 +49,12 @@ class EnsureNetToolBeforeRunTaskProvider :
         if (ok) {
             CakeBalloonNotifications.notifyInformation(
                 env.project,
-                "Cake.Tool (Global) successfully installed."
+                "Cake.Tool (Global) successfully installed.",
             )
         } else {
             CakeBalloonNotifications.notifyError(
                 env.project,
-                "Installation of Cake.Tool (Global) failed."
+                "Installation of Cake.Tool (Global) failed.",
             )
         }
         return ok

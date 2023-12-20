@@ -7,7 +7,6 @@ import kotlin.math.max
  * represents a version that can be compared to other versions.
  */
 class CakeVersion internal constructor(private val parts: List<Int>) : Comparable<CakeVersion> {
-
     companion object {
         private val suffixMatcher = Regex("-(\\D+)(\\d+)") // https://regex101.com/r/nrjWum/1
 
@@ -27,9 +26,10 @@ class CakeVersion internal constructor(private val parts: List<Int>) : Comparabl
             }
 
             val txtParts = text.split("-")[0].split(".")
-            val parts = txtParts.map {
-                parseInt(it)
-            }
+            val parts =
+                txtParts.map {
+                    parseInt(it)
+                }
 
             val version = CakeVersion(parts)
 

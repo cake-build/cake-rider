@@ -9,8 +9,8 @@ import net.cakebuild.language.psi.CakeLexerAdapter
  and DO name all tests starting with test. (i.e. testSimple())
  */
 class CakeLexerTests : LexerTestCase() {
-
     override fun createLexer() = CakeLexerAdapter()
+
     override fun getDirPath() = "src/test/testData/net/cakebuild/language/psi/"
 
     fun `test unknown word`() {
@@ -25,7 +25,7 @@ class CakeLexerTests : LexerTestCase() {
             CakeTokenType.UNKNOWN ('o')
             CakeTokenType.UNKNOWN ('r')
             CakeTokenType.UNKNOWN ('d')
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 
@@ -34,63 +34,70 @@ class CakeLexerTests : LexerTestCase() {
     }
 
     fun `test multi-line eol comment`() {
-        val input = """
+        val input =
+            """
             ///////////////////////////////////////////////////////////////////////////////
             // ARGUMENTS
             ///////////////////////////////////////////////////////////////////////////////
-        """.trimIndent()
-        val expected = """
+            """.trimIndent()
+        val expected =
+            """
             CakeTokenType.EOL_COMMENT ('///////////////////////////////////////////////////////////////////////////////')
             WHITE_SPACE ('\n')
             CakeTokenType.EOL_COMMENT ('// ARGUMENTS')
             WHITE_SPACE ('\n')
             CakeTokenType.EOL_COMMENT ('///////////////////////////////////////////////////////////////////////////////')
-        """.trimIndent()
+            """.trimIndent()
         doTest(input, expected)
     }
 
     fun `test multi-line block comment`() {
-        val input = """
+        val input =
+            """
             /******************************************************************************
             ** ARGUMENTS
             *******************************************************************************/
-        """.trimIndent()
-        val expected = """
+            """.trimIndent()
+        val expected =
+            """
             CakeTokenType.BLOCK_COMMENT ('/*')
             CakeTokenType.BLOCK_COMMENT ('*****************************************************************************')
             CakeTokenType.BLOCK_COMMENT ('\n')
             CakeTokenType.BLOCK_COMMENT ('** ARGUMENTS')
             CakeTokenType.BLOCK_COMMENT ('\n')
             CakeTokenType.BLOCK_COMMENT ('*******************************************************************************/')
-        """.trimIndent()
+            """.trimIndent()
         doTest(input, expected)
     }
 
     fun `test multi-empty lines`() {
-        val input = """
+        val input =
+            """
             ///////////////////////////////////////////////////////////////////////////////
-            
+
             ///////////////////////////////////////////////////////////////////////////////
-            
-            
-            
-        """.trimIndent()
-        val expected = """
+
+
+
+            """.trimIndent()
+        val expected =
+            """
             CakeTokenType.EOL_COMMENT ('///////////////////////////////////////////////////////////////////////////////')
             WHITE_SPACE ('\n\n')
             CakeTokenType.EOL_COMMENT ('///////////////////////////////////////////////////////////////////////////////')
             WHITE_SPACE ('\n\n\n')
-        """.trimIndent()
+            """.trimIndent()
         doTest(input, expected)
     }
 
     fun `test task`() {
         val input = "Task(\"Default\")"
-        val expected = """
-        CakeTokenType.TASK_START ('Task("')
-        CakeTokenType.TASK_NAME ('Default')
-        CakeTokenType.TASK_END ('")')
-        """.trimIndent()
+        val expected =
+            """
+            CakeTokenType.TASK_START ('Task("')
+            CakeTokenType.TASK_NAME ('Default')
+            CakeTokenType.TASK_END ('")')
+            """.trimIndent()
         doTest(input, expected)
     }
 }

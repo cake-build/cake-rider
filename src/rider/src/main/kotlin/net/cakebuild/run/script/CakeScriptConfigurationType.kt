@@ -4,8 +4,7 @@ import com.intellij.execution.configurations.ConfigurationTypeBase
 import icons.CakeIcons
 
 class CakeScriptConfigurationType :
-    ConfigurationTypeBase(id, "Cake Script", "Cake Script", CakeIcons.CakeAction) {
-
+    ConfigurationTypeBase(ID, "Cake Script", "Cake Script", CakeIcons.CakeAction) {
     val factory = CakeScriptConfigurationFactory(this)
 
     init {
@@ -13,6 +12,6 @@ class CakeScriptConfigurationType :
     }
 
     companion object {
-        const val id = "CAKE_CONFIGURATION"
+        const val ID = "CAKE_CONFIGURATION"
     }
 }

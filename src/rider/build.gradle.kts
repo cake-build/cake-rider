@@ -55,7 +55,7 @@ intellij {
         properties("platformPlugins")
             .split(',')
             .map(String::trim)
-            .filter(String::isNotEmpty)
+            .filter(String::isNotEmpty),
     )
 }
 
@@ -132,15 +132,16 @@ tasks {
 
             exec {
                 executable = "dotnet"
-                args = listOf(
-                    "msbuild",
-                    "-restore",
-                    "-target:Clean",
-                    File(dotnetDir, "$pluginName.sln").absolutePath,
-                    "-property:Configuration=$dotNetConfiguration",
-                    "-property:SdkVersion=$platformVersion",
-                    "-property:HostFullIdentifier="
-                )
+                args =
+                    listOf(
+                        "msbuild",
+                        "-restore",
+                        "-target:Clean",
+                        File(dotnetDir, "$pluginName.sln").absolutePath,
+                        "-property:Configuration=$dotNetConfiguration",
+                        "-property:SdkVersion=$platformVersion",
+                        "-property:HostFullIdentifier=",
+                    )
                 workingDir = File(rootDir, "../dotnet")
             }
         }
@@ -154,56 +155,58 @@ tasks {
         pathToPsiRoot.set("/net/cakebuild/language/psi")
     }
 
-    val buildDotNet = register("buildDotNet") {
-        dependsOn(rdgen)
+    val buildDotNet =
+        register("buildDotNet") {
+            dependsOn(rdgen)
 
-        val pluginName = properties("pluginName")
-        val dotNetConfiguration = properties("dotNetConfiguration")
-        val platformVersion = properties("platformVersion")
-        val dotnetDir = File(rootDir, "../dotnet")
-        val dotnetOutDir = File(dotnetDir, "$pluginName/bin/$dotNetConfiguration")
+            val pluginName = properties("pluginName")
+            val dotNetConfiguration = properties("dotNetConfiguration")
+            val platformVersion = properties("platformVersion")
+            val dotnetDir = File(rootDir, "../dotnet")
+            val dotnetOutDir = File(dotnetDir, "$pluginName/bin/$dotNetConfiguration")
 
-        // define input & output, so gradle
-        // can determine whether building is needed
-        outputs.files(
-            File(dotnetOutDir, "$pluginName.dll"),
-            File(dotnetOutDir, "$pluginName.pdb")
-        )
-            .withPropertyName("outputDir")
+            // define input & output, so gradle
+            // can determine whether building is needed
+            outputs.files(
+                File(dotnetOutDir, "$pluginName.dll"),
+                File(dotnetOutDir, "$pluginName.pdb"),
+            )
+                .withPropertyName("outputDir")
 
-        inputs.property("dotNetConfiguration", dotNetConfiguration)
-        inputs.property("pluginName", pluginName)
-        inputs.property("platformVersion", platformVersion)
-        inputs.files(
-            fileTree(File(rootDir, "../dotnet/$pluginName")) {
-                include("**/*.cs", "**/*.csproj")
-                exclude("bin/**", "obj/**")
+            inputs.property("dotNetConfiguration", dotNetConfiguration)
+            inputs.property("pluginName", pluginName)
+            inputs.property("platformVersion", platformVersion)
+            inputs.files(
+                fileTree(File(rootDir, "../dotnet/$pluginName")) {
+                    include("**/*.cs", "**/*.csproj")
+                    exclude("bin/**", "obj/**")
+                },
+            )
+                .skipWhenEmpty()
+                .withPropertyName("sourceFiles")
+                .withPathSensitivity(PathSensitivity.RELATIVE)
+
+            // build the dotNet part
+            // https://blog.jetbrains.com/dotnet/2019/02/14/writing-plugins-resharper-rider/
+            doLast {
+                exec {
+                    executable = "dotnet"
+                    args =
+                        listOf(
+                            "msbuild",
+                            "-restore",
+                            "-target:Build",
+                            File(dotnetDir, "$pluginName.sln").absolutePath,
+                            "-property:Configuration=$dotNetConfiguration",
+                            "-property:SdkVersion=$platformVersion",
+                            "-property:HostFullIdentifier=",
+                        )
+                    workingDir = dotnetDir
+                }
+
+                logger.info("outputs: ${outputs.files.joinToString { it.absolutePath }}")
             }
-        )
-            .skipWhenEmpty()
-            .withPropertyName("sourceFiles")
-            .withPathSensitivity(PathSensitivity.RELATIVE)
-
-        // build the dotNet part
-        // https://blog.jetbrains.com/dotnet/2019/02/14/writing-plugins-resharper-rider/
-        doLast {
-            exec {
-                executable = "dotnet"
-                args = listOf(
-                    "msbuild",
-                    "-restore",
-                    "-target:Build",
-                    File(dotnetDir, "$pluginName.sln").absolutePath,
-                    "-property:Configuration=$dotNetConfiguration",
-                    "-property:SdkVersion=$platformVersion",
-                    "-property:HostFullIdentifier="
-                )
-                workingDir = dotnetDir
-            }
-
-            logger.info("outputs: ${outputs.files.joinToString { it.absolutePath }}")
         }
-    }
 
     // add the dotnet component to the sandbox that will be used to create the final plugin-zip
     prepareSandbox {
@@ -232,20 +235,20 @@ tasks {
             logger.info("Sandbox is at $sandbox")
             logger.info("Adding projectTemplates from $projectTemplates")
             logger.info(
-                "Adding .NET components:\n - ${buildDotNet.get().outputs.files.joinToString(separator = "\n - ")}"
+                "Adding .NET components:\n - ${buildDotNet.get().outputs.files.joinToString(separator = "\n - ")}",
             )
         }
 
         // copy projectTemplates
         into(
-            "$pluginName/projectTemplates"
+            "$pluginName/projectTemplates",
         ) {
             from(projectTemplates)
         }
 
         // copy dotnet component
         into(
-            "$pluginName/dotnet"
+            "$pluginName/dotnet",
         ) {
             from(buildDotNet.get().outputs)
         }
@@ -286,12 +289,12 @@ tasks {
 
                     if (!containsAll(listOf(start, end))) {
                         throw GradleException(
-                            "Plugin description section not found in plugin_description.md:\n$start ... $end"
+                            "Plugin description section not found in plugin_description.md:\n$start ... $end",
                         )
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run { markdownToHTML(this) }
-            }
+            },
         )
 
         changeNotes.set(
@@ -302,12 +305,12 @@ tasks {
 
                     if (!containsAll(listOf(start, end))) {
                         throw GradleException(
-                            "Plugin changeNotes section not found in plugin_description.md:\n$start ... $end"
+                            "Plugin changeNotes section not found in plugin_description.md:\n$start ... $end",
                         )
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run { markdownToHTML(this) }
-            }
+            },
         )
     }
 
@@ -317,7 +320,7 @@ tasks {
             properties("pluginVerifierIdeVersions")
                 .split(',')
                 .map(String::trim)
-                .filter(String::isNotEmpty)
+                .filter(String::isNotEmpty),
         )
         // reports are in ${project.buildDir}/reports/pluginVerifier - or set verificationReportsDirectory()
     }

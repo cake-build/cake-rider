@@ -10,9 +10,9 @@ import org.junit.Test
 import java.io.StringWriter
 
 class CakeSettingsTests {
-
     companion object {
-        const val defaultSettingsXml = """
+        const val DEFAULT_SETTINGS_XML =
+            """
 <CakeSettings>
   <option name="cakeRunner" value="~/.dotnet/tools/dotnet-cake" />
   <option name="cakeRunnerOverrides">
@@ -41,7 +41,7 @@ class CakeSettingsTests {
   <option name="downloadContentUrlBootstrapperNetToolSh" value="https://cakebuild.net/download/bootstrapper/dotnet-tool/bash" />
   <option name="downloadContentUrlConfigurationFile" value="https://cakebuild.net/download/configuration" />
 </CakeSettings>
-            """
+"""
     }
 
     @Test
@@ -53,7 +53,7 @@ class CakeSettingsTests {
         val element = XmlSerializer.serialize(sut)
 
         // then
-        assertXmlOutputEquals(defaultSettingsXml, element)
+        assertXmlOutputEquals(DEFAULT_SETTINGS_XML, element)
     }
 
     @Test
@@ -61,26 +61,28 @@ class CakeSettingsTests {
         // this is the test for GH-112
 
         // given
-        val settingsXml = """
-<CakeSettings>
-  <option name="cakeRunnerOverrides">
-    <map>
-      <entry key="someOS" value="build.ps1" />
-      <entry key="someOtherOS" value="cake.bat" />
-    </map>
-  </option>
-</CakeSettings>
-            """.toXmlElement()
+        val settingsXml =
+            """
+            <CakeSettings>
+              <option name="cakeRunnerOverrides">
+                <map>
+                  <entry key="someOS" value="build.ps1" />
+                  <entry key="someOtherOS" value="cake.bat" />
+                </map>
+              </option>
+            </CakeSettings>
+            """.trimIndent().toXmlElement()
 
         // when
         val sut = XmlSerializer.deserialize(settingsXml, CakeSettings::class.java)
         val actual = sut.cakeRunnerOverrides
 
         // then
-        val expected = mapOf(
-            Pair("someOS", "build.ps1"),
-            Pair("someOtherOS", "cake.bat")
-        )
+        val expected =
+            mapOf(
+                Pair("someOS", "build.ps1"),
+                Pair("someOtherOS", "cake.bat"),
+            )
         assertEquals(expected.count(), actual.count())
         expected.entries.forEach {
             assertEquals(it.value, actual[it.key])

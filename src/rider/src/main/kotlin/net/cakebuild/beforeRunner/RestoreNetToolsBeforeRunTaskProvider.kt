@@ -39,13 +39,14 @@ class RestoreNetToolsBeforeRunTaskProvider :
         context: DataContext,
         configuration: RunConfiguration,
         env: ExecutionEnvironment,
-        task: RestoreNetToolsBeforeRunTask
+        task: RestoreNetToolsBeforeRunTask,
     ): Boolean {
-        val commandLine = GeneralCommandLine()
-            .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.CONSOLE)
-            .withExePath("dotnet")
-            .withParameters("tool", "restore")
-            .withWorkDirectory((configuration as CakeScriptConfiguration).getWorkingDirectory())
+        val commandLine =
+            GeneralCommandLine()
+                .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.CONSOLE)
+                .withExePath("dotnet")
+                .withParameters("tool", "restore")
+                .withWorkDirectory((configuration as CakeScriptConfiguration).getWorkingDirectory())
         val output = ExecUtil.execAndGetOutput(commandLine)
         if (output.exitCode != 0) {
             val err = "'${commandLine.commandLineString}' exited with unexpected Exitcode. Exitcode: ${output.exitCode}"

@@ -13,20 +13,18 @@ import org.jdom.Element
 class CakeFrostingConfiguration(
     project: Project,
     private val factory: CakeFrostingConfigurationFactory,
-    val parameters: CakeFrostingConfigurationParameters
-) :
-    RiderAsyncRunConfiguration(
-        "Cake Frosting",
-        project,
-        factory,
-        ::CakeFrostingConfigurationEditor,
-        CakeFrostingExecutorFactory(project, parameters)
-    ),
+    val parameters: CakeFrostingConfigurationParameters,
+) : RiderAsyncRunConfiguration(
+    "Cake Frosting",
+    project,
+    factory,
+    ::CakeFrostingConfigurationEditor,
+    CakeFrostingExecutorFactory(project, parameters),
+),
     IRiderDebuggable,
     ICanRunFromBackend,
     IProjectBasedRunConfiguration,
     IDotNetRunConfigurationWithPostStartupActivitiesSupport {
-
     override fun getProjectFilePath(): String {
         return parameters.projectFilePath
     }

@@ -11,11 +11,14 @@ class CreateNewCakeBuildFile :
     CreateFileFromTemplateAction(
         "Cake File",
         "Adds a new Cake script file.",
-        CakeIcons.CakeFileType
+        CakeIcons.CakeFileType,
     ),
     DumbAware {
-
-    override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
+    override fun buildDialog(
+        project: Project,
+        directory: PsiDirectory,
+        builder: CreateFileFromTemplateDialog.Builder,
+    ) {
         builder
             .setTitle("Cake File")
             // one entry for each file template
@@ -23,5 +26,9 @@ class CreateNewCakeBuildFile :
             .addKind("Cake Build File", CakeIcons.CakeFileType, "Cake File")
     }
 
-    override fun getActionName(directory: PsiDirectory, p1: String, p2: String) = "Cake File"
+    override fun getActionName(
+        directory: PsiDirectory,
+        p1: String,
+        p2: String,
+    ) = "Cake File"
 }

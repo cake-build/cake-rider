@@ -48,7 +48,10 @@ abstract class CustomControlBase(override val lifetime: Lifetime, name: String, 
 /**
  * Wrapper for [ControlViewBuilder.build] to allow for custom controls
  */
-fun ControlViewBuilder.customBuild(viewModel: RunConfigurationViewModelBase, project: Project): AnchoredPanel {
+fun ControlViewBuilder.customBuild(
+    viewModel: RunConfigurationViewModelBase,
+    project: Project,
+): AnchoredPanel {
     val controls = viewModel.controls as MutableList<ControlBase>
     val injects = mutableMapOf<Int, CustomControlBase>()
 

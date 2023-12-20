@@ -10,10 +10,9 @@ import net.cakebuild.language.psi.CakeTask
 class CakeStructureViewModel(psiFile: PsiFile?) :
     StructureViewModelBase(
         psiFile!!,
-        CakeStructureViewElement(psiFile)
+        CakeStructureViewElement(psiFile),
     ),
     ElementInfoProvider {
-
     override fun getSorters(): Array<Sorter> {
         return arrayOf(Sorter.ALPHA_SORTER)
     }
