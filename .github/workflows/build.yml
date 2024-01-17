@@ -61,7 +61,7 @@ jobs:
 
       # Cache Gradle Wrapper
       - name: Setup Gradle Wrapper Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
@@ -73,7 +73,7 @@ jobs:
 
       # Cache Cake tools
       - name: Cache Tools
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: tools
           key: ${{ runner.os }}-tools-${{ hashFiles('recipe.cake') }}
