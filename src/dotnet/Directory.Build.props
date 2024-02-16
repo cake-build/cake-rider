@@ -6,7 +6,7 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <DebugType>pdbonly</DebugType>
         <!-- will be injected by gradle at build -->
-        <SdkVersion Condition="'$(SdkVersion)' == ''">2023.2.0</SdkVersion>
+        <SdkVersion Condition="'$(SdkVersion)' == ''">2024.1.0-eap03</SdkVersion>
         <WaveVersion>$(SdkVersion.Substring(2,2))$(SdkVersion.Substring(5,1)).0.0</WaveVersion>
         <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     </PropertyGroup>
