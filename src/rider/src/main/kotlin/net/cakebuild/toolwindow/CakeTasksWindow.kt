@@ -37,7 +37,6 @@ import javax.swing.tree.TreePath
 import javax.swing.tree.TreeSelectionModel
 
 class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true, true) {
-
     private val tree: Tree = Tree()
     private val sequentialLifetimes: SequentialLifetimes = SequentialLifetimes(project.lifetime)
 
@@ -57,7 +56,7 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
                     }
                     super.mouseClicked(e)
                 }
-            }
+            },
         )
     }
 
@@ -67,7 +66,7 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
             actionManager.createActionToolbar(
                 "Cake Tasks Toolbar",
                 actionManager.getAction("CakeTasksWindow") as ActionGroup,
-                true
+                true,
             )
         actionToolbar.targetComponent = this
         toolbar = actionToolbar.component
@@ -81,7 +80,10 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
         expandCollapse(false)
     }
 
-    private fun expandCollapse(expand: Boolean, path: TreePath? = null) {
+    private fun expandCollapse(
+        expand: Boolean,
+        path: TreePath? = null,
+    ) {
         if (path == null) {
             expandCollapse(expand, TreePath(tree.model.root))
             return
@@ -105,8 +107,9 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
     }
 
     private fun getSelectedTask(): CakeTask? {
-        val selected = tree.getSelectedNodes(DefaultMutableTreeNode::class.java) { it.isLeaf }.firstOrNull()
-            ?: return null
+        val selected =
+            tree.getSelectedNodes(DefaultMutableTreeNode::class.java) { it.isLeaf }.firstOrNull()
+                ?: return null
         return when (selected.userObject) {
             is CakeTask -> selected.userObject as CakeTask
             else -> null
@@ -200,7 +203,6 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
     }
 
     class MyTreeCellRenderer : DefaultTreeCellRenderer() {
-
         private val log = Logger.getInstance(MyTreeCellRenderer::class.java)
 
         init {
@@ -216,7 +218,7 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
             expanded: Boolean,
             leaf: Boolean,
             row: Int,
-            hasFocus: Boolean
+            hasFocus: Boolean,
         ): Component {
             val cell: Component = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus)
             if (cell is JComponent) {
@@ -243,7 +245,7 @@ class CakeTasksWindow(private val project: Project) : SimpleToolWindowPanel(true
                         // do not modify the label - it's probably fine the way it is.
                         log.trace(
                             "found userObject of ${data?.javaClass?.name ?: "[null]"} " +
-                                "to override the label '${label.text}'"
+                                "to override the label '${label.text}'",
                         )
                     }
                 }

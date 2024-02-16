@@ -8,7 +8,6 @@ import com.intellij.util.io.HttpRequests
 import net.cakebuild.installers.CakeNetToolInstaller
 
 abstract class NuGetProvider {
-
     private val log = Logger.getInstance(CakeNetToolInstaller::class.java)
     abstract val endpointType: String
     protected val endpointUrl: String? by lazy {

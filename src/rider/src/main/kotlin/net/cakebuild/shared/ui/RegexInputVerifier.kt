@@ -6,7 +6,6 @@ import javax.swing.JComponent
 import javax.swing.JTextField
 
 class RegexInputVerifier : InputVerifier() {
-
     var onValidationSuccess: (() -> Unit)? = null
     var onValidationError: ((String) -> Unit)? = null
     private var lastErrorMessage = ""

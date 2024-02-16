@@ -11,9 +11,8 @@ import net.cakebuild.language.CakeParserDefinition
 class CakeParserTests : ParsingTestCase(
     "net/cakebuild/language/psi/",
     "cake",
-    CakeParserDefinition()
+    CakeParserDefinition(),
 ) {
-
     /**
      * @return path to test data file directory relative to root of this module.
      */

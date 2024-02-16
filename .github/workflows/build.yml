@@ -40,18 +40,18 @@ jobs:
 
       # Validates the gradle wrappers and saves us from getting malicious PRs
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1.1.0
+        uses: gradle/wrapper-validation-action@v2.1.1
 
       # Setup Java 11 environment which is needed to build
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
       # Setup dotnet 6 (and 2.1 for Wyam, 3.1 for gitReleaseManager, 5.0 for gitVersion)
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v3.2.0
+        uses: actions/setup-dotnet@v4.0.0
         with:
           dotnet-version: |
             2.1.x
@@ -61,7 +61,7 @@ jobs:
 
       # Cache Gradle Wrapper
       - name: Setup Gradle Wrapper Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
@@ -73,13 +73,13 @@ jobs:
 
       # Cache Cake tools
       - name: Cache Tools
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: tools
           key: ${{ runner.os }}-tools-${{ hashFiles('recipe.cake') }}
 
       - name: Build project
-        uses: cake-build/cake-action@v1.4.1
+        uses: cake-build/cake-action@v2.0.0
         with:
           script-path: recipe.cake
           target: CI
@@ -87,7 +87,7 @@ jobs:
 
       # currently, Cake.Recipe does not upload artifacts when run on gh-actions
       - name: Upload Issues
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           if-no-files-found: warn
           name: ${{ matrix.os }} Issues
@@ -95,7 +95,7 @@ jobs:
             BuildArtifacts/report.html
             BuildArtifacts/**/coverlet/*.xml
       - name: Upload Packages
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if:  runner.os == 'Linux'
         with:
           if-no-files-found: warn

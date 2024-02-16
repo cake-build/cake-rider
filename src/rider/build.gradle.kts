@@ -11,16 +11,16 @@ plugins {
     // do NOT update kotlin - kotlin version must match platform version, see https://plugins.jetbrains.com/docs/intellij/kotlin.html#kotlin-standard-library
     id("org.jetbrains.kotlin.jvm") version "1.8.0"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "1.15.0"
+    id("org.jetbrains.intellij") version "1.17.1"
     id("com.jetbrains.rdgen") version "2023.3.0"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "2.2.0"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
-    id("io.gitlab.arturbosch.detekt") version "1.23.1"
+    id("io.gitlab.arturbosch.detekt") version "1.23.5"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.0"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
-    id("org.jetbrains.grammarkit") version "2022.3.2"
+    id("org.jetbrains.grammarkit") version "2022.3.2.1"
 }
 
 val jvmVersion = "17"
@@ -33,12 +33,12 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.1")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.5")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.10.2")
 }
 
 // Configure gradle-intellij-plugin plugin.
@@ -55,7 +55,7 @@ intellij {
         properties("platformPlugins")
             .split(',')
             .map(String::trim)
-            .filter(String::isNotEmpty)
+            .filter(String::isNotEmpty),
     )
 }
 
@@ -105,6 +105,9 @@ configure<com.jetbrains.rd.generator.gradle.RdGenExtension> {
 sourceSets["main"].java.srcDirs("src/main/gen")
 
 tasks {
+    buildSearchableOptions {
+        enabled = false
+    }
 
     // generate the lexer (uses grammarkit)
     generateLexer {
@@ -129,15 +132,16 @@ tasks {
 
             exec {
                 executable = "dotnet"
-                args = listOf(
-                    "msbuild",
-                    "-restore",
-                    "-target:Clean",
-                    File(dotnetDir, "$pluginName.sln").absolutePath,
-                    "-property:Configuration=$dotNetConfiguration",
-                    "-property:SdkVersion=$platformVersion",
-                    "-property:HostFullIdentifier="
-                )
+                args =
+                    listOf(
+                        "msbuild",
+                        "-restore",
+                        "-target:Clean",
+                        File(dotnetDir, "$pluginName.sln").absolutePath,
+                        "-property:Configuration=$dotNetConfiguration",
+                        "-property:SdkVersion=$platformVersion",
+                        "-property:HostFullIdentifier=",
+                    )
                 workingDir = File(rootDir, "../dotnet")
             }
         }
@@ -151,56 +155,58 @@ tasks {
         pathToPsiRoot.set("/net/cakebuild/language/psi")
     }
 
-    val buildDotNet = register("buildDotNet") {
-        dependsOn(rdgen)
+    val buildDotNet =
+        register("buildDotNet") {
+            dependsOn(rdgen)
 
-        val pluginName = properties("pluginName")
-        val dotNetConfiguration = properties("dotNetConfiguration")
-        val platformVersion = properties("platformVersion")
-        val dotnetDir = File(rootDir, "../dotnet")
-        val dotnetOutDir = File(dotnetDir, "$pluginName/bin/$dotNetConfiguration")
+            val pluginName = properties("pluginName")
+            val dotNetConfiguration = properties("dotNetConfiguration")
+            val platformVersion = properties("platformVersion")
+            val dotnetDir = File(rootDir, "../dotnet")
+            val dotnetOutDir = File(dotnetDir, "$pluginName/bin/$dotNetConfiguration")
 
-        // define input & output, so gradle
-        // can determine whether building is needed
-        outputs.files(
-            File(dotnetOutDir, "$pluginName.dll"),
-            File(dotnetOutDir, "$pluginName.pdb")
-        )
-            .withPropertyName("outputDir")
+            // define input & output, so gradle
+            // can determine whether building is needed
+            outputs.files(
+                File(dotnetOutDir, "$pluginName.dll"),
+                File(dotnetOutDir, "$pluginName.pdb"),
+            )
+                .withPropertyName("outputDir")
 
-        inputs.property("dotNetConfiguration", dotNetConfiguration)
-        inputs.property("pluginName", pluginName)
-        inputs.property("platformVersion", platformVersion)
-        inputs.files(
-            fileTree(File(rootDir, "../dotnet/$pluginName")) {
-                include("**/*.cs", "**/*.csproj")
-                exclude("bin/**", "obj/**")
+            inputs.property("dotNetConfiguration", dotNetConfiguration)
+            inputs.property("pluginName", pluginName)
+            inputs.property("platformVersion", platformVersion)
+            inputs.files(
+                fileTree(File(rootDir, "../dotnet/$pluginName")) {
+                    include("**/*.cs", "**/*.csproj")
+                    exclude("bin/**", "obj/**")
+                },
+            )
+                .skipWhenEmpty()
+                .withPropertyName("sourceFiles")
+                .withPathSensitivity(PathSensitivity.RELATIVE)
+
+            // build the dotNet part
+            // https://blog.jetbrains.com/dotnet/2019/02/14/writing-plugins-resharper-rider/
+            doLast {
+                exec {
+                    executable = "dotnet"
+                    args =
+                        listOf(
+                            "msbuild",
+                            "-restore",
+                            "-target:Build",
+                            File(dotnetDir, "$pluginName.sln").absolutePath,
+                            "-property:Configuration=$dotNetConfiguration",
+                            "-property:SdkVersion=$platformVersion",
+                            "-property:HostFullIdentifier=",
+                        )
+                    workingDir = dotnetDir
+                }
+
+                logger.info("outputs: ${outputs.files.joinToString { it.absolutePath }}")
             }
-        )
-            .skipWhenEmpty()
-            .withPropertyName("sourceFiles")
-            .withPathSensitivity(PathSensitivity.RELATIVE)
-
-        // build the dotNet part
-        // https://blog.jetbrains.com/dotnet/2019/02/14/writing-plugins-resharper-rider/
-        doLast {
-            exec {
-                executable = "dotnet"
-                args = listOf(
-                    "msbuild",
-                    "-restore",
-                    "-target:Build",
-                    File(dotnetDir, "$pluginName.sln").absolutePath,
-                    "-property:Configuration=$dotNetConfiguration",
-                    "-property:SdkVersion=$platformVersion",
-                    "-property:HostFullIdentifier="
-                )
-                workingDir = dotnetDir
-            }
-
-            logger.info("outputs: ${outputs.files.joinToString { it.absolutePath }}")
         }
-    }
 
     // add the dotnet component to the sandbox that will be used to create the final plugin-zip
     prepareSandbox {
@@ -229,32 +235,33 @@ tasks {
             logger.info("Sandbox is at $sandbox")
             logger.info("Adding projectTemplates from $projectTemplates")
             logger.info(
-                "Adding .NET components:\n - ${buildDotNet.get().outputs.files.joinToString(separator = "\n - ")}"
+                "Adding .NET components:\n - ${buildDotNet.get().outputs.files.joinToString(separator = "\n - ")}",
             )
         }
 
         // copy projectTemplates
         into(
-            "$pluginName/projectTemplates"
+            "$pluginName/projectTemplates",
         ) {
             from(projectTemplates)
         }
 
         // copy dotnet component
         into(
-            "$pluginName/dotnet"
+            "$pluginName/dotnet",
         ) {
             from(buildDotNet.get().outputs)
         }
     }
 
-    withType<KotlinCompile> {
+    withType<KotlinCompile>().configureEach {
         dependsOn(generateLexer, generateParser, rdgen)
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjvm-default=all-compatibility")
         }
     }
-    withType<Detekt> {
+
+    withType<Detekt>().configureEach {
         jvmTarget = jvmVersion
         excludes.add("**/gen/**")
         reports {
@@ -263,7 +270,8 @@ tasks {
             txt.required.set(false)
         }
     }
-    withType<org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask> {
+
+    withType<org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask>().configureEach {
         exclude("**/gen/**", "**/*.Generated.kt")
     }
 
@@ -281,12 +289,12 @@ tasks {
 
                     if (!containsAll(listOf(start, end))) {
                         throw GradleException(
-                            "Plugin description section not found in plugin_description.md:\n$start ... $end"
+                            "Plugin description section not found in plugin_description.md:\n$start ... $end",
                         )
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run { markdownToHTML(this) }
-            }
+            },
         )
 
         changeNotes.set(
@@ -297,12 +305,12 @@ tasks {
 
                     if (!containsAll(listOf(start, end))) {
                         throw GradleException(
-                            "Plugin changeNotes section not found in plugin_description.md:\n$start ... $end"
+                            "Plugin changeNotes section not found in plugin_description.md:\n$start ... $end",
                         )
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run { markdownToHTML(this) }
-            }
+            },
         )
     }
 
@@ -312,7 +320,7 @@ tasks {
             properties("pluginVerifierIdeVersions")
                 .split(',')
                 .map(String::trim)
-                .filter(String::isNotEmpty)
+                .filter(String::isNotEmpty),
         )
         // reports are in ${project.buildDir}/reports/pluginVerifier - or set verificationReportsDirectory()
     }

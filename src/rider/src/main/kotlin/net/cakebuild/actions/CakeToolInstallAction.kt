@@ -22,19 +22,24 @@ abstract class CakeToolInstallAction : AnAction(), DumbAware {
             const val PROCESS_TWO_THIRDS: Double = 0.67
             const val PROCESS_DONE: Double = 1.0
         }
+
         override fun actionPerformed(e: AnActionEvent) {
-            val task: Task.Backgroundable = object : Task.Backgroundable(e.project, "Ensuring Cake.Tool (Global)") {
-                override fun run(indicator: ProgressIndicator) {
-                    doInstallOrUpdate(e.project, indicator)
+            val task: Task.Backgroundable =
+                object : Task.Backgroundable(e.project, "Ensuring Cake.Tool (Global)") {
+                    override fun run(indicator: ProgressIndicator) {
+                        doInstallOrUpdate(e.project, indicator)
+                    }
                 }
-            }
             ProgressManager.getInstance().runProcessWithProgressAsynchronously(
                 task,
-                BackgroundableProcessIndicator(task)
+                BackgroundableProcessIndicator(task),
             )
         }
 
-        private fun doInstallOrUpdate(project: Project?, indicator: ProgressIndicator) {
+        private fun doInstallOrUpdate(
+            project: Project?,
+            indicator: ProgressIndicator,
+        ) {
             if (indicator.isCanceled) {
                 return
             }
@@ -66,7 +71,7 @@ abstract class CakeToolInstallAction : AnAction(), DumbAware {
                     ApplicationManager.getApplication().invokeLater {
                         CakeBalloonNotifications.notifyInformation(
                             project,
-                            "Cake.Tool (Global) already installed."
+                            "Cake.Tool (Global) already installed.",
                         )
                     }
                 }
@@ -79,7 +84,10 @@ abstract class CakeToolInstallAction : AnAction(), DumbAware {
             indicator.fraction = PROCESS_DONE
         }
 
-        private fun updateCakeTool(installer: CakeNetToolInstaller, project: Project?) {
+        private fun updateCakeTool(
+            installer: CakeNetToolInstaller,
+            project: Project?,
+        ) {
             val success = installer.updateCake()
             if (project == null) {
                 return
@@ -89,18 +97,21 @@ abstract class CakeToolInstallAction : AnAction(), DumbAware {
                 if (success) {
                     CakeBalloonNotifications.notifyInformation(
                         project,
-                        "Cake.Tool (Global) successfully updated."
+                        "Cake.Tool (Global) successfully updated.",
                     )
                 } else {
                     CakeBalloonNotifications.notifyError(
                         project,
-                        "update of Cake.Tool (Global) failed."
+                        "update of Cake.Tool (Global) failed.",
                     )
                 }
             }
         }
 
-        private fun installCakeTool(installer: CakeNetToolInstaller, project: Project?) {
+        private fun installCakeTool(
+            installer: CakeNetToolInstaller,
+            project: Project?,
+        ) {
             val success = installer.installCake()
             if (project == null) {
                 return
@@ -110,12 +121,12 @@ abstract class CakeToolInstallAction : AnAction(), DumbAware {
                 if (success) {
                     CakeBalloonNotifications.notifyInformation(
                         project,
-                        "Cake.Tool (Global) successfully installed."
+                        "Cake.Tool (Global) successfully installed.",
                     )
                 } else {
                     CakeBalloonNotifications.notifyError(
                         project,
-                        "installation of Cake.Tool (Global) failed."
+                        "installation of Cake.Tool (Global) failed.",
                     )
                 }
             }

@@ -22,12 +22,14 @@ class CakeRunnerSettingsConfigurable(private val project: Project) : Configurabl
     @Suppress("DuplicatedCode")
     override fun isModified(): Boolean {
         val settings = CakeSettings.getInstance(project)
-        val pairs = arrayOf(
-            Pair({ settings.cakeRunner }, { editor.cakeRunnerField })
-        )
-        val textFieldsModified = pairs.any {
-            Configurable.isFieldModified(it.second(), it.first())
-        }
+        val pairs =
+            arrayOf(
+                Pair({ settings.cakeRunner }, { editor.cakeRunnerField }),
+            )
+        val textFieldsModified =
+            pairs.any {
+                Configurable.isFieldModified(it.second(), it.first())
+            }
 
         if (textFieldsModified) {
             return true
@@ -56,7 +58,10 @@ class CakeRunnerSettingsConfigurable(private val project: Project) : Configurabl
         return "Runner"
     }
 
-    private fun isModified(left: Map<String, String>, right: Map<String, String>): Boolean {
+    private fun isModified(
+        left: Map<String, String>,
+        right: Map<String, String>,
+    ): Boolean {
         if (left.size != right.size) {
             return true
         }

@@ -35,12 +35,14 @@ class CakeGeneralSettingsConfigurable(private val project: Project) : Configurab
     @Suppress("DuplicatedCode")
     override fun isModified(): Boolean {
         val settings = CakeSettings.getInstance(project)
-        val pairs = arrayOf(
-            Pair({ settings.cakeTaskParsingRegex }, { editor.taskRegexField })
-        )
-        val modified = pairs.any {
-            Configurable.isFieldModified(it.second(), it.first())
-        }
+        val pairs =
+            arrayOf(
+                Pair({ settings.cakeTaskParsingRegex }, { editor.taskRegexField }),
+            )
+        val modified =
+            pairs.any {
+                Configurable.isFieldModified(it.second(), it.first())
+            }
         if (modified) {
             return true
         }

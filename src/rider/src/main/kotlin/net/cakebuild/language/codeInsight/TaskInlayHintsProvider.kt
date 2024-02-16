@@ -29,17 +29,18 @@ class TaskInlayHintsProvider : InlayHintsProvider<TaskInlayHintsProvider.Setting
     override val name
         get() = "Cake"
     override val previewText
-        get() = """
+        get() =
+            """
             foo();
             Task("Default");
             bar();
             Task("Some Task")
-              .Does(() =>
-              {
-              // some stuff...
-              });
+                .Does(() =>
+                {
+                // some stuff...
+                });
             baz();
-        """.trimIndent()
+            """.trimIndent()
 
     override fun createConfigurable(settings: Settings) = TaskInlayHintsConfigurable()
 
@@ -49,7 +50,7 @@ class TaskInlayHintsProvider : InlayHintsProvider<TaskInlayHintsProvider.Setting
         file: PsiFile,
         editor: Editor,
         settings: Settings,
-        sink: InlayHintsSink
+        sink: InlayHintsSink,
     ) = TaskInlayHintsCollector(editor)
 
     class Settings
@@ -71,50 +72,58 @@ class TaskInlayHintsProvider : InlayHintsProvider<TaskInlayHintsProvider.Setting
     }
 
     class TaskInlayHintsCollector(editor: Editor) : FactoryInlayHintsCollector(editor) {
-        override fun collect(element: PsiElement, editor: Editor, sink: InlayHintsSink): Boolean {
+        override fun collect(
+            element: PsiElement,
+            editor: Editor,
+            sink: InlayHintsSink,
+        ): Boolean {
             if (element.elementType == CakeTypes.TASK_NAME) {
                 val taskName = element.text
-                val elm = factory.mouseHandling(
-                    factory.container(
-                        factory.smallText("Run Task")
-                    ),
-                    { event, _ ->
-                        if (event.clickCount == 2) {
-                            val project = element.containingFile.project
-                            CakeScriptProject.runCakeTarget(
-                                project,
-                                element.containingFile.virtualFile,
-                                taskName,
-                                CakeTaskRunMode.Run
-                            )
-                        }
-                    },
-                    object : InlayPresentationFactory.HoverListener {
-                        var lastComponent: java.awt.Component? = null
-                        var lastCursor: Cursor? = null
-
-                        override fun onHover(event: MouseEvent, translated: Point) {
-                            if (lastComponent == null) {
-                                lastComponent = event.component
-                                lastCursor = event.component.cursor
+                val elm =
+                    factory.mouseHandling(
+                        factory.container(
+                            factory.smallText("Run Task"),
+                        ),
+                        { event, _ ->
+                            if (event.clickCount == 2) {
+                                val project = element.containingFile.project
+                                CakeScriptProject.runCakeTarget(
+                                    project,
+                                    element.containingFile.virtualFile,
+                                    taskName,
+                                    CakeTaskRunMode.Run,
+                                )
                             }
-                            event.component.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-                        }
+                        },
+                        object : InlayPresentationFactory.HoverListener {
+                            var lastComponent: java.awt.Component? = null
+                            var lastCursor: Cursor? = null
 
-                        override fun onHoverFinished() {
-                            if (lastComponent != null && lastCursor != null) {
-                                lastComponent!!.cursor = lastCursor!!
+                            override fun onHover(
+                                event: MouseEvent,
+                                translated: Point,
+                            ) {
+                                if (lastComponent == null) {
+                                    lastComponent = event.component
+                                    lastCursor = event.component.cursor
+                                }
+                                event.component.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
                             }
-                            lastComponent = null
-                        }
-                    }
-                )
+
+                            override fun onHoverFinished() {
+                                if (lastComponent != null && lastCursor != null) {
+                                    lastComponent!!.cursor = lastCursor!!
+                                }
+                                lastComponent = null
+                            }
+                        },
+                    )
                 sink.addBlockElement(
                     element.startOffset,
                     relatesToPrecedingText = false,
                     showAbove = true,
                     priority = 0,
-                    presentation = elm
+                    presentation = elm,
                 )
             }
 

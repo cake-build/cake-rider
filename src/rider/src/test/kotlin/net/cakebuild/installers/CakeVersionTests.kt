@@ -11,7 +11,6 @@ import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CakeVersionTests {
-
     // Numbered parts
     @Test
     fun `should get the set parts correctly`() {
@@ -135,15 +134,25 @@ class CakeVersionTests {
 
     @ParameterizedTest(name = "{0} == {1}")
     @MethodSource("compareEqualsSource")
-    fun `should compare different versions - equals`(left: CakeVersion, right: CakeVersion, expected: Boolean) {
-        println("$left == $right ? Expected: $expected")
+    fun `should compare different versions - equals`(
+        left: CakeVersion,
+        right: CakeVersion,
+        expected: Boolean,
+    ) {
+        println(
+            "$left == $right ? Expected: $expected",
+        )
         val actual = left == right
         assertEquals(expected, actual)
     }
 
     @ParameterizedTest(name = "{0} < {1}")
     @MethodSource("compareLessSource")
-    fun `should compare different versions - less`(left: CakeVersion, right: CakeVersion, expected: Boolean) {
+    fun `should compare different versions - less`(
+        left: CakeVersion,
+        right: CakeVersion,
+        expected: Boolean,
+    ) {
         println("$left < $right ? Expected: $expected")
         val actual = left < right
         assertEquals(expected, actual)
@@ -151,7 +160,11 @@ class CakeVersionTests {
 
     @ParameterizedTest(name = "{0} <= {1}")
     @MethodSource("compareLessEqualSource")
-    fun `should compare different versions - less or equal`(left: CakeVersion, right: CakeVersion, expected: Boolean) {
+    fun `should compare different versions - less or equal`(
+        left: CakeVersion,
+        right: CakeVersion,
+        expected: Boolean,
+    ) {
         println("$left <= $right ? Expected: $expected")
         val actual = left <= right
         assertEquals(expected, actual)
@@ -159,7 +172,11 @@ class CakeVersionTests {
 
     @ParameterizedTest(name = "{0} > {1}")
     @MethodSource("compareGreaterSource")
-    fun `should compare different versions - greater`(left: CakeVersion, right: CakeVersion, expected: Boolean) {
+    fun `should compare different versions - greater`(
+        left: CakeVersion,
+        right: CakeVersion,
+        expected: Boolean,
+    ) {
         println("$left > $right ? Expected: $expected")
         val actual = left > right
         assertEquals(expected, actual)
@@ -170,7 +187,7 @@ class CakeVersionTests {
     fun `should compare different versions - greater or equal`(
         left: CakeVersion,
         right: CakeVersion,
-        expected: Boolean
+        expected: Boolean,
     ) {
         println("$left >= $right ? Expected: $expected")
         val actual = left >= right
@@ -199,7 +216,7 @@ class CakeVersionTests {
                 Arguments.of(CakeVersion(listOf(1, 0, 0, 0)), CakeVersion(listOf(1)), true),
                 Arguments.of(CakeVersion(listOf(1, 2, 3)), CakeVersion(listOf(2)), false),
                 Arguments.of(CakeVersion(listOf(1, 2, 3)), CakeVersion(listOf(1, 2, 4)), false),
-                Arguments.of(CakeVersion.parse("1.0.0-alpha1"), CakeVersion.parse("1.0.0-beta1"), true)
+                Arguments.of(CakeVersion.parse("1.0.0-alpha1"), CakeVersion.parse("1.0.0-beta1"), true),
             )
 
         @Suppress("Unused")
@@ -211,7 +228,7 @@ class CakeVersionTests {
                 Arguments.of(CakeVersion(listOf(1, 0, 0, 0)), CakeVersion(listOf(1)), false),
                 Arguments.of(CakeVersion(listOf(1, 2, 3)), CakeVersion(listOf(2)), true),
                 Arguments.of(CakeVersion(listOf(1, 2, 3)), CakeVersion(listOf(1, 2, 4)), true),
-                Arguments.of(CakeVersion.parse("1.0.0-alpha1"), CakeVersion.parse("1.0.0-beta1"), false)
+                Arguments.of(CakeVersion.parse("1.0.0-alpha1"), CakeVersion.parse("1.0.0-beta1"), false),
             )
 
         @Suppress("Unused")
@@ -223,7 +240,7 @@ class CakeVersionTests {
                 Arguments.of(CakeVersion(listOf(1, 0, 0, 0)), CakeVersion(listOf(1)), true),
                 Arguments.of(CakeVersion(listOf(1, 2, 3)), CakeVersion(listOf(2)), true),
                 Arguments.of(CakeVersion(listOf(1, 2, 3)), CakeVersion(listOf(1, 2, 4)), true),
-                Arguments.of(CakeVersion.parse("1.0.0-alpha1"), CakeVersion.parse("1.0.0-beta1"), true)
+                Arguments.of(CakeVersion.parse("1.0.0-alpha1"), CakeVersion.parse("1.0.0-beta1"), true),
             )
 
         @Suppress("Unused")
@@ -236,7 +253,7 @@ class CakeVersionTests {
                 Arguments.of(CakeVersion(listOf(1, 2, 3)), CakeVersion(listOf(2)), false),
                 Arguments.of(CakeVersion(listOf(1, 2, 3)), CakeVersion(listOf(1, 2, 4)), false),
                 Arguments.of(CakeVersion(listOf(1, 2, 4)), CakeVersion(listOf(1, 2, 3)), true),
-                Arguments.of(CakeVersion.parse("1.0.0-alpha1"), CakeVersion.parse("1.0.0-beta1"), false)
+                Arguments.of(CakeVersion.parse("1.0.0-alpha1"), CakeVersion.parse("1.0.0-beta1"), false),
             )
 
         @Suppress("Unused")
@@ -248,7 +265,7 @@ class CakeVersionTests {
                 Arguments.of(CakeVersion(listOf(1, 0, 0, 0)), CakeVersion(listOf(1)), true),
                 Arguments.of(CakeVersion(listOf(1, 2, 3)), CakeVersion(listOf(2)), false),
                 Arguments.of(CakeVersion(listOf(1, 2, 3)), CakeVersion(listOf(1, 2, 4)), false),
-                Arguments.of(CakeVersion.parse("1.0.0-alpha1"), CakeVersion.parse("1.0.0-beta1"), true)
+                Arguments.of(CakeVersion.parse("1.0.0-alpha1"), CakeVersion.parse("1.0.0-beta1"), true),
             )
     }
 }

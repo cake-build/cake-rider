@@ -27,7 +27,7 @@ class CakeFrostingConfigurationParameters(val project: Project) {
         projectFilePath: String,
         verbosity: String,
         programParameters: String,
-        envs: Map<String, String>
+        envs: Map<String, String>,
     ) : this(project) {
         this.projectFilePath = projectFilePath
         this.taskName = taskName
@@ -59,7 +59,7 @@ class CakeFrostingConfigurationParameters(val project: Project) {
             projectFilePath,
             verbosity,
             additionalArguments,
-            copyEnvs(envs)
+            copyEnvs(envs),
         )
     }
 
@@ -70,7 +70,7 @@ class CakeFrostingConfigurationParameters(val project: Project) {
             }
         ) {
             throw RuntimeConfigurationError(
-                RiderRunBundle.message("DotNetProjectConfigurationParameters.not.specified.project")
+                RiderRunBundle.message("DotNetProjectConfigurationParameters.not.specified.project"),
             )
         }
     }

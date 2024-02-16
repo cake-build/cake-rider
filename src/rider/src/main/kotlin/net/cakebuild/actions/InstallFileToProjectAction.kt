@@ -15,24 +15,26 @@ import net.cakebuild.settings.CakeSettings
 import net.cakebuild.shared.CakeScriptProject
 
 abstract class InstallFileToProjectAction : AnAction(), DumbAware {
-
     private val log = Logger.getInstance(InstallFileToProjectAction::class.java)
 
     protected abstract val fileType: FileType
+
     protected abstract val fileName: String
+
     protected abstract fun getUrl(settings: CakeSettings): String
 
     override fun actionPerformed(e: AnActionEvent) {
         val projectDir = CakeScriptProject(e.project!!).getProjectDir()!!
         val existing = projectDir.findChild(fileName)
         if (null != existing && existing.exists()) {
-            val dlg = ConfirmationDialog.requestForConfirmation(
-                VcsShowConfirmationOption.STATIC_SHOW_CONFIRMATION,
-                e.project!!,
-                "File $fileName already exists. Override?",
-                "Override?",
-                Messages.getQuestionIcon()
-            )
+            val dlg =
+                ConfirmationDialog.requestForConfirmation(
+                    VcsShowConfirmationOption.STATIC_SHOW_CONFIRMATION,
+                    e.project!!,
+                    "File $fileName already exists. Override?",
+                    "Override?",
+                    Messages.getQuestionIcon(),
+                )
             if (!dlg) {
                 return
             }
@@ -48,11 +50,11 @@ abstract class InstallFileToProjectAction : AnAction(), DumbAware {
         val fileDescription = service.createFileDescription(getUrl(settings), fileName)
         service.createDownloader(
             arrayOf(fileDescription).toMutableList(),
-            fileName
+            fileName,
         ).downloadFilesWithProgress(
             projectDir.path,
             e.project,
-            null
+            null,
         )
     }
 

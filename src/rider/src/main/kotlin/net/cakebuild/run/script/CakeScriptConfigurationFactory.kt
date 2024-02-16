@@ -11,7 +11,6 @@ import com.jetbrains.rider.build.tasks.BuildProjectBeforeRunTaskProvider
 
 class CakeScriptConfigurationFactory(cakeConfigurationType: CakeScriptConfigurationType) :
     ConfigurationFactory(cakeConfigurationType) {
-
     override fun getSingletonPolicy() = RunConfigurationSingletonPolicy.SINGLE_INSTANCE
 
     override fun createTemplateConfiguration(project: Project): CakeScriptConfiguration {
@@ -32,7 +31,7 @@ class CakeScriptConfigurationFactory(cakeConfigurationType: CakeScriptConfigurat
 
     override fun configureBeforeRunTaskDefaults(
         providerID: Key<out BeforeRunTask<BeforeRunTask<*>>>?,
-        task: BeforeRunTask<out BeforeRunTask<*>>?
+        task: BeforeRunTask<out BeforeRunTask<*>>?,
     ) {
         super.configureBeforeRunTaskDefaults(providerID, task)
 

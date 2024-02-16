@@ -11,7 +11,10 @@ class SearchQueryService : NuGetProvider() {
     override val endpointType: String
         get() = "SearchQueryService"
 
-    fun getVersion(packageName: String, includePrerelease: Boolean): String? {
+    fun getVersion(
+        packageName: String,
+        includePrerelease: Boolean,
+    ): String? {
         if (endpointUrl == null) {
             log.warn("No endpoint url found.")
             return null

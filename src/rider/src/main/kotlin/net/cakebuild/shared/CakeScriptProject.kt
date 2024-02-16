@@ -22,7 +22,6 @@ import java.nio.file.FileSystems
 import java.util.Stack
 
 class CakeScriptProject(private val project: Project) {
-
     private val log = Logger.getInstance(CakeScriptProject::class.java)
 
     fun getProjectDir(): VirtualFile? {
@@ -35,7 +34,10 @@ class CakeScriptProject(private val project: Project) {
         return projectDir
     }
 
-    private fun getSearchPaths(settings: CakeSettings, projectDir: VirtualFile): Collection<VirtualFile> {
+    private fun getSearchPaths(
+        settings: CakeSettings,
+        projectDir: VirtualFile,
+    ): Collection<VirtualFile> {
         return settings.cakeScriptSearchPaths.mapNotNull {
             // VfsUtil.findRelativeFile does not work for "./foo" or "../foo"
             val parts = it.split("/", "\\")
@@ -53,57 +55,65 @@ class CakeScriptProject(private val project: Project) {
                 }
 
                 val child = path.findChild(p)
-                path = if (child == null) {
-                    log.warn("could not access $p as child of ${path.path}")
-                    null
-                } else {
-                    child
-                }
+                path =
+                    if (child == null) {
+                        log.warn("could not access $p as child of ${path.path}")
+                        null
+                    } else {
+                        child
+                    }
             }
             path
         }
     }
 
-    fun getCakeFiles() = sequence {
-        val settings = CakeSettings.getInstance(project)
-        val fileTypeManager = FileTypeManager.getInstance()
-        val projectDir = getProjectDir()
-        if (projectDir == null) {
-            log.warn("Unable to find a folder to search for cake files.")
-            return@sequence
-        }
-        val searchPaths = getSearchPaths(settings, projectDir)
-        val bucket = Stack<VirtualFile>()
-        bucket.addAll(searchPaths)
-        val excludePatterns = settings.cakeScriptSearchIgnores.map {
-            Regex(it)
-        }
-        while (!bucket.isEmpty()) {
-            val folder = bucket.pop()
-            log.trace("searching for cake scripts in folder ${folder.path}")
-            children@ for (child in folder.children) {
-                val normalizedPath = child.path.replace("\\", "/")
-                for (exclude in excludePatterns) {
-                    if (normalizedPath.matches(exclude)) {
-                        log.trace("$normalizedPath excluded by pattern ${exclude.pattern}")
-                        continue@children
+    fun getCakeFiles() =
+        sequence {
+            val settings = CakeSettings.getInstance(project)
+            val fileTypeManager = FileTypeManager.getInstance()
+            val projectDir = getProjectDir()
+            if (projectDir == null) {
+                log.warn("Unable to find a folder to search for cake files.")
+                return@sequence
+            }
+            val searchPaths = getSearchPaths(settings, projectDir)
+            val bucket = Stack<VirtualFile>()
+            bucket.addAll(searchPaths)
+            val excludePatterns =
+                settings.cakeScriptSearchIgnores.map {
+                    Regex(it)
+                }
+            while (!bucket.isEmpty()) {
+                val folder = bucket.pop()
+                log.trace("searching for cake scripts in folder ${folder.path}")
+                children@ for (child in folder.children) {
+                    val normalizedPath = child.path.replace("\\", "/")
+                    for (exclude in excludePatterns) {
+                        if (normalizedPath.matches(exclude)) {
+                            log.trace("$normalizedPath excluded by pattern ${exclude.pattern}")
+                            continue@children
+                        }
                     }
-                }
-                if (child.isDirectory) {
-                    bucket.push(child)
-                    continue
-                }
+                    if (child.isDirectory) {
+                        bucket.push(child)
+                        continue
+                    }
 
-                val fileType = fileTypeManager.getFileTypeByFileName(child.name)
-                if (fileType is CakeFileType) {
-                    yield(CakeFile(project, child))
+                    val fileType = fileTypeManager.getFileTypeByFileName(child.name)
+                    if (fileType is CakeFileType) {
+                        yield(CakeFile(project, child))
+                    }
                 }
             }
         }
-    }
 
     companion object {
-        fun runCakeTarget(project: Project, file: VirtualFile, taskName: String, mode: CakeTaskRunMode) {
+        fun runCakeTarget(
+            project: Project,
+            file: VirtualFile,
+            taskName: String,
+            mode: CakeTaskRunMode,
+        ) {
             val runManager = project.getService(RunManager::class.java)
             val configurationType = ConfigurationTypeUtil.findConfigurationType(CakeScriptConfigurationType::class.java)
             val fileSystems = FileSystems.getDefault()
@@ -115,16 +125,17 @@ class CakeScriptProject(private val project: Project) {
             val settings = CakeSettings.getInstance(project)
             cakeConfiguration.setOptions(path.toString(), taskName, settings.cakeVerbosity)
 
-            val executor = when (mode) {
-                CakeTaskRunMode.Debug -> DefaultDebugExecutor.getDebugExecutorInstance()
-                CakeTaskRunMode.Run -> DefaultRunExecutor.getRunExecutorInstance()
-                else -> {
-                    runConfiguration.storeInDotIdeaFolder()
-                    runManager.addConfiguration(runConfiguration)
-                    runManager.selectedConfiguration = runConfiguration
-                    null
+            val executor =
+                when (mode) {
+                    CakeTaskRunMode.Debug -> DefaultDebugExecutor.getDebugExecutorInstance()
+                    CakeTaskRunMode.Run -> DefaultRunExecutor.getRunExecutorInstance()
+                    else -> {
+                        runConfiguration.storeInDotIdeaFolder()
+                        runManager.addConfiguration(runConfiguration)
+                        runManager.selectedConfiguration = runConfiguration
+                        null
+                    }
                 }
-            }
 
             if (executor != null) {
                 ProgramRunnerUtil.executeConfiguration(runConfiguration, executor)
@@ -133,15 +144,16 @@ class CakeScriptProject(private val project: Project) {
     }
 
     class CakeFile(private val project: Project, val file: VirtualFile) {
-
         private val content by lazy { VfsUtil.loadText(file) }
 
-        fun getTasks() = sequence {
-            val regex = Regex(CakeSettings.getInstance(project).cakeTaskParsingRegex)
-            val tasks = regex.findAll(content).map {
-                CakeScriptTask(project, file, it.groups[1]!!.value)
+        fun getTasks() =
+            sequence {
+                val regex = Regex(CakeSettings.getInstance(project).cakeTaskParsingRegex)
+                val tasks =
+                    regex.findAll(content).map {
+                        CakeScriptTask(project, file, it.groups[1]!!.value)
+                    }
+                yieldAll(tasks)
             }
-            yieldAll(tasks)
-        }
     }
 }
