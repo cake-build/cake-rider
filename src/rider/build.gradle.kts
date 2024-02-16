@@ -12,7 +12,8 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.8.0"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "1.17.1"
-    id("com.jetbrains.rdgen") version "2023.3.0"
+    // rd - see releases at https://github.com/JetBrains/rd/releases
+    id("com.jetbrains.rdgen") version "2023.3.2"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "2.2.0"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
@@ -127,7 +128,7 @@ tasks {
             logger.log(LogLevel.INFO, "cleaning dotnet component.")
             val pluginName = properties("pluginName")
             val dotNetConfiguration = properties("dotNetConfiguration")
-            val platformVersion = properties("platformVersion")
+            val platformVersion = properties("dotNetSdkVersion")
             val dotnetDir = File(rootDir, "../dotnet")
 
             exec {
@@ -161,7 +162,7 @@ tasks {
 
             val pluginName = properties("pluginName")
             val dotNetConfiguration = properties("dotNetConfiguration")
-            val platformVersion = properties("platformVersion")
+            val platformVersion = properties("dotNetSdkVersion")
             val dotnetDir = File(rootDir, "../dotnet")
             val dotnetOutDir = File(dotnetDir, "$pluginName/bin/$dotNetConfiguration")
 
@@ -214,7 +215,7 @@ tasks {
 
         val pluginName = properties("pluginName")
         val dotNetConfiguration = properties("dotNetConfiguration")
-        val platformVersion = properties("platformVersion")
+        val platformVersion = properties("dotNetSdkVersion")
 
         inputs.property("dotNetConfiguration", dotNetConfiguration)
         inputs.property("pluginName", pluginName)

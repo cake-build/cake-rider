@@ -60,7 +60,7 @@ public class CakeFrostingProjectsHost : IDetectFrostingModules, ICakeFrostingPro
         _model = solution.GetProtocolSolution().GetCakeFrostingProjectsModel();
 
         solutionLoadTasksScheduler.EnqueueTask(new SolutionLoadTask(
-            "Initialize cake projects",
+            typeof(CakeFrostingProject),
             SolutionLoadTaskKinds.AfterDone,
             () =>
             {

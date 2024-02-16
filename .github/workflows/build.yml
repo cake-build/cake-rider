@@ -29,7 +29,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-2022, ubuntu-22.04, macos-12 ]
+        #os: [ windows-2022, ubuntu-22.04, macos-12 ]
+        os: [ windows-2022, macos-12 ]
 
     steps:
       - name: Checkout the requested branch
@@ -77,6 +78,18 @@ jobs:
         with:
           path: tools
           key: ${{ runner.os }}-tools-${{ hashFiles('recipe.cake') }}
+
+      - name: See the available space
+        if: runner.os != 'Windows'
+        run: |
+          echo "tmp points to ${{ runner.temp }}"
+          df -h
+
+      - name: See the available space
+        if: runner.os == 'Windows'
+        run: |
+          echo "tmp points to ${{ runner.temp }}"
+          Get-Volume
 
       - name: Build project
         uses: cake-build/cake-action@v2.0.0
