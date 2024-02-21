@@ -113,8 +113,7 @@ tasks {
     // generate the lexer (uses grammarkit)
     generateLexer {
         sourceFile.set(File(rootDir, "src/main/kotlin/net/cakebuild/language/psi/Cake.flex"))
-        targetDir.set("src/main/gen/net/cakebuild/language/psi")
-        targetClass.set("CakeLexer")
+        targetOutputDir.set(File(rootDir, "src/main/gen/net/cakebuild/language/psi"))
         purgeOldFiles.set(true)
     }
 
@@ -151,7 +150,7 @@ tasks {
     // generate the parser (uses grammarkit)
     generateParser {
         sourceFile.set(File(rootDir, "src/main/kotlin/net/cakebuild/language/psi/Cake.bnf"))
-        targetRoot.set("src/main/gen")
+        targetRootOutputDir.set(File(rootDir, "src/main/gen"))
         pathToParser.set("/net/cakebuild/language/psi/CakeParser.java")
         pathToPsiRoot.set("/net/cakebuild/language/psi")
     }
