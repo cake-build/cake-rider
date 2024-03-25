@@ -11,7 +11,7 @@ plugins {
     // do NOT update kotlin - kotlin version must match platform version, see https://plugins.jetbrains.com/docs/intellij/kotlin.html#kotlin-standard-library
     id("org.jetbrains.kotlin.jvm") version "1.8.0"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "1.17.1"
+    id("org.jetbrains.intellij") version "1.17.2"
     // rd - see releases at https://github.com/JetBrains/rd/releases
     id("com.jetbrains.rdgen") version "2023.3.2"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
