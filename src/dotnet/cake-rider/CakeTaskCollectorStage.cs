@@ -12,7 +12,6 @@ namespace net.cakebuild;
 /// <summary>
 /// Used to update tasks after initial solution load.
 /// </summary>
-[DaemonStage(StagesAfter = new[] { typeof(FilteringHighlightingDaemonStage) })]
 public sealed class CakeTaskCollectorStage : CSharpDaemonStageBase
 {
     private readonly ICakeFrostingProjectsHost _host;
