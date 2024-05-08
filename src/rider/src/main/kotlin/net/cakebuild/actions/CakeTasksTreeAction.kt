@@ -1,5 +1,6 @@
 package net.cakebuild.actions
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import net.cakebuild.shared.CakeDataKeys
@@ -8,6 +9,10 @@ import net.cakebuild.toolwindow.CakeTasksWindow
 abstract class CakeTasksTreeAction : AnAction() {
     protected fun getWindow(e: AnActionEvent): CakeTasksWindow? {
         return CakeDataKeys.TASKS_WINDOW.getData(e.dataContext)
+    }
+
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.EDT
     }
 
     class CollapseAll : CakeTasksTreeAction() {
