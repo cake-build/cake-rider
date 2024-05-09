@@ -20,6 +20,9 @@ IntelliJBuildParameters.SetParameters(
 
 IntelliJBuildParameters.PrintParameters(Context);
 
+ToolSettings.SetToolPreprocessorDirectives(
+  gitReleaseManagerGlobalTool: "#tool dotnet:?package=GitReleaseManager.Tool&version=0.17.0");
+
 ToolSettings.SetToolSettings(context: Context);
 
 IntelliJBuild.Run();
