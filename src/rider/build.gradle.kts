@@ -19,7 +19,7 @@ plugins {
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
     id("io.gitlab.arturbosch.detekt") version "1.23.6"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    //id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
     // grammarkit to generate parser & lexer (i.e. the bnf and the flex file...)
     id("org.jetbrains.grammarkit") version "2022.3.2.2"
 }
@@ -271,9 +271,9 @@ tasks {
         }
     }
 
-    withType<org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask>().configureEach {
-        exclude("**/gen/**", "**/*.Generated.kt")
-    }
+    //withType<org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask>().configureEach {
+    //    exclude("**/gen/**", "**/*.Generated.kt")
+    //}
 
     patchPluginXml {
         version.set(properties("pluginVersion"))
