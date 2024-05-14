@@ -34,25 +34,25 @@ jobs:
 
     steps:
       - name: Checkout the requested branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
 
       - name: Fetch all tags and branches
         run: git fetch --prune --unshallow
 
       # Validates the gradle wrappers and saves us from getting malicious PRs
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v3.3.2
+        uses: gradle/wrapper-validation-action@216d1ad2b3710bf005dc39237337b9673fd8fcd5 # v3.3.2
 
       # Setup Java 11 environment which is needed to build
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
       # Setup dotnet 6 (and 2.1 for Wyam, 3.1 for gitReleaseManager, 5.0 for gitVersion)
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v4.0.0
+        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
         with:
           dotnet-version: |
             2.1.x
@@ -62,7 +62,7 @@ jobs:
 
       # Cache Gradle Wrapper
       - name: Setup Gradle Wrapper Cache
-        uses: actions/cache@v4
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
@@ -74,7 +74,7 @@ jobs:
 
       # Cache Cake tools
       - name: Cache Tools
-        uses: actions/cache@v4
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
         with:
           path: tools
           key: ${{ runner.os }}-tools-${{ hashFiles('recipe.cake') }}
@@ -92,7 +92,7 @@ jobs:
           Get-Volume
 
       - name: Build project
-        uses: cake-build/cake-action@v2.0.0
+        uses: cake-build/cake-action@1223b6fa067ad192159f43b50cd4f953679b0934 # v2.0.0
         with:
           script-path: recipe.cake
           target: CI
@@ -100,7 +100,7 @@ jobs:
 
       # currently, Cake.Recipe does not upload artifacts when run on gh-actions
       - name: Upload Issues
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
         with:
           if-no-files-found: warn
           name: ${{ matrix.os }} Issues
@@ -108,7 +108,7 @@ jobs:
             BuildArtifacts/report.html
             BuildArtifacts/**/coverlet/*.xml
       - name: Upload Packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
         if:  runner.os == 'Windows'
         with:
           if-no-files-found: warn
