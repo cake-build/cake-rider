@@ -275,10 +275,6 @@ tasks {
     //    exclude("**/gen/**", "**/*.Generated.kt")
     //}
 
-    register("ktlintCheck") {
-        // mock task, since we disabled the "original"
-    }
-
     patchPluginXml {
         version.set(properties("pluginVersion"))
         sinceBuild.set(properties("pluginSinceBuild"))
