@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Cake.Core" Version="1.0.0" />
     <PackageReference Include="Cake.Testing" Version="1.0.0" />
-    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit" Version="2.8.1" />
   </ItemGroup>
 
 </Project>
