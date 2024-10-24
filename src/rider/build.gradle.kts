@@ -36,10 +36,10 @@ repositories {
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.2")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.2")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.3")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.3")
 }
 
 // Configure gradle-intellij-plugin plugin.
