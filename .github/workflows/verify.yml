@@ -1,0 +1,58 @@
+name: Verify
+
+on:
+  workflow_run:
+    workflows: ["Build"]
+    branches: ["develop"]
+    types:
+      - completed
+
+jobs:
+  verify:
+    runs-on: windows-2022
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout the requested branch
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4
+
+      - name: Fetch all tags and branches
+        run: git fetch --prune --unshallow
+
+      # Setup Java 11 environment which is needed to build
+      - name: Setup Java
+        uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # Setup dotnet 6 (and 2.1 for Wyam, 3.1 for gitReleaseManager, 5.0 for gitVersion)
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@6bd8b7f7774af54e05809fcc5431931b3eb1ddee # v4.0.1
+        with:
+          dotnet-version: |
+            2.1.x
+            3.1.x
+            5.0.x
+            6.0.x
+
+      # Cache Cake tools
+      - name: Cache Tools
+        uses: actions/cache@3624ceb22c1c5a301c8db4169662070a689d9ea8 # v4
+        with:
+          path: tools
+          key: ${{ runner.os }}-tools-${{ hashFiles('recipe.cake') }}
+
+      - name: See the available space
+        run: |
+          echo "tmp points to ${{ runner.temp }}"
+          Get-Volume
+
+      - name: Build project
+        uses: cake-build/cake-action@1223b6fa067ad192159f43b50cd4f953679b0934 # v2.0.0
+        with:
+          script-path: recipe.cake
+          target: Run-Plugin-Verifier
+          cake-version: tool-manifest
+          arguments: |
+            enable-verifier: true
