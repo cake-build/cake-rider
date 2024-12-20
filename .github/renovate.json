@@ -3,5 +3,6 @@
   "extends": [
     "github>cake-contrib/renovate-presets:cake-recipe",
     "github>cake-contrib/renovate-presets:github-actions" ],
-  "packageRules": []
+  "packageRules": [],
+  "milestone": 13
 }
