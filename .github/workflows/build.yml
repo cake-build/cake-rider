@@ -92,7 +92,7 @@ jobs:
           Get-Volume
 
       - name: Build project
-        uses: cake-build/cake-action@1223b6fa067ad192159f43b50cd4f953679b0934 # v2.0.0
+        uses: cake-build/cake-action@d218f1133bb74a1df0b08c89cfd8fc100c09e1a0 # v3.0.1
         with:
           script-path: recipe.cake
           target: CI
